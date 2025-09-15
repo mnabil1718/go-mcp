@@ -12,7 +12,9 @@ func (app *Application) routes() http.Handler {
 	useMiddlewares(r)
 
 	r.GET("/health/liveness", app.healthcheck)
-	r.POST("/chat", app.chat)
+	r.GET("/conversations/:id", app.getConv)
+	r.POST("/conversations", app.postConv)
+	r.POST("/chat", app.postChat)
 
 	return r.Handler()
 }
