@@ -1,35 +1,71 @@
 import { Injectable, signal } from '@angular/core';
-import { sign } from 'crypto';
-import { response } from 'express';
+import { environment } from '../../environments/environment.development';
+import { Conversation, Message, PostConvRes } from './chat.domain';
+import { ApiResponse } from '../common/api.domain';
 
 @Injectable({ providedIn: 'root' })
-export class ChatService {
-  answer = signal<string>('');
+export class ConversationService {
+  messages = signal<Message[]>([]);
+  loading = signal(false);
   error = signal<string | null>(null);
-  done = signal<boolean>(false);
 
-  async chat(message: string): Promise<void> {
-    this.answer.set('');
+  async createConversation(): Promise<string> {
+    const res = await fetch(`${environment.apiUrl}/conversations`, { method: 'POST' });
+    if (!res.ok) throw new Error('failed to create conversation');
+    const json: ApiResponse<PostConvRes> = await res.json();
+    if (!json.data) {
+      throw new Error(json.message ?? 'conversation_id missing in response');
+    }
+    const id = json.data.conversation_id;
+    if (!id) throw new Error('conversation_id missing in response');
+    return id;
+  }
+
+  async getConversation(id: string): Promise<void> {
+    this.loading.set(true);
     this.error.set(null);
-    this.done.set(false);
     try {
-      const URL = 'http://localhost:8080/chat';
-      const res = await fetch(URL, {
+      const res = await fetch(`${environment.apiUrl}/conversations/${id}`);
+      if (!res.ok) throw new Error('failed to load conversation');
+
+      const json: ApiResponse<Conversation> = await res.json();
+      this.messages.set(json.data?.messages ?? []);
+    } catch (err: any) {
+      this.error.set(err.message);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async sendMessage(convId: string, message: string): Promise<void> {
+    this.messages.update((msgs) => {
+      return [...msgs, { role: 'user', content: message, sent_at: new Date().toISOString() }];
+    });
+
+    try {
+      const res = await fetch(`${environment.apiUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ conversation_id: convId, message }),
       });
 
-      if (!res.body) {
-        throw new Error('no response body');
-      }
+      if (!res.body) throw new Error('no response body');
 
       const reader = res.body.getReader();
       const dec = new TextDecoder();
 
+      // insert assistant bubble
+      let assistant: Message = {
+        role: 'assistant',
+        content: '',
+        sent_at: new Date().toISOString(),
+      };
+      this.messages.update((msgs) => [...msgs, assistant]);
+
       while (true) {
-        const { done: isDone, value } = await reader.read();
-        if (isDone) break;
+        const { done, value } = await reader.read();
+        if (done) break;
+
         const chunk = dec.decode(value, { stream: true });
         const lines = chunk.split('\n\n');
 
@@ -39,18 +75,23 @@ export class ChatService {
             if (!json) continue;
 
             const parsed = JSON.parse(json);
+            if (parsed.done) return;
 
-            if (parsed.done) {
-              this.done.set(true);
-              return;
+            if (parsed.message?.content) {
+              this.messages.update((msgs) => {
+                const updated = [...msgs];
+                const last = updated[updated.length - 1];
+                if (last.role === 'assistant') {
+                  last.content += parsed.message.content;
+                }
+                return updated;
+              });
             }
-            this.answer.update((a) => a + parsed.message.content);
           }
         }
       }
-    } catch (error: any) {
-      console.log(error);
-      this.error.set(error.message);
+    } catch (err: any) {
+      this.error.set(err.message);
     }
   }
 }

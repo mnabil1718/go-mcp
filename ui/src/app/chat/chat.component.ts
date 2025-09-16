@@ -1,29 +1,33 @@
+// chat.component.ts
 import { Component, inject } from '@angular/core';
-import { ChatService } from './chat.service';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ConversationService } from './chat.service';
+import { ChatBubbleComponent } from './chat.bubble.component';
+import { CommonModule, NgFor } from '@angular/common';
 
 @Component({
   selector: 'chat',
-  imports: [FormsModule],
-  template: `
-    <h2>AI Chat</h2>
-    <input [(ngModel)]="prompt" placeholder="Ask something..." />
-    <button (click)="send()">Send</button>
-
-    <div class="response">
-      {{ chatService.answer() }}
-    </div>
-
-    @if (chatService.error()) {
-    <div>❌ {{ chatService.error() }}</div>
-    }
-  `,
+  imports: [FormsModule, ChatBubbleComponent, CommonModule],
+  templateUrl: 'chat.template.html',
 })
 export class ChatComponent {
+  private route = inject(ActivatedRoute);
+  convo = inject(ConversationService);
+
+  convId = '';
   prompt = '';
-  chatService = inject(ChatService);
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.convId = params.get('id')!;
+      this.convo.getConversation(this.convId);
+    });
+  }
 
   send() {
-    this.chatService.chat(this.prompt);
+    if (!this.prompt.trim()) return;
+    this.convo.sendMessage(this.convId, this.prompt);
+    this.prompt = '';
   }
 }
