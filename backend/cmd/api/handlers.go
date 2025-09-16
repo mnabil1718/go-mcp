@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mnabil1718/mcp-go/internal/chat"
@@ -45,6 +46,7 @@ func (app *Application) postChat(c *gin.Context) {
 	if err := app.repos.ChatRepo.SaveMessage(req.ConvID, chat.Message{
 		Role:    "user",
 		Content: req.Message,
+		SentAt:  time.Now(),
 	}); err != nil {
 		commons.TranslateDomainError(c, err)
 		return
@@ -125,6 +127,7 @@ func (app *Application) postChat(c *gin.Context) {
 					_ = app.repos.ChatRepo.SaveMessage(req.ConvID, chat.Message{
 						Role:    "assistant",
 						Content: assistantResp,
+						SentAt:  time.Now(),
 					})
 				}
 				return

@@ -2,6 +2,7 @@ package chat
 
 import (
 	"sync"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/mnabil1718/mcp-go/internal/commons"
@@ -21,7 +22,7 @@ func (r *MemoryRepo) CreateConversation() (string, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	r.convs[id] = &Conversation{ID: id}
+	r.convs[id] = &Conversation{ID: id, CreatedAt: time.Now()}
 
 	return id, nil
 }
