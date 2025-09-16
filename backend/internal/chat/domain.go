@@ -24,6 +24,7 @@ type Conversation struct {
 }
 
 type Repository interface {
+	GetConversations() []*Conversation
 	CreateConversation() (string, error)
 	GetConversation(id string) (*Conversation, error)
 	SaveMessage(cID string, msg Message) error

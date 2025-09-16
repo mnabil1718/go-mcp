@@ -17,12 +17,25 @@ func NewMemoryRepo() *MemoryRepo {
 	return &MemoryRepo{convs: make(map[string]*Conversation)}
 }
 
+func (r *MemoryRepo) GetConversations() []*Conversation {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	conversations := []*Conversation{}
+
+	for _, conv := range r.convs {
+		conversations = append(conversations, conv)
+	}
+
+	return conversations
+}
+
 func (r *MemoryRepo) CreateConversation() (string, error) {
 	id := uuid.NewString()
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	r.convs[id] = &Conversation{ID: id, CreatedAt: time.Now()}
+	r.convs[id] = &Conversation{ID: id, Messages: []Message{}, CreatedAt: time.Now()}
 
 	return id, nil
 }

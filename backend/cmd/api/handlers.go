@@ -150,3 +150,8 @@ func (app *Application) getConv(c *gin.Context) {
 
 	commons.SuccessResponse(c, http.StatusOK, nil, conv)
 }
+
+func (app *Application) getConvs(c *gin.Context) {
+	convs := app.repos.ChatRepo.GetConversations()
+	commons.SuccessResponse(c, http.StatusOK, nil, convs)
+}

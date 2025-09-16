@@ -14,6 +14,7 @@ func (app *Application) routes() http.Handler {
 	r.GET("/health/liveness", app.healthcheck)
 	r.GET("/conversations/:id", app.getConv)
 	r.POST("/conversations", app.postConv)
+	r.GET("/conversations", app.getConvs)
 	r.POST("/chat", app.postChat)
 
 	return r.Handler()
