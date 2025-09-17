@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Conversation, Message, PostConvRes } from './chat.domain';
-import { ApiResponse } from '../common/api.domain';
+import { ApiResponse } from '../common/api/api.domain';
 
 @Injectable({ providedIn: 'root' })
 export class ConversationService {

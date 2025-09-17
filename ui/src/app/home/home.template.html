@@ -1,0 +1,25 @@
+<div class="mx-auto flex flex-col w-full max-w-2xl">
+  <h1 class="text-2xl text-center mb-3">What's on your mind today?</h1>
+  <form>
+    <mat-form-field class="w-full">
+      <div class="items-end" [ngClass]="{ flex: !sendUp() }">
+        <textarea
+          matInput
+          #chat
+          #autosize="cdkTextareaAutosize"
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="1"
+          cdkAutosizeMaxRows="7"
+          placeholder="Start chatting..."
+          class="!mb-2"
+          (input)="onInput()"
+        ></textarea>
+        <div class="flex justify-end">
+          <button matIconButton class="transition-all duration-150" aria-label="Send message">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-form-field>
+  </form>
+</div>
