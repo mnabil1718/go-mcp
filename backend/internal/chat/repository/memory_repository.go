@@ -32,19 +32,21 @@ func (r *InMemoryRepository) GetAll() ([]*chat.Chat, error) {
 	return chats, nil
 }
 
-func (r *InMemoryRepository) Create(title string) (*string, error) {
+func (r *InMemoryRepository) Create(title string) (*chat.Chat, error) {
 	r.db.Mu.Lock()
 	defer r.db.Mu.Unlock()
 
 	id := uuid.NewString()
 
-	r.db.Chats[id] = &chat.Chat{
+	ch := &chat.Chat{
 		ID:        id,
 		Title:     title,
 		CreatedAt: time.Now(),
 	}
 
-	return &id, nil
+	r.db.Chats[id] = ch
+
+	return ch, nil
 }
 
 func (r *InMemoryRepository) GetById(id string) (*chat.ChatWithMessages, error) {

@@ -19,10 +19,6 @@ type ControllerCreateChatRequest struct {
 	Title string `json:"title" binding:"required,min=1"`
 }
 
-type ControllerPostResponse struct {
-	ID string `json:"chat_id"`
-}
-
 type ServiceGetByIDResponse struct {
 	ID        string            `json:"id"`
 	Title     string            `json:"title"`

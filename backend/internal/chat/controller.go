@@ -25,13 +25,13 @@ func (cr *ChatController) Post(c *gin.Context) {
 		return
 	}
 
-	id, err := cr.s.Create(req.Title)
+	ch, err := cr.s.Create(req.Title)
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
 	}
 
-	commons.SuccessResponse(c, http.StatusCreated, nil, ControllerPostResponse{ID: *id})
+	commons.SuccessResponse(c, http.StatusCreated, nil, ch)
 }
 
 func (cr *ChatController) GetAll(c *gin.Context) {

@@ -17,7 +17,7 @@ type Controller interface {
 
 type Service interface {
 	GetAll() ([]*Chat, error)
-	Create(title string) (*string, error)
+	Create(title string) (*Chat, error)
 	GetById(id string) (*ChatWithMessages, error)
 	SaveMessage(chatID, message string, role message.Role) error
 	StreamChat(ctx context.Context, w http.ResponseWriter, r ServiceStreamChatRequest) error
@@ -25,6 +25,6 @@ type Service interface {
 
 type Repository interface {
 	GetAll() ([]*Chat, error)
-	Create(title string) (*string, error)
+	Create(title string) (*Chat, error)
 	GetById(id string) (*ChatWithMessages, error)
 }

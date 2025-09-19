@@ -24,13 +24,13 @@ func NewChatService(r Repository, mr message.Repository) Service {
 	}
 }
 
-func (s *ChatService) Create(title string) (*string, error) {
-	id, err := s.r.Create(title)
+func (s *ChatService) Create(title string) (*Chat, error) {
+	ch, err := s.r.Create(title)
 	if err != nil {
 		return nil, err
 	}
 
-	return id, nil
+	return ch, nil
 }
 
 func (s *ChatService) GetAll() ([]*Chat, error) {
