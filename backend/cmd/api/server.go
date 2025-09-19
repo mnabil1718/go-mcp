@@ -11,36 +11,40 @@ import (
 	"time"
 )
 
-func (app *Application) serve() error {
-	server := &http.Server{Addr: fmt.Sprintf(":%d", app.config.Port), Handler: app.routes()}
-	shutDownErr := make(chan error, 1)
-
-	go app.gracefulShutdown(server, shutDownErr)
-
-	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatalf("listen: %s\n", err)
+func (a *App) SetupServer() {
+	a.Server = &http.Server{
+		Addr:    fmt.Sprintf(":%d", a.Config.Port),
+		Handler: a.Router.Handler(),
 	}
-
-	if err := <-shutDownErr; err != nil {
-		return err
-	}
-
-	return nil
 }
 
-func (app *Application) gracefulShutdown(server *http.Server, shutDownErr chan error) {
+func (a *App) HandleGracefulShutdown() {
+	a.WG.Add(1)
+	go func() {
+		defer a.WG.Done()
+		a.GracefulShutdown()
+	}()
+}
+
+func (a *App) GracefulShutdown() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	log.Println("shutting down server...")
+	log.Println("Received shutdown signal")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
-	if err := server.Shutdown(ctx); err != nil {
-		shutDownErr <- err
+	if err := a.Server.Shutdown(ctx); err != nil {
+		log.Printf("server shutdown failed: %v", err)
 	}
+}
 
-	app.wg.Wait()
-	shutDownErr <- nil
+func (a *App) ShutdownChan() <-chan error {
+	done := make(chan error)
+	go func() {
+		a.WG.Wait()
+		done <- nil
+	}()
+	return done
 }

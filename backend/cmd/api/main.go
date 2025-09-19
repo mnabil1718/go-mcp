@@ -2,25 +2,13 @@ package main
 
 import (
 	"log"
-	"sync"
-
-	"github.com/mnabil1718/mcp-go/internal/config"
-	"github.com/mnabil1718/mcp-go/internal/data"
 )
 
-type Application struct {
-	repos  *data.Repos
-	config *config.Config
-	wg     sync.WaitGroup
-}
-
 func main() {
-	app := &Application{
-		config: config.LoadConfig(),
-		repos:  data.NewRepos(),
+
+	app := NewApp()
+	if err := app.Start(); err != nil {
+		log.Fatalf("Application stopped with error: %v", err)
 	}
 
-	if err := app.serve(); err != nil {
-		log.Fatalf("server error: %v", err)
-	}
 }

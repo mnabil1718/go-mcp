@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func useMiddlewares(r *gin.Engine) {
+func UseGlobalMiddlewares(r *gin.Engine) {
 	r.Use(CORSMiddleware())
 }
 

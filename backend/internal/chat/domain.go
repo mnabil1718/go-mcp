@@ -1,31 +1,20 @@
 package chat
 
-import "time"
+import (
+	"time"
 
-type ChatReq struct {
-	ConvID  string `json:"conversation_id" binding:"required"`
-	Message string `json:"message" binding:"required"`
-}
+	"github.com/mnabil1718/mcp-go/internal/message"
+)
 
-type PostConvRes struct {
-	ConvID string `json:"conversation_id"`
-}
-
-type Message struct {
-	Role    string    `json:"role"`
-	Content string    `json:"content"`
-	SentAt  time.Time `json:"sent_at"`
-}
-
-type Conversation struct {
+type Chat struct {
 	ID        string    `json:"id"`
-	Messages  []Message `json:"messages"`
+	Title     string    `json:"title"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type Repository interface {
-	GetConversations() []*Conversation
-	CreateConversation() (string, error)
-	GetConversation(id string) (*Conversation, error)
-	SaveMessage(cID string, msg Message) error
+type ChatWithMessages struct {
+	ID        string             `json:"id"`
+	Title     string             `json:"title"`
+	CreatedAt time.Time          `json:"created_at"`
+	Messages  []*message.Message `json:"messages"`
 }
