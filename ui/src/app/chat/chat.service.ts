@@ -1,97 +1,95 @@
-import { Injectable, signal } from '@angular/core';
-import { environment } from '../../environments/environment.development';
-import { Conversation, Message, PostConvRes } from './chat.domain';
-import { ApiResponse } from '../common/api/api.domain';
+import { inject, Injectable, signal } from '@angular/core';
+import { Message, OllamaMessage } from '../message/message.domain';
+import {
+  Chat,
+  ChatRequest,
+  ChatWithMessages,
+  CreateChatRequest,
+  SaveMessageRequest,
+} from './chat.domain';
+import { ApiService } from '../common/api/api.service';
+import { Observable, tap } from 'rxjs';
+import { Chunk } from '../common/api/api.domain';
 
 @Injectable({ providedIn: 'root' })
-export class ConversationService {
-  messages = signal<Message[]>([]);
-  loading = signal(false);
-  error = signal<string | null>(null);
+export class ChatService {
+  private api = inject(ApiService);
 
-  async createConversation(): Promise<string> {
-    const res = await fetch(`${environment.apiUrl}/conversations`, { method: 'POST' });
-    if (!res.ok) throw new Error('failed to create conversation');
-    const json: ApiResponse<PostConvRes> = await res.json();
-    if (!json.data) {
-      throw new Error(json.message ?? 'conversation_id missing in response');
-    }
-    const id = json.data.conversation_id;
-    if (!id) throw new Error('conversation_id missing in response');
-    return id;
+  chats = signal<Chat[]>([]);
+  selectedChat = signal<Chat | null>(null);
+  selectedChatMessages = signal<Message[]>([]);
+
+  create(body: CreateChatRequest): Observable<Chat> {
+    return this.api.post<Chat>('chats', body).pipe(
+      tap({
+        next: (chat) => {
+          this.chats.update((chats) => [...chats, chat]);
+        },
+      })
+    );
   }
 
-  async getConversation(id: string): Promise<void> {
-    this.loading.set(true);
-    this.error.set(null);
-    try {
-      const res = await fetch(`${environment.apiUrl}/conversations/${id}`);
-      if (!res.ok) throw new Error('failed to load conversation');
-
-      const json: ApiResponse<Conversation> = await res.json();
-      this.messages.set(json.data?.messages ?? []);
-    } catch (err: any) {
-      this.error.set(err.message);
-    } finally {
-      this.loading.set(false);
-    }
+  getById(id: string): Observable<ChatWithMessages> {
+    return this.api.get<ChatWithMessages>(`chats/${id}`).pipe(
+      tap({
+        next: (chat) => {
+          this.selectedChat.set({
+            id: chat.id,
+            title: chat.title,
+            created_at: chat.created_at,
+          });
+          this.selectedChatMessages.set(chat.messages);
+        },
+      })
+    );
   }
 
-  async sendMessage(convId: string, message: string): Promise<void> {
-    this.messages.update((msgs) => {
-      return [...msgs, { role: 'user', content: message, sent_at: new Date().toISOString() }];
-    });
+  saveMessage(r: SaveMessageRequest): Observable<Message> {
+    return this.api.post<Message>(`chats/${r.chat_id}/messages`, { message: r.message }).pipe(
+      tap({
+        next: (msg) => {
+          this.selectedChatMessages.update((old) => [...old, msg]);
+        },
+      })
+    );
+  }
 
-    try {
-      const res = await fetch(`${environment.apiUrl}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ conversation_id: convId, message }),
+  chat(r: ChatRequest) {
+    // save user prompt
+    this.saveMessage(r).subscribe();
+
+    let replyBuffer = '';
+
+    return new Observable<Chunk<string>>((subscriber) => {
+      const sub = this.api.stream<OllamaMessage>(`chats/${r.chat_id}/generate`).subscribe({
+        next: (chunk) => {
+          if (chunk.event === 'message' && chunk.data) {
+            replyBuffer += chunk.data.content; // append token to buffer
+
+            // Emit a "typing" event with current buffer
+            subscriber.next({ event: 'typing', data: replyBuffer });
+          }
+
+          if (chunk.event === 'done') {
+            // Save final assistant message to state
+            const reply: Message = {
+              role: 'assistant',
+              chat_id: r.chat_id,
+              content: replyBuffer,
+              id: crypto.randomUUID(),
+              sent_at: new Date().toISOString(),
+            };
+            this.selectedChatMessages.update((msgs) => [...msgs, reply]);
+
+            subscriber.next({ event: 'done', data: replyBuffer });
+            subscriber.complete();
+          }
+        },
+        error: (err) => subscriber.error(err),
       });
 
-      if (!res.body) throw new Error('no response body');
-
-      const reader = res.body.getReader();
-      const dec = new TextDecoder();
-
-      // insert assistant bubble
-      let assistant: Message = {
-        role: 'assistant',
-        content: '',
-        sent_at: new Date().toISOString(),
-      };
-      this.messages.update((msgs) => [...msgs, assistant]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = dec.decode(value, { stream: true });
-        const lines = chunk.split('\n\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data:')) {
-            const json = line.replace(/^data:\s*/, '').trim();
-            if (!json) continue;
-
-            const parsed = JSON.parse(json);
-            if (parsed.done) return;
-
-            if (parsed.message?.content) {
-              this.messages.update((msgs) => {
-                const updated = [...msgs];
-                const last = updated[updated.length - 1];
-                if (last.role === 'assistant') {
-                  last.content += parsed.message.content;
-                }
-                return updated;
-              });
-            }
-          }
-        }
-      }
-    } catch (err: any) {
-      this.error.set(err.message);
-    }
+      // Cleanup when unsubscribed
+      return () => sub.unsubscribe();
+    });
   }
 }

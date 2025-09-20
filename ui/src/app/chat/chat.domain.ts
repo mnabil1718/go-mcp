@@ -1,15 +1,25 @@
-export interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-  sent_at: string; // ISO date
+import { Message } from '../message/message.domain';
+
+export interface Chat {
+  id: string;
+  title: string;
+  created_at: string;
 }
 
-export interface Conversation {
+export interface ChatWithMessages {
   id: string;
+  title: string;
   created_at: string;
   messages: Message[];
 }
 
-export interface PostConvRes {
-  conversation_id: string;
+export interface CreateChatRequest {
+  title: string;
 }
+
+export interface ChatRequest {
+  chat_id: string;
+  message: string;
+}
+
+export type SaveMessageRequest = ChatRequest;

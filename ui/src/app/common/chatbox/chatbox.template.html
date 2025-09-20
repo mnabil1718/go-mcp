@@ -1,0 +1,29 @@
+<form (ngSubmit)="onSubmit()">
+  <mat-form-field class="w-full">
+    <div class="items-end" [class.flex]="!sendUp()">
+      <textarea
+        matInput
+        #chat
+        #autosize="cdkTextareaAutosize"
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="7"
+        placeholder="Start chatting..."
+        class="!mb-2"
+        [formControl]="prompt"
+        (input)="onInput()"
+        (keydown)="onKeyDown($event)"
+      ></textarea>
+      <div class="flex justify-end">
+        <button
+          matIconButton
+          type="submit"
+          class="transition-all duration-150"
+          aria-label="Send message"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-form-field>
+</form>

@@ -7,8 +7,8 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { ApiErrorInterceptor } from './common/api/api.interceptor';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { errorResponseInterceptor, retryInterceptor } from './common/api/api.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withInterceptors([ApiErrorInterceptor]), withFetch()),
+    provideHttpClient(withInterceptors([retryInterceptor, errorResponseInterceptor])),
   ],
 };
