@@ -16,18 +16,19 @@ func NewInMemoryRepository(db *db.InMemoryDB) message_pkg.Repository {
 	return &InMemoryRepository{db: db}
 }
 
-func (r *InMemoryRepository) SaveMessage(chatID, message string, role message_pkg.Role) error {
+func (r *InMemoryRepository) SaveMessage(chatID, message string, role message_pkg.Role) (*message_pkg.Message, error) {
 	r.db.Mu.Lock()
 	defer r.db.Mu.Unlock()
 
 	id := uuid.NewString()
-	r.db.Messages[id] = &message_pkg.Message{
+	msg := &message_pkg.Message{
 		ID:      id,
 		ChatID:  chatID,
 		Role:    role,
 		Content: message,
 		SentAt:  time.Now(),
 	}
+	r.db.Messages[id] = msg
 
-	return nil
+	return msg, nil
 }

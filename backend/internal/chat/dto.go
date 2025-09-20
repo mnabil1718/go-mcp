@@ -6,12 +6,11 @@ import (
 	"github.com/mnabil1718/mcp-go/internal/message"
 )
 
-type ControllerGetByIdRequest struct {
+type ControllerIdUriRequest struct {
 	ID string `uri:"id" binding:"required,uuid"`
 }
 
-type ControllerChatRequest struct {
-	ID      string `json:"chat_id" binding:"required"`
+type ControllerPostMessageRequest struct {
 	Message string `json:"message" binding:"required"`
 }
 
@@ -26,9 +25,8 @@ type ServiceGetByIDResponse struct {
 	Messages  []message.Message `json:"messages"`
 }
 
-type ServiceStreamChatRequest struct {
+type ServiceStreamRequest struct {
 	ChatID   string
-	UserMsg  string
 	Model    string
 	Endpoint string
 }

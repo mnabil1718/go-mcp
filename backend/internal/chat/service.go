@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/mnabil1718/mcp-go/internal/message"
 )
@@ -51,42 +52,33 @@ func (s *ChatService) GetById(id string) (*ChatWithMessages, error) {
 	return res, nil
 }
 
-func (s *ChatService) SaveMessage(chatID, message string, role message.Role) error {
-	if err := s.mr.SaveMessage(chatID, message, role); err != nil {
-		return err
+func (s *ChatService) SaveMessage(chatID, message string, role message.Role) (*message.Message, error) {
+	msg, err := s.mr.SaveMessage(chatID, message, role)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	return msg, err
 }
 
-func (s *ChatService) StreamChat(ctx context.Context, w http.ResponseWriter, r ServiceStreamChatRequest) error {
+func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r ServiceStreamRequest) error {
 	ch, err := s.r.GetById(r.ChatID)
 	if err != nil {
 		return err
 	}
 
-	// Save user message
-	if err := s.mr.SaveMessage(ch.ID, r.UserMsg, message.MessageRoleUser); err != nil {
-		return err
-	}
-
-	// Prepare messages for backend
-	messages := make([]map[string]any, 0, len(ch.Messages)+1)
+	// Prepare chat history context
+	messages := make([]map[string]any, 0, len(ch.Messages))
 	for _, m := range ch.Messages {
 		messages = append(messages, map[string]any{
 			"role":    m.Role,
 			"content": m.Content,
 		})
 	}
-	messages = append(messages, map[string]any{
-		"role":    message.MessageRoleUser,
-		"content": r.UserMsg,
-	})
 
 	payload := map[string]any{
 		"model":    r.Model,
 		"messages": messages,
-		"stream":   true,
 	}
 
 	data, err := json.Marshal(payload)
@@ -94,15 +86,25 @@ func (s *ChatService) StreamChat(ctx context.Context, w http.ResponseWriter, r S
 		return fmt.Errorf("failed to marshal request payload: %w", err)
 	}
 
-	resp, err := http.Post(r.Endpoint, "application/json", bytes.NewBuffer(data))
+	req, err := http.NewRequestWithContext(ctx, "POST", r.Endpoint, bytes.NewBuffer(data))
+	if err != nil {
+		return fmt.Errorf("failed to create request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{
+		Timeout: 60 * time.Second,
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to reach chat backend: %w", err)
 	}
 	defer resp.Body.Close()
 
 	// Setup SSE headers
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Content-Type", "text/event-stream; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-cache, no-transform")
 	w.Header().Set("Connection", "keep-alive")
 
 	flusher, ok := w.(http.Flusher)
@@ -124,6 +126,10 @@ func (s *ChatService) StreamChat(ctx context.Context, w http.ResponseWriter, r S
 				if errors.Is(err, io.EOF) {
 					return nil
 				}
+
+				// Stream error event before closing
+				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
+				flusher.Flush()
 				return fmt.Errorf("invalid response from chat backend: %w", err)
 			}
 
@@ -131,19 +137,27 @@ func (s *ChatService) StreamChat(ctx context.Context, w http.ResponseWriter, r S
 			if msgObj, ok := chunk["message"].(map[string]any); ok {
 				if content, ok := msgObj["content"].(string); ok {
 					assistantResp += content
+
+					// Stream message event
+					b, _ := json.Marshal(map[string]any{
+						"role":    "assistant",
+						"content": content,
+					})
+					fmt.Fprintf(w, "event: message\ndata: %s\n\n", b)
+					flusher.Flush()
 				}
 			}
-
-			// Stream raw chunk to client
-			b, _ := json.Marshal(chunk)
-			fmt.Fprintf(w, "data: %s\n\n", b)
-			flusher.Flush()
 
 			// Save final assistant response when done
 			if done, ok := chunk["done"].(bool); ok && done {
 				if assistantResp != "" {
-					_ = s.mr.SaveMessage(ch.ID, assistantResp, message.MessageRoleAssistant)
+					_, _ = s.mr.SaveMessage(ch.ID, assistantResp, message.MessageRoleAssistant)
 				}
+
+				// Send final "done" event
+				fmt.Fprintf(w, "event: done\ndata: {\"done\":true}\n\n")
+				flusher.Flush()
+
 				return nil
 			}
 		}

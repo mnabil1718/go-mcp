@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mnabil1718/mcp-go/internal/commons"
 	"github.com/mnabil1718/mcp-go/internal/config"
+	"github.com/mnabil1718/mcp-go/internal/message"
 )
 
 type ChatController struct {
@@ -45,7 +46,7 @@ func (cr *ChatController) GetAll(c *gin.Context) {
 }
 
 func (cr *ChatController) GetById(c *gin.Context) {
-	var req ControllerGetByIdRequest
+	var req ControllerIdUriRequest
 	if err := c.ShouldBindUri(&req); err != nil {
 		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -60,22 +61,43 @@ func (cr *ChatController) GetById(c *gin.Context) {
 	commons.SuccessResponse(c, http.StatusOK, nil, chat)
 }
 
-func (cr *ChatController) PostChat(c *gin.Context) {
-	var req ControllerChatRequest
+func (cr *ChatController) PostMessage(c *gin.Context) {
+	var rUri ControllerIdUriRequest
+	if err := c.ShouldBindUri(&rUri); err != nil {
+		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var req ControllerPostMessageRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	r := ServiceStreamChatRequest{
+	msg, err := cr.s.SaveMessage(rUri.ID, req.Message, message.MessageRoleUser)
+	if err != nil {
+		commons.TranslateDomainError(c, err)
+		return
+	}
+
+	commons.SuccessResponse(c, http.StatusCreated, nil, msg)
+}
+
+func (cr *ChatController) GetStream(c *gin.Context) {
+	var req ControllerIdUriRequest
+	if err := c.ShouldBindUri(&req); err != nil {
+		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	r := ServiceStreamRequest{
 		ChatID:   req.ID,
-		UserMsg:  req.Message,
 		Model:    "mistral:latest",
 		Endpoint: cr.cfg.ChatEndpoint,
 	}
 
-	err := cr.s.StreamChat(
+	err := cr.s.Stream(
 		c.Request.Context(),
 		c.Writer,
 		r,
