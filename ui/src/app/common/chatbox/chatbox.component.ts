@@ -48,7 +48,8 @@ export class ChatboxComponent {
     }
   }
 
-  onSubmit() {
+  onSubmit(e: Event) {
+    e.preventDefault();
     if (this.prompt.value !== null) {
       this.onSubmitCallback()(this.prompt.value);
     }

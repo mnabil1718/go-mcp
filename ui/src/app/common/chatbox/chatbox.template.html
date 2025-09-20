@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit($event)">
   <mat-form-field class="w-full">
     <div class="items-end" [class.flex]="!sendUp()">
       <textarea

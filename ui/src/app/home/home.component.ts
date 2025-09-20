@@ -9,12 +9,13 @@ import { ChatService } from '../chat/chat.service';
 })
 export class HomeComponent {
   private chat = inject(ChatService);
+
   createAndNavigateToChat(prompt: string) {
     // call chat service to create new chat, get id back
     // navigate to /c/:chat_id
     this.chat.create({ title: 'aaa' }).subscribe({
       next: (ch) => {
-        // navigate to new route
+        console.log(ch);
       },
     });
   }
