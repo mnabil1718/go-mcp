@@ -1,0 +1,14 @@
+.message-container {
+  background-color: var(--mat-sys-surface-container);
+}
+
+.chat-bubble-user {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.chat-loader span {
+  background-color: var(--mat-sys-primary);
+}
+
+

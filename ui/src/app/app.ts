@@ -3,12 +3,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { MediaService } from './common/media/media.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatToolbarModule, MatSidenavModule, MatIcon, MatButtonModule],
+  imports: [RouterOutlet, MatToolbarModule, MatSidenavModule, MatIcon, MatButtonModule, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

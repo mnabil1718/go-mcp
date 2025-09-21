@@ -17,9 +17,7 @@ export interface CreateChatRequest {
   title: string;
 }
 
-export interface ChatRequest {
+export interface SaveMessageRequest {
   chat_id: string;
   message: string;
 }
-
-export type SaveMessageRequest = ChatRequest;

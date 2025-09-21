@@ -1,12 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Message, OllamaMessage } from '../message/message.domain';
-import {
-  Chat,
-  ChatRequest,
-  ChatWithMessages,
-  CreateChatRequest,
-  SaveMessageRequest,
-} from './chat.domain';
+import { Chat, ChatWithMessages, CreateChatRequest, SaveMessageRequest } from './chat.domain';
 import { ApiService } from '../common/api/api.service';
 import { Observable, tap } from 'rxjs';
 import { Chunk } from '../common/api/api.domain';
@@ -18,6 +12,8 @@ export class ChatService {
   chats = signal<Chat[]>([]);
   selectedChat = signal<Chat | null>(null);
   selectedChatMessages = signal<Message[]>([]);
+  response = signal<string | null>(null);
+  loading = signal<boolean>(false);
 
   create(body: CreateChatRequest): Observable<Chat> {
     return this.api.post<Chat>('chats', body).pipe(
@@ -45,51 +41,57 @@ export class ChatService {
   }
 
   saveMessage(r: SaveMessageRequest): Observable<Message> {
-    return this.api.post<Message>(`chats/${r.chat_id}/messages`, { message: r.message }).pipe(
-      tap({
-        next: (msg) => {
-          this.selectedChatMessages.update((old) => [...old, msg]);
-        },
-      })
-    );
+    const msg: Message = {
+      id: crypto.randomUUID(),
+      chat_id: r.chat_id,
+      content: r.message,
+      role: 'user',
+      sent_at: new Date().toISOString(),
+    };
+
+    this.selectedChatMessages.update((oldMsg) => [...oldMsg, msg]);
+
+    return this.api.post<Message>(`chats/${r.chat_id}/messages`, { message: r.message });
   }
 
-  chat(r: ChatRequest) {
-    // save user prompt
-    this.saveMessage(r).subscribe();
-
+  respond(id: string): Observable<Chunk<OllamaMessage>> {
+    this.loading.set(true);
     let replyBuffer = '';
 
-    return new Observable<Chunk<string>>((subscriber) => {
-      const sub = this.api.stream<OllamaMessage>(`chats/${r.chat_id}/generate`).subscribe({
+    return new Observable<Chunk<OllamaMessage>>((subscriber) => {
+      const sub = this.api.stream<OllamaMessage>(`chats/${id}/generate`).subscribe({
         next: (chunk) => {
           if (chunk.event === 'message' && chunk.data) {
             replyBuffer += chunk.data.content; // append token to buffer
-
-            // Emit a "typing" event with current buffer
-            subscriber.next({ event: 'typing', data: replyBuffer });
-          }
-
-          if (chunk.event === 'done') {
-            // Save final assistant message to state
-            const reply: Message = {
-              role: 'assistant',
-              chat_id: r.chat_id,
-              content: replyBuffer,
-              id: crypto.randomUUID(),
-              sent_at: new Date().toISOString(),
-            };
-            this.selectedChatMessages.update((msgs) => [...msgs, reply]);
-
-            subscriber.next({ event: 'done', data: replyBuffer });
-            subscriber.complete();
+            this.loading.set(false);
+            this.response.set(replyBuffer);
+            subscriber.next(chunk);
           }
         },
-        error: (err) => subscriber.error(err),
+        error: (err) => {
+          this.loading.set(false);
+          subscriber.error(err);
+        },
+        complete: () => {
+          const reply: Message = {
+            role: 'assistant',
+            chat_id: id,
+            content: replyBuffer,
+            id: crypto.randomUUID(),
+            sent_at: new Date().toISOString(),
+          };
+          this.selectedChatMessages.update((msgs) => [...msgs, reply]);
+
+          this.loading.set(false);
+          this.response.set(null);
+        },
       });
 
       // Cleanup when unsubscribed
-      return () => sub.unsubscribe();
+      return () => {
+        this.loading.set(false);
+        sub.unsubscribe();
+      };
     });
   }
 }

@@ -44,6 +44,8 @@ export class ChatboxComponent {
 
       if (this.prompt.value !== null) {
         this.onSubmitCallback()(this.prompt.value);
+        this.prompt.setValue('');
+        this.sendUp.set(false);
       }
     }
   }
@@ -52,6 +54,8 @@ export class ChatboxComponent {
     e.preventDefault();
     if (this.prompt.value !== null) {
       this.onSubmitCallback()(this.prompt.value);
+      this.prompt.setValue('');
+      this.sendUp.set(false);
     }
   }
 }

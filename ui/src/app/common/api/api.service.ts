@@ -71,6 +71,7 @@ export class ApiService {
 
       es.addEventListener('done', (e: MessageEvent) => {
         this.zone.run(() => {
+          subscriber.next({ event: 'done', data: null as T });
           subscriber.complete();
         });
       });

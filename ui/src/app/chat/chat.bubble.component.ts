@@ -3,16 +3,17 @@ import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'chat-bubble',
+  styleUrl: 'chat.css',
   template: `
     @if (role() === 'assistant') {
-    <div class="flex justify-start">
+    <ul class="w-full">
       <div class="max-w-full p-5 text-slate-700">
         {{ message() }}
       </div>
-    </div>
-    } @else {
+    </ul>
+    } @else if (role() === 'user') {
     <div class="flex justify-end">
-      <div class="max-w-xs rounded-lg shadow p-3 bg-indigo-600 text-white">
+      <div class="max-w-xs rounded-lg shadow p-3 chat-bubble-user">
         {{ message() }}
       </div>
     </div>
@@ -20,6 +21,6 @@ import { Component, input } from '@angular/core';
   `,
 })
 export class ChatBubbleComponent {
-  role = input<'user' | 'assistant'>();
-  message = input<string>();
+  role = input.required<'user' | 'assistant'>();
+  message = input.required<string>();
 }

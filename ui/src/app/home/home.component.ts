@@ -1,21 +1,29 @@
 import { Component, inject } from '@angular/core';
 import { ChatboxComponent } from '../common/chatbox/chatbox.component';
 import { ChatService } from '../chat/chat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'home',
   imports: [ChatboxComponent],
   templateUrl: 'home.template.html',
+  host: {
+    class: 'flex flex-col flex-1 justify-center items-center p-3',
+  },
 })
 export class HomeComponent {
+  private router = inject(Router);
   private chat = inject(ChatService);
 
   createAndNavigateToChat(prompt: string) {
-    // call chat service to create new chat, get id back
-    // navigate to /c/:chat_id
     this.chat.create({ title: 'aaa' }).subscribe({
       next: (ch) => {
-        console.log(ch);
+        this.chat.saveMessage({ chat_id: ch.id, message: prompt }).subscribe({
+          next: () => {
+            this.chat.respond(ch.id).subscribe();
+          },
+        });
+        this.router.navigate(['/c', ch.id]);
       },
     });
   }

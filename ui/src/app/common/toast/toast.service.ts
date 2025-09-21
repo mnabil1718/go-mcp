@@ -26,7 +26,7 @@ export class ToastService {
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
       duration: this.duration,
-      panelClass: 'bg-red-400 text-white',
+      panelClass: ['toast-error'],
     });
   }
 }
