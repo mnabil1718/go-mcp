@@ -93,7 +93,10 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{
-		Timeout: 60 * time.Second,
+		Transport: &http.Transport{
+			ResponseHeaderTimeout: 10 * time.Second,
+			IdleConnTimeout:       90 * time.Second,
+		},
 	}
 
 	resp, err := client.Do(req)
