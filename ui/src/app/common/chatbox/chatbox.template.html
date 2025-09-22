@@ -6,8 +6,10 @@
         #chat
         #autosize="cdkTextareaAutosize"
         cdkTextareaAutosize
+        cdkTrapFocus
         cdkAutosizeMinRows="1"
         cdkAutosizeMaxRows="7"
+        [cdkTrapFocusAutoCapture]="true"
         placeholder="Start chatting..."
         class="!mb-2"
         [formControl]="prompt"

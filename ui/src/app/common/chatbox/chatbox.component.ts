@@ -1,3 +1,4 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
 import { Component, ElementRef, inject, input, signal, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     TextFieldModule,
+    A11yModule,
   ],
 })
 export class ChatboxComponent {
