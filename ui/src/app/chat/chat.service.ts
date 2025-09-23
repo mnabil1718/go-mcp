@@ -15,7 +15,8 @@ export class ChatService {
   selectedChat = signal<Chat | null>(null);
   selectedChatMessages = signal<Message[]>([]);
   response = signal<string | null>(null);
-  loading = signal<boolean>(false);
+  thinking = signal<boolean>(false);
+  generating = signal<boolean>(false);
 
   create(body: CreateChatRequest): Observable<Chat> {
     return this.api.post<Chat>('chats', body).pipe(
@@ -57,7 +58,8 @@ export class ChatService {
   }
 
   respond(id: string): Observable<Chunk<OllamaMessage>> {
-    this.loading.set(true);
+    this.thinking.set(true);
+    this.generating.set(true);
     let replyBuffer = '';
 
     return new Observable<Chunk<OllamaMessage>>((subscriber) => {
@@ -65,13 +67,14 @@ export class ChatService {
         next: (chunk) => {
           if (chunk.event === 'message' && chunk.data) {
             replyBuffer += chunk.data.content; // append token to buffer
-            this.loading.set(false);
+            this.thinking.set(false);
             this.response.set(replyBuffer);
             subscriber.next(chunk);
           }
         },
         error: (err) => {
-          this.loading.set(false);
+          this.thinking.set(false);
+          this.generating.set(false);
           this.toast.showError(err);
           subscriber.error(err);
         },
@@ -85,14 +88,16 @@ export class ChatService {
           };
           this.selectedChatMessages.update((msgs) => [...msgs, reply]);
 
-          this.loading.set(false);
+          this.thinking.set(false);
+          this.generating.set(false);
           this.response.set(null);
         },
       });
 
       // Cleanup when unsubscribed
       return () => {
-        this.loading.set(false);
+        this.thinking.set(false);
+        this.generating.set(false);
         sub.unsubscribe();
       };
     });

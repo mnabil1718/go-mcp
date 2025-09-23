@@ -1,6 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
-import { Component, ElementRef, inject, input, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, signal, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,6 +24,7 @@ export class ChatboxComponent {
   onSubmitCallback = input.required<(prompt: string) => void>(); // return signal with callback
   prompt = new FormControl('');
   sendUp = signal<boolean>(false);
+  isGenerating = input.required<boolean>();
 
   @ViewChild('chat') chat!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;

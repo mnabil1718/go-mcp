@@ -8,7 +8,7 @@
     <chat-bubble [role]="message.role" [message]="message.content" />
     } @if (this.chat.response()) {
     <chat-bubble role="assistant" [message]="this.chat.response()!" />
-    } @if (this.chat.loading()) {
+    } @if (this.chat.thinking()) {
     <chat-loader />
     }
   </ul>
@@ -27,6 +27,6 @@
 <!-- Bottom Bar -->
 <div class="pt-6 px-4 border-t border-slate-300">
   <div class="max-w-3xl w-full mx-auto">
-    <chatbox [onSubmitCallback]="send.bind(this)" />
+    <chatbox [onSubmitCallback]="send.bind(this)" [isGenerating]="this.chat.generating()" />
   </div>
 </div>
