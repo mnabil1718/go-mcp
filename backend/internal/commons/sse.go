@@ -2,30 +2,59 @@ package commons
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
-func SSE(ctx context.Context, flusher http.Flusher, w http.ResponseWriter, queue chan []byte) {
+func HandleSseStreaming(ctx context.Context, w http.ResponseWriter, queue chan map[string]any, errChan chan error) error {
+
+	// Setup SSE headers
+	w.Header().Set("Content-Type", "text/event-stream; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-cache, no-transform")
+	w.Header().Set("Connection", "keep-alive")
+
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		return fmt.Errorf("streaming not supported")
+	}
 
 	for {
 		select {
 		case <-ctx.Done():
-			// client closed connection (browser tab closed, network down, etc)
-			return
+			// client closed connection
+			return nil
+
+		case err, ok := <-errChan:
+			if ok && err != nil {
+				// stream error back to client
+				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
+				flusher.Flush()
+				return err
+			}
 
 		case chunk, ok := <-queue:
 			if !ok {
-				// upstream closed channel, nothing more to stream
-				return
+				// llm client finish streaming
+				return nil
 			}
 
-			if _, err := w.Write(chunk); err != nil {
-				// client disconnected — stop streaming
-				return
+			if msgObj, ok := chunk["message"].(map[string]any); ok {
+				if content, ok := msgObj["content"].(string); ok {
+					// send SSE
+					b, _ := json.Marshal(map[string]any{
+						"role":    "assistant",
+						"content": content,
+					})
+					fmt.Fprintf(w, "event: message\ndata: %s\n\n", b)
+					flusher.Flush()
+				}
 			}
 
-			flusher.Flush()
-
+			if done, ok := chunk["done"].(bool); ok && done {
+				fmt.Fprintf(w, "event: done\ndata: {\"done\":true}\n\n")
+				flusher.Flush()
+			}
 		}
 	}
 }

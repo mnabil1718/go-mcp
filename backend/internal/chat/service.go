@@ -2,10 +2,10 @@ package chat
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
+	"github.com/mnabil1718/mcp-go/internal/commons"
 	"github.com/mnabil1718/mcp-go/internal/llm"
 	"github.com/mnabil1718/mcp-go/internal/message"
 )
@@ -122,52 +122,9 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 
 	}()
 
-	// Setup SSE headers
-	w.Header().Set("Content-Type", "text/event-stream; charset=utf-8")
-	w.Header().Set("Cache-Control", "no-cache, no-transform")
-	w.Header().Set("Connection", "keep-alive")
-
-	flusher, ok := w.(http.Flusher)
-	if !ok {
-		return fmt.Errorf("streaming not supported")
+	if err = commons.HandleSseStreaming(ctx, w, queue, errChan); err != nil {
+		return err
 	}
 
-	for {
-		select {
-		case <-ctx.Done():
-			// client closed connection
-			return nil
-
-		case err, ok := <-errChan:
-			if ok && err != nil {
-				// stream error back to client
-				fmt.Fprintf(w, "event: error\ndata: %q\n\n", err.Error())
-				flusher.Flush()
-				return err
-			}
-
-		case chunk, ok := <-queue:
-			if !ok {
-				// llm client finish streaming
-				return nil
-			}
-
-			if msgObj, ok := chunk["message"].(map[string]any); ok {
-				if content, ok := msgObj["content"].(string); ok {
-					// send SSE
-					b, _ := json.Marshal(map[string]any{
-						"role":    "assistant",
-						"content": content,
-					})
-					fmt.Fprintf(w, "event: message\ndata: %s\n\n", b)
-					flusher.Flush()
-				}
-			}
-
-			if done, ok := chunk["done"].(bool); ok && done {
-				fmt.Fprintf(w, "event: done\ndata: {\"done\":true}\n\n")
-				flusher.Flush()
-			}
-		}
-	}
+	return nil
 }
