@@ -2,7 +2,6 @@ package chat
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/mnabil1718/mcp-go/internal/commons"
@@ -94,7 +93,6 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 			if msgObj, ok := chunk["message"].(map[string]any); ok {
 				if content, ok := msgObj["content"].(string); ok {
 					assistantResp += content
-					fmt.Println("assitant response now: ", assistantResp)
 				}
 			}
 
