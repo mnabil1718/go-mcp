@@ -7,13 +7,13 @@ import { Component, input } from '@angular/core';
   template: `
     @if (role() === 'assistant') {
     <ul class="w-full">
-      <div class="max-w-full p-5">
+      <div class="max-w-full p-5 whitespace-pre-line">
         {{ message() }}
       </div>
     </ul>
     } @else if (role() === 'user') {
     <div class="flex justify-end">
-      <div class="max-w-xs rounded-lg p-3 chat-bubble-user">
+      <div class="max-w-xs rounded-lg p-3 chat-bubble-user whitespace-pre-line">
         {{ message() }}
       </div>
     </div>

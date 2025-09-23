@@ -78,10 +78,6 @@ export class ChatComponent {
     }
   }
 
-  private onMessagesChanged() {
-    this.scrollToBottom();
-  }
-
   scrollToBottom(): void {
     this.messageContainer.nativeElement.scroll({
       top: this.messageContainer.nativeElement.scrollHeight,

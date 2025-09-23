@@ -4,10 +4,12 @@ import { Chat, ChatWithMessages, CreateChatRequest, SaveMessageRequest } from '.
 import { ApiService } from '../common/api/api.service';
 import { Observable, tap } from 'rxjs';
 import { Chunk } from '../common/api/api.domain';
+import { ToastService } from '../common/toast/toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private api = inject(ApiService);
+  private toast = inject(ToastService);
 
   chats = signal<Chat[]>([]);
   selectedChat = signal<Chat | null>(null);
@@ -70,6 +72,7 @@ export class ChatService {
         },
         error: (err) => {
           this.loading.set(false);
+          this.toast.showError(err);
           subscriber.error(err);
         },
         complete: () => {
