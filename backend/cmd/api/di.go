@@ -5,6 +5,7 @@ import (
 	cr "github.com/mnabil1718/mcp-go/internal/chat/repository"
 	"github.com/mnabil1718/mcp-go/internal/db"
 	"github.com/mnabil1718/mcp-go/internal/healthcheck"
+	"github.com/mnabil1718/mcp-go/internal/llm"
 	mr "github.com/mnabil1718/mcp-go/internal/message/repository"
 )
 
@@ -15,8 +16,11 @@ func (a *App) WireDependencies() {
 	chatRepo := cr.NewMemoryRepository(db)
 	msgRepo := mr.NewInMemoryRepository(db)
 
+	// llm client
+	llmClient := llm.NewOllamaClient(a.Config.ChatEndpoint)
+
 	// service
-	chatService := chat.NewChatService(chatRepo, msgRepo)
+	chatService := chat.NewChatService(chatRepo, msgRepo, llmClient)
 
 	// controller
 	healthcheckController := healthcheck.NewHealthcheckController()
