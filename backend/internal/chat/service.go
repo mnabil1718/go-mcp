@@ -2,6 +2,7 @@ package chat
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/mnabil1718/mcp-go/internal/commons"
@@ -94,6 +95,11 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 				if content, ok := msgObj["content"].(string); ok {
 					assistantResp += content
 				}
+			}
+
+			// ollama can also return error chunk
+			if errMsg, ok := chunk["error"].(string); ok {
+				return errors.New(errMsg)
 			}
 
 			// non blocking
