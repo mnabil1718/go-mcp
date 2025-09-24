@@ -21,7 +21,7 @@ func NewOllamaClient(endpoint string) LLMClient {
 	}
 }
 
-func (c *OllamaClient) Stream(ctx context.Context, payload map[string]any, onChunkCallback OnChunkCallback) error {
+func (c *OllamaClient) Respond(ctx context.Context, payload map[string]any, onChunkCallback OnChunkCallback) error {
 
 	data, err := json.Marshal(payload)
 	if err != nil {

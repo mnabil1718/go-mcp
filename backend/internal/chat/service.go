@@ -88,7 +88,7 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 		defer close(errChan)
 		var assistantResp string
 
-		err := s.cl.Stream(context.Background(), payload, func(chunk llm.Chunk) error {
+		err := s.cl.Respond(context.Background(), payload, func(chunk llm.Chunk) error {
 
 			// preprocessing here
 			if msgObj, ok := chunk["message"].(map[string]any); ok {
