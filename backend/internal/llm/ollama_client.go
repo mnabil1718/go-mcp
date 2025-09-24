@@ -83,7 +83,7 @@ func (c *OllamaClient) GenerateTitle(ctx context.Context, payload map[string]any
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			ResponseHeaderTimeout: 10 * time.Second,
+			ResponseHeaderTimeout: 20 * time.Second,
 			IdleConnTimeout:       90 * time.Second,
 		},
 	}

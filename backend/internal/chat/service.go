@@ -73,23 +73,12 @@ func (s *ChatService) GenerateTitle(ctx context.Context, r ServiceGenerateTitleR
 
 	// Prepare context, first prompt
 	context := ch.Messages[0].Content
-	prompt := fmt.Sprintf(`
-							You are a title generator.
-
-							Task: Summarize the following prompt into a short title.
-
-							Rules:
-							- Use 3 to 5 words only.
-							- Do not use quotes, colons, or punctuation.
-							- Output only the title, nothing else.
-
-							Prompt:
-							%s
-							`, context)
+	prompt := fmt.Sprintf("generate 3-5 words title for this prompt. return title only and nothing else. prompt: %s", context)
 
 	payload := map[string]any{
 		"model":  r.Model,
 		"prompt": prompt,
+		"stream": false,
 	}
 
 	title, err := s.cl.GenerateTitle(ctx, payload)
