@@ -3,6 +3,8 @@ package commons
 import (
 	"errors"
 	"net/http"
+	"strings"
+	"unicode"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,4 +39,26 @@ func SuccessResponse(c *gin.Context, httpStatusCode int, msg *string, data any) 
 	}
 
 	c.JSON(httpStatusCode, res)
+}
+
+func SanitizeTitle(t string) string {
+	s := strings.TrimSpace(t)
+
+	// Replace any run of whitespace (spaces, tabs, newlines) with a single space
+	fields := strings.Fields(s)
+	s = strings.Join(fields, " ")
+
+	s = strings.Map(func(r rune) rune {
+		if unicode.IsPunct(r) {
+			return -1
+		}
+		return r
+	}, s)
+
+	// capitalize first letter
+	runes := []rune(s)
+	runes[0] = unicode.ToUpper(runes[0])
+	s = string(runes)
+
+	return s
 }

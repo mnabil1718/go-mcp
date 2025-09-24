@@ -3,6 +3,7 @@ package chat
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/mnabil1718/mcp-go/internal/commons"
@@ -24,8 +25,8 @@ func NewChatService(r Repository, mr message.Repository, cl llm.LLMClient) Servi
 	}
 }
 
-func (s *ChatService) Create(title string) (*Chat, error) {
-	ch, err := s.r.Create(title)
+func (s *ChatService) Create() (*Chat, error) {
+	ch, err := s.r.Create()
 	if err != nil {
 		return nil, err
 	}
@@ -58,6 +59,50 @@ func (s *ChatService) SaveMessage(chatID, message string, role message.Role) (*m
 	}
 
 	return msg, err
+}
+
+func (s *ChatService) GenerateTitle(ctx context.Context, r ServiceGenerateTitleRequest) (*Chat, error) {
+	ch, err := s.r.GetById(r.ChatID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ch.Messages) < 1 {
+		return nil, errors.New("chat has no messages")
+	}
+
+	// Prepare context, first prompt
+	context := ch.Messages[0].Content
+	prompt := fmt.Sprintf(`
+							You are a title generator.
+
+							Task: Summarize the following prompt into a short title.
+
+							Rules:
+							- Use 3 to 5 words only.
+							- Do not use quotes, colons, or punctuation.
+							- Output only the title, nothing else.
+
+							Prompt:
+							%s
+							`, context)
+
+	payload := map[string]any{
+		"model":  r.Model,
+		"prompt": prompt,
+	}
+
+	title, err := s.cl.GenerateTitle(ctx, payload)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedCh, err := s.r.UpdateTitle(r.ChatID, *title)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedCh, nil
 }
 
 func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r ServiceStreamRequest) error {

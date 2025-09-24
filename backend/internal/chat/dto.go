@@ -26,7 +26,8 @@ type ServiceGetByIDResponse struct {
 }
 
 type ServiceStreamRequest struct {
-	ChatID   string
-	Model    string
-	Endpoint string
+	ChatID string
+	Model  string
 }
+
+type ServiceGenerateTitleRequest = ServiceStreamRequest

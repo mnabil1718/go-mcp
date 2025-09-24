@@ -9,8 +9,8 @@ import (
 )
 
 type Config struct {
-	Port         int
-	ChatEndpoint string
+	Port           int
+	LLMApiEndpoint string
 }
 
 var (
@@ -34,7 +34,7 @@ func LoadConfig() *Config {
 	}
 
 	config.Port = viper.GetInt("PORT")
-	config.ChatEndpoint = viper.GetString("CHAT_ENDPOINT")
+	config.LLMApiEndpoint = viper.GetString("LLM_API_ENDPOINT")
 
 	return &config
 }

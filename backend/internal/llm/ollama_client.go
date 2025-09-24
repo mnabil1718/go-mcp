@@ -9,15 +9,17 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/mnabil1718/mcp-go/internal/commons"
 )
 
 type OllamaClient struct {
-	Endpoint string
+	APIEndpoint string
 }
 
-func NewOllamaClient(endpoint string) LLMClient {
+func NewOllamaClient(apiEndpoint string) LLMClient {
 	return &OllamaClient{
-		Endpoint: endpoint,
+		APIEndpoint: apiEndpoint,
 	}
 }
 
@@ -28,7 +30,7 @@ func (c *OllamaClient) Respond(ctx context.Context, payload map[string]any, onCh
 		return fmt.Errorf("failed to marshal request payload: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", c.Endpoint, bytes.NewBuffer(data))
+	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%s/%s", c.APIEndpoint, "chat"), bytes.NewBuffer(data))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
@@ -43,7 +45,7 @@ func (c *OllamaClient) Respond(ctx context.Context, payload map[string]any, onCh
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed to reach chat backend: %w", err)
+		return fmt.Errorf("failed to reach llm backend: %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -64,4 +66,39 @@ func (c *OllamaClient) Respond(ctx context.Context, payload map[string]any, onCh
 		}
 	}
 
+}
+
+func (c *OllamaClient) GenerateTitle(ctx context.Context, payload map[string]any) (*string, error) {
+
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request payload: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("%s/%s", c.APIEndpoint, "generate"), bytes.NewBuffer(data))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			ResponseHeaderTimeout: 10 * time.Second,
+			IdleConnTimeout:       90 * time.Second,
+		},
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to reach llm backend: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var res NonStreamGenerateResponse
+	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		return nil, err
+	}
+
+	t := commons.SanitizeTitle(res.Response)
+	return &t, nil
 }

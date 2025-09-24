@@ -17,7 +17,7 @@ func (a *App) WireDependencies() {
 	msgRepo := mr.NewInMemoryRepository(db)
 
 	// llm client
-	llmClient := llm.NewOllamaClient(a.Config.ChatEndpoint)
+	llmClient := llm.NewOllamaClient(a.Config.LLMApiEndpoint)
 
 	// service
 	chatService := chat.NewChatService(chatRepo, msgRepo, llmClient)

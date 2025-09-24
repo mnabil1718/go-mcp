@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mnabil1718/mcp-go/internal/commons"
 	"github.com/mnabil1718/mcp-go/internal/config"
+	"github.com/mnabil1718/mcp-go/internal/llm"
 	"github.com/mnabil1718/mcp-go/internal/message"
 )
 
@@ -19,20 +20,34 @@ func NewChatController(s Service, cfg *config.Config) Controller {
 }
 
 func (cr *ChatController) Post(c *gin.Context) {
-	var req ControllerCreateChatRequest
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	ch, err := cr.s.Create(req.Title)
+	ch, err := cr.s.Create()
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
 	}
 
 	commons.SuccessResponse(c, http.StatusCreated, nil, ch)
+}
+
+func (cr *ChatController) PostTitle(c *gin.Context) {
+	var param ControllerIdUriRequest
+	if err := c.ShouldBindUri(&param); err != nil {
+		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	r := ServiceGenerateTitleRequest{
+		ChatID: param.ID,
+		Model:  llm.Llama3,
+	}
+	ch, err := cr.s.GenerateTitle(c.Request.Context(), r)
+	if err != nil {
+		commons.TranslateDomainError(c, err)
+		return
+	}
+
+	commons.SuccessResponse(c, http.StatusOK, nil, ch)
 }
 
 func (cr *ChatController) GetAll(c *gin.Context) {
@@ -92,9 +107,8 @@ func (cr *ChatController) GetStream(c *gin.Context) {
 	}
 
 	r := ServiceStreamRequest{
-		ChatID:   req.ID,
-		Model:    "mistral:latest",
-		Endpoint: cr.cfg.ChatEndpoint,
+		ChatID: req.ID,
+		Model:  llm.Llama3,
 	}
 
 	err := cr.s.Stream(

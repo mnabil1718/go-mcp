@@ -19,6 +19,17 @@ func NewMemoryRepository(db *db.InMemoryDB) chat.Repository {
 	return &InMemoryRepository{db: db}
 }
 
+func (r *InMemoryRepository) CheckIdExists(id string) error {
+	r.db.Mu.RLock()
+	defer r.db.Mu.RUnlock()
+
+	if _, ok := r.db.Chats[id]; !ok {
+		return commons.ErrRecordNotFound
+	}
+
+	return nil
+}
+
 func (r *InMemoryRepository) GetAll() ([]*chat.Chat, error) {
 	r.db.Mu.RLock()
 	defer r.db.Mu.RUnlock()
@@ -32,7 +43,7 @@ func (r *InMemoryRepository) GetAll() ([]*chat.Chat, error) {
 	return chats, nil
 }
 
-func (r *InMemoryRepository) Create(title string) (*chat.Chat, error) {
+func (r *InMemoryRepository) Create() (*chat.Chat, error) {
 	r.db.Mu.Lock()
 	defer r.db.Mu.Unlock()
 
@@ -40,13 +51,34 @@ func (r *InMemoryRepository) Create(title string) (*chat.Chat, error) {
 
 	ch := &chat.Chat{
 		ID:        id,
-		Title:     title,
+		Title:     nil, // generated after first AI response
 		CreatedAt: time.Now(),
 	}
 
 	r.db.Chats[id] = ch
 
 	return ch, nil
+}
+
+func (r *InMemoryRepository) UpdateTitle(id, title string) (*chat.Chat, error) {
+	r.db.Mu.Lock()
+	defer r.db.Mu.Unlock()
+
+	ch, ok := r.db.Chats[id]
+	if !ok {
+		return nil, commons.ErrRecordNotFound
+	}
+
+	updated := &chat.Chat{
+		ID:        ch.ID,
+		Title:     &title,
+		CreatedAt: ch.CreatedAt,
+	}
+
+	r.db.Chats[id] = updated
+
+	return updated, nil
+
 }
 
 func (r *InMemoryRepository) GetById(id string) (*chat.ChatWithMessages, error) {
