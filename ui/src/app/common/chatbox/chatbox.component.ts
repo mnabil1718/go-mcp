@@ -45,7 +45,7 @@ export class ChatboxComponent {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
 
-      if (this.prompt.value !== null && !this.isGenerating()) {
+      if (this.prompt.value !== null && !this.isGenerating() && this.prompt.value.trim()) {
         this.onSubmitCallback()(this.prompt.value.trim());
         this.prompt.setValue('');
         this.sendUp.set(false);

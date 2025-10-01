@@ -1,13 +1,4 @@
-import {
-  afterNextRender,
-  Component,
-  effect,
-  ElementRef,
-  inject,
-  signal,
-  ViewChild,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ChatBubbleComponent } from './chat.bubble.component';
@@ -18,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ChatActions } from './store/chat.action';
 import * as ChatSelectors from './store/chat.selector';
 import { AsyncPipe } from '@angular/common';
-import { combineLatest, distinctUntilChanged, map, take } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'chat',
@@ -39,7 +30,6 @@ import { combineLatest, distinctUntilChanged, map, take } from 'rxjs';
 })
 export class ChatComponent {
   private store = inject(Store);
-  private activatedRoute = inject(ActivatedRoute);
 
   @ViewChild('messageContainer') messageContainer!: ElementRef<HTMLDivElement>;
   scrolledUp = signal<boolean>(false);
@@ -51,30 +41,15 @@ export class ChatComponent {
   selectedChatId$ = this.store.select(ChatSelectors.selectSelectedChatId);
 
   constructor() {
-    // dispatch load chat on route change
-    // // auto-scroll when messages change
-    // effect(() => {
-    //   this.messages$.subscribe((messages) => {
-    //     if (!this.scrolledUp() && messages.length > 0) {
-    //       afterNextRender(() => this.scrollToBottom());
-    //     }
-    //   });
-    // });
-    // // auto-scroll when response chunks stream in
-    // effect(() => {
-    //   this.response$.subscribe((resp) => {
-    //     if (resp && !this.scrolledUp()) {
-    //       afterNextRender(() => this.scrollToBottom());
-    //     }
-    //   });
-    // });
+    // auto-scroll effect
+    this.messages$.subscribe(() => this.autoScroll());
+    this.response$.subscribe(() => this.autoScroll());
   }
 
   ngAfterViewInit() {
     const el = this.messageContainer.nativeElement;
     el.addEventListener('scroll', () => {
-      const isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 20;
-      this.scrolledUp.set(!isAtBottom);
+      this.scrolledUp.set(!this.isUserNearBottom());
     });
   }
 
@@ -98,5 +73,18 @@ export class ChatComponent {
       left: 0,
       behavior: 'smooth',
     });
+  }
+
+  private autoScroll() {
+    // wait for Angular to render new items
+    setTimeout(() => this.scrollToBottom(), 0);
+  }
+
+  private isUserNearBottom(): boolean {
+    const el = this.messageContainer.nativeElement;
+    const threshold = 50;
+    const position = el.scrollTop + el.offsetHeight;
+    const height = el.scrollHeight;
+    return position > height - threshold;
   }
 }
