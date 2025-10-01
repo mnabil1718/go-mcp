@@ -46,7 +46,7 @@ export class ChatboxComponent {
       e.preventDefault();
 
       if (this.prompt.value !== null && !this.isGenerating()) {
-        this.onSubmitCallback()(this.prompt.value);
+        this.onSubmitCallback()(this.prompt.value.trim());
         this.prompt.setValue('');
         this.sendUp.set(false);
       }
@@ -56,7 +56,7 @@ export class ChatboxComponent {
   onSubmit(e: Event) {
     e.preventDefault();
     if (this.prompt.value !== null) {
-      this.onSubmitCallback()(this.prompt.value);
+      this.onSubmitCallback()(this.prompt.value.trim());
       this.prompt.setValue('');
       this.sendUp.set(false);
     }

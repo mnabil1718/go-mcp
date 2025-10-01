@@ -111,9 +111,9 @@ export class ChatsEffect {
     );
   });
 
-  saveMessage$ = createEffect(() => {
+  sendOptimistic$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(ChatActions.saveMessage),
+      ofType(ChatActions.sendOptimistic),
       exhaustMap((action) =>
         this.service
           .saveMessage({
@@ -121,12 +121,13 @@ export class ChatsEffect {
             message: action.message,
           })
           .pipe(
-            map((msg) =>
+            mergeMap((msg) => [
               ChatAPIActions.saveMessageSuccess({
                 temp_id: action.temp_id,
                 message: msg,
-              })
-            ),
+              }),
+              ChatActions.respond({ id: action.chat_id }),
+            ]),
             catchError((error) => of(ChatAPIActions.failure({ message: error })))
           )
       )

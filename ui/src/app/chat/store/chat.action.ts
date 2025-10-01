@@ -9,7 +9,7 @@ export const ChatActions = createActionGroup({
     getChats: emptyProps(),
     getById: props<{ id: string }>(),
     createOptimistic: props<{ temp_id: string; prompt: string }>(),
-    saveMessage: props<{ temp_id: string; chat_id: string; message: string }>(),
+    sendOptimistic: props<{ temp_id: string; chat_id: string; message: string }>(),
     saveMessageFromCreate: props<{ temp_id: string; chat_id: string; message: string }>(),
     generateTitle: props<{ id: string }>(),
     respond: props<{ id: string }>(),

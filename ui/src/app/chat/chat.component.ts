@@ -18,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ChatActions } from './store/chat.action';
 import * as ChatSelectors from './store/chat.selector';
 import { AsyncPipe } from '@angular/common';
-import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, take } from 'rxjs';
 
 @Component({
   selector: 'chat',
@@ -79,14 +79,17 @@ export class ChatComponent {
   }
 
   send(prompt: string) {
-    // this.selectedChat$
-    //   .subscribe((ch) => {
-    //     if (ch) {
-    //       this.store.dispatch(ChatActions.saveMessage({ chat_id: ch.id, message: prompt }));
-    //       this.store.dispatch(ChatActions.respond({ id: ch.id }));
-    //     }
-    //   })
-    //   .unsubscribe(); // unsubscribe because we just need the latest value once
+    this.selectedChatId$.pipe(take(1)).subscribe((id) => {
+      if (id) {
+        this.store.dispatch(
+          ChatActions.sendOptimistic({
+            temp_id: crypto.randomUUID(),
+            chat_id: id,
+            message: prompt,
+          })
+        );
+      }
+    });
   }
 
   scrollToBottom(): void {

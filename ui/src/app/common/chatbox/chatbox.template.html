@@ -22,7 +22,7 @@
           type="submit"
           class="transition-all duration-150"
           aria-label="Send message"
-          [disabled]="prompt.invalid || !prompt.value || isGenerating()"
+          [disabled]="prompt.invalid || !prompt.value || isGenerating() || !prompt.value.trim()"
         >
           <mat-icon>send</mat-icon>
         </button>

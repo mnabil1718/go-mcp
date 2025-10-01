@@ -37,6 +37,22 @@ export const chatsReducer = createReducer(
     generating: true,
   })),
 
+  on(ChatActions.sendOptimistic, (state, { temp_id, chat_id, message }) => ({
+    ...state,
+    messages: [
+      ...state.messages,
+      {
+        id: temp_id,
+        chat_id,
+        role: 'user',
+        content: message,
+        sent_at: new Date().toISOString(),
+      },
+    ],
+    thinking: true,
+    generating: true,
+  })),
+
   on(ChatActions.respond, (state, _) => ({
     ...state,
     generating: true,
