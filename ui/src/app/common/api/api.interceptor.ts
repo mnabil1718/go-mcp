@@ -36,8 +36,6 @@ export function errorResponseInterceptor(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> {
-  const toast = inject(ToastService);
-
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
       let error: Error;
@@ -53,7 +51,6 @@ export function errorResponseInterceptor(
         error = new Error(`Error status ${err.status}`);
       }
 
-      toast.showError(error.message);
       return throwError(() => error);
     })
   );

@@ -1,105 +1,58 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Message, OllamaMessage } from '../message/message.domain';
-import { Chat, ChatWithMessages, CreateChatRequest, SaveMessageRequest } from './chat.domain';
+import { Chat, ChatWithMessages, SaveMessageRequest } from './chat.domain';
 import { ApiService } from '../common/api/api.service';
-import { Observable, tap } from 'rxjs';
-import { Chunk } from '../common/api/api.domain';
-import { ToastService } from '../common/toast/toast.service';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private api = inject(ApiService);
-  private toast = inject(ToastService);
 
-  chats = signal<Chat[]>([]);
-  selectedChat = signal<Chat | null>(null);
-  selectedChatMessages = signal<Message[]>([]);
-  response = signal<string | null>(null);
-  thinking = signal<boolean>(false);
-  generating = signal<boolean>(false);
+  create(): Observable<Chat> {
+    return this.api.post<Chat>('chats', null);
+  }
 
-  create(body: CreateChatRequest): Observable<Chat> {
-    return this.api.post<Chat>('chats', body).pipe(
-      tap({
-        next: (chat) => {
-          this.chats.update((chats) => [...chats, chat]);
-        },
-      })
-    );
+  getChats(): Observable<Chat[]> {
+    return this.api.get<Chat[]>('chats');
   }
 
   getById(id: string): Observable<ChatWithMessages> {
-    return this.api.get<ChatWithMessages>(`chats/${id}`).pipe(
-      tap({
-        next: (chat) => {
-          this.selectedChat.set({
-            id: chat.id,
-            title: chat.title,
-            created_at: chat.created_at,
-          });
-          this.selectedChatMessages.set(chat.messages);
-        },
-      })
-    );
+    return this.api.get<ChatWithMessages>(`chats/${id}`);
+  }
+
+  generateTitle(id: string): Observable<Chat> {
+    return this.api.post<Chat>(`chats/${id}/generate-title`, null);
   }
 
   saveMessage(r: SaveMessageRequest): Observable<Message> {
-    const msg: Message = {
-      id: crypto.randomUUID(),
-      chat_id: r.chat_id,
-      content: r.message,
-      role: 'user',
-      sent_at: new Date().toISOString(),
-    };
-
-    this.selectedChatMessages.update((oldMsg) => [...oldMsg, msg]);
-
     return this.api.post<Message>(`chats/${r.chat_id}/messages`, { message: r.message });
   }
 
-  respond(id: string): Observable<Chunk<OllamaMessage>> {
-    this.thinking.set(true);
-    this.generating.set(true);
+  respond(id: string): Observable<OllamaMessage | Message> {
     let replyBuffer = '';
 
-    return new Observable<Chunk<OllamaMessage>>((subscriber) => {
+    return new Observable<OllamaMessage | Message>((subscriber) => {
       const sub = this.api.stream<OllamaMessage>(`chats/${id}/generate`).subscribe({
         next: (chunk) => {
           if (chunk.event === 'message' && chunk.data) {
-            replyBuffer += chunk.data.content; // append token to buffer
-            this.thinking.set(false);
-            this.response.set(replyBuffer);
-            subscriber.next(chunk);
+            replyBuffer += chunk.data.content;
+            subscriber.next(chunk.data);
+          } else if (chunk.event === 'done') {
+            const reply: Message = {
+              role: 'assistant',
+              chat_id: id,
+              content: replyBuffer,
+              id: crypto.randomUUID(),
+              sent_at: new Date().toISOString(),
+            };
+            subscriber.next(reply);
+            subscriber.complete();
           }
         },
-        error: (err) => {
-          this.thinking.set(false);
-          this.generating.set(false);
-          this.toast.showError(err);
-          subscriber.error(err);
-        },
-        complete: () => {
-          const reply: Message = {
-            role: 'assistant',
-            chat_id: id,
-            content: replyBuffer,
-            id: crypto.randomUUID(),
-            sent_at: new Date().toISOString(),
-          };
-          this.selectedChatMessages.update((msgs) => [...msgs, reply]);
-
-          this.thinking.set(false);
-          this.generating.set(false);
-          this.response.set(null);
-        },
+        error: (err) => subscriber.error(err),
       });
 
-      // Cleanup when unsubscribed
-      return () => {
-        this.thinking.set(false);
-        this.generating.set(false);
-        sub.unsubscribe();
-      };
+      return () => sub.unsubscribe(); // cleanup
     });
   }
 }

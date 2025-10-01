@@ -4,16 +4,16 @@
   class="message-container relative flex flex-col flex-[1_1_0] overflow-y-auto max-h-full p-3 pb-12"
 >
   <ul class="w-full max-w-3xl mx-auto flex flex-col space-y-5">
-    @for (message of this.chat.selectedChatMessages(); track message.id) {
+    @for (message of messages$ | async; track message.id) {
     <chat-bubble [role]="message.role" [message]="message.content" />
-    } @if (this.chat.response()) {
-    <chat-bubble role="assistant" [message]="this.chat.response()!" />
-    } @if (this.chat.thinking()) {
+    } @if (response$ | async) {
+    <chat-bubble role="assistant" [message]="(response$ | async)!" />
+    } @if (thinking$ | async) {
     <chat-loader />
     }
   </ul>
 
-  @if (this.scrolledUp()) {
+  @if (scrolledUp()) {
   <button
     matMiniFab
     (click)="scrollToBottom()"
@@ -27,6 +27,6 @@
 <!-- Bottom Bar -->
 <div class="pt-6 px-4 border-t border-slate-300">
   <div class="max-w-3xl w-full mx-auto">
-    <chatbox [onSubmitCallback]="send.bind(this)" [isGenerating]="this.chat.generating()" />
+    <chatbox [onSubmitCallback]="send.bind(this)" [isGenerating]="(generating$ | async) ?? false" />
   </div>
 </div>
