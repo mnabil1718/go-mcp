@@ -4,11 +4,9 @@ import { Component } from '@angular/core';
   selector: 'chat-loader',
   styleUrl: 'chat.css',
   template: `
-    <li class="chat-loader flex items-center space-x-1.5">
-      <span class="w-2 h-2 rounded-full animate-bounce [animation-delay:0ms]"></span>
-      <span class="w-2 h-2 rounded-full animate-bounce [animation-delay:200ms]"></span>
-      <span class="w-2 h-2 rounded-full animate-bounce [animation-delay:400ms]"></span>
-    </li>
+    <div class="p-3">
+      <div class="chat-loader w-3 h-3 rounded-full animate-ping"></div>
+    </div>
   `,
 })
 export class ChatLoaderComponent {}

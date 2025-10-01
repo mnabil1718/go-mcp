@@ -8,7 +8,7 @@
   box-shadow: var(--mat-sys-level1);
 }
 
-.chat-loader span {
+.chat-loader {
   background-color: var(--mat-sys-primary);
 }
 
