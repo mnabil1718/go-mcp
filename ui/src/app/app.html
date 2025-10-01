@@ -9,7 +9,7 @@
     <!-- If not using content wrapper, material sidenav acting up -->
     <div class="p-3">
       @if (isMobile()) {
-      <div class="text-right">
+      <div class="sticky top-0 flex justify-end">
         <button mat-icon-button (click)="sidenav.toggle()">
           <mat-icon>close</mat-icon>
         </button>

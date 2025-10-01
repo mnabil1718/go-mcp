@@ -20,6 +20,7 @@ export const chatsReducer = createReducer(
       ...state.chats,
       {
         id: temp_id,
+        title: 'New Chat',
         created_at: new Date().toISOString(),
       },
     ],

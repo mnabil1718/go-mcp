@@ -1,1 +1,19 @@
-<div>aaaaa</div>
+<div>
+  <mat-nav-list>
+    <h3 matSubheader>Navigations</h3>
+
+    <mat-list-item [activated]="false">
+      <a routerLink="/" class="md-typescale-body-medium">New Chat</a>
+      <mat-icon matListItemIcon fontSet="material-symbols-outlined">edit</mat-icon>
+    </mat-list-item>
+
+    @if ((chats$ | async)!.length > 0) {
+    <div class="mb-7"></div>
+    <h3 matSubheader>Chats</h3>
+    @for (chat of chats$ | async; track chat.id) {
+    <mat-list-item [activated]="false">
+      <a matListItemTitle href="..." class="display-large">{{ chat.title }}</a>
+    </mat-list-item>
+    } }
+  </mat-nav-list>
+</div>
