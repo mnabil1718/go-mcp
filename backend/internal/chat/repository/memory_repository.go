@@ -40,6 +40,10 @@ func (r *InMemoryRepository) GetAll() ([]*chat.Chat, error) {
 		chats = append(chats, chat)
 	}
 
+	sort.Slice(chats, func(i, j int) bool {
+		return chats[i].CreatedAt.After(chats[j].CreatedAt)
+	})
+
 	return chats, nil
 }
 
