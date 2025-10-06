@@ -7,7 +7,7 @@ import { ChatActions } from './store/chat.action';
 
 export const ChatResolver: ResolveFn<boolean> = async (
   route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
+  _: RouterStateSnapshot
 ) => {
   const store = inject(Store);
   const id = route.paramMap.get('id');

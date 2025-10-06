@@ -17,12 +17,12 @@ export const chatsReducer = createReducer(
   on(ChatActions.createOptimistic, (state, { temp_id, prompt }) => ({
     ...state,
     chats: [
-      ...state.chats,
       {
         id: temp_id,
         title: 'New Chat',
         created_at: new Date().toISOString(),
       },
+      ...state.chats,
     ],
     selectedChatId: temp_id,
     messages: [
@@ -96,6 +96,7 @@ export const chatsReducer = createReducer(
     ...state,
     thinking: false,
     response: (state.response ?? '') + chunk.content,
+    // response: chunk.content,
   })),
 
   on(ChatAPIActions.respondSuccess, (state, message) => ({

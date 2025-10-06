@@ -77,7 +77,7 @@ export class ChatComponent {
 
   private autoScroll() {
     // wait for Angular to render new items
-    setTimeout(() => this.scrollToBottom(), 0);
+    setTimeout(() => this.scrollToBottom());
   }
 
   private isUserNearBottom(): boolean {
