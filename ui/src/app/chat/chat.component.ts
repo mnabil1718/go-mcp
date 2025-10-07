@@ -1,7 +1,6 @@
 import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { ChatBubbleComponent } from './chat.bubble.component';
 import { ChatboxComponent } from '../common/chatbox/chatbox.component';
 import { ChatLoaderComponent } from './chat-loader.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,17 +9,20 @@ import { ChatActions } from './store/chat.action';
 import * as ChatSelectors from './store/chat.selector';
 import { AsyncPipe } from '@angular/common';
 import { take } from 'rxjs';
+import { MessageComponent } from '../message/message.component';
+import { MarkdownComponent } from '../common/md/markdown.component';
 
 @Component({
   selector: 'chat',
   imports: [
     FormsModule,
     ChatboxComponent,
-    ChatBubbleComponent,
     ChatLoaderComponent,
     MatIconModule,
     MatButtonModule,
     AsyncPipe,
+    MessageComponent,
+    MarkdownComponent,
   ],
   templateUrl: 'chat.template.html',
   styleUrl: './chat.css',
@@ -77,7 +79,7 @@ export class ChatComponent {
 
   private autoScroll() {
     // wait for Angular to render new items
-    setTimeout(() => this.scrollToBottom());
+    setTimeout(() => this.scrollToBottom(), 50);
   }
 
   private isUserNearBottom(): boolean {
