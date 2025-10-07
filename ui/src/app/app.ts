@@ -26,4 +26,5 @@ export class App {
 
   private media = inject(MediaService);
   isMobile = this.media.match('(max-width: 600px)');
+  isOpened = signal<boolean>(this.isMobile() ? false : true);
 }
