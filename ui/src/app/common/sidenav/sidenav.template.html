@@ -2,8 +2,8 @@
   <mat-nav-list>
     <h3 matSubheader>Navigations</h3>
 
-    <mat-list-item [activated]="false">
-      <a routerLink="/" matListItemTitle>New Chat</a>
+    <mat-list-item [activated]="false" routerLink="/">
+      <span class="mat-label-large">New Chat</span>
       <mat-icon matListItemIcon fontSet="material-symbols-outlined">edit</mat-icon>
     </mat-list-item>
 
@@ -11,8 +11,10 @@
     <div class="mb-7"></div>
     <h3 matSubheader>Chats</h3>
     @for (chat of chats$ | async; track chat.id) {
-    <mat-list-item [activated]="false" matListItemTitle [routerLink]="['c', chat.id]" class="">
-      {{ chat.title ?? 'New Chat' }}
+    <mat-list-item [activated]="false" matListItemTitle [routerLink]="['c', chat.id]">
+      <span class="mat-label-large">
+        {{ chat.title ?? 'New Chat' }}
+      </span>
     </mat-list-item>
     } }
   </mat-nav-list>
