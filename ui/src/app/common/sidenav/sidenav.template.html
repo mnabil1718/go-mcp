@@ -2,24 +2,30 @@
   <mat-nav-list>
     <h3 matSubheader>Navigations</h3>
 
-    <mat-list-item [activated]="false" routerLink="/">
+    <!-- Changing element [active] to `true` if routerLinkActive matches -->
+    <a mat-list-item routerLink="/">
       <span class="mat-label-large">New Chat</span>
       <mat-icon matListItemIcon fontSet="material-symbols-outlined">edit</mat-icon>
-    </mat-list-item>
+    </a>
 
     @if ((chats$ | async)!.length > 0) {
     <div class="mb-7"></div>
     <h3 matSubheader>Chats</h3>
     @for (chat of chats$ | async; track chat.id) {
-    <mat-list-item
-      [activated]="activeChatId === chat.id"
+    <!-- Changing element [active] to `true` if routerLinkActive matches -->
+    <a
+      mat-list-item
+      #rla="routerLinkActive"
+      [activated]="rla.isActive"
       matListItemTitle
       [routerLink]="['c', chat.id]"
+      routerLinkActive
+      [routerLinkActiveOptions]="{ exact: true }"
     >
       <span class="mat-label-large">
         {{ chat.title ?? 'New Chat' }}
       </span>
-    </mat-list-item>
+    </a>
     } }
   </mat-nav-list>
 </div>
