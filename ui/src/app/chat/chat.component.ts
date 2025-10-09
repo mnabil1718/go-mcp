@@ -35,6 +35,7 @@ export class ChatComponent {
 
   @ViewChild('messageContainer') messageContainer!: ElementRef<HTMLDivElement>;
   scrolledUp = signal<boolean>(false);
+  showFab = signal<boolean>(false);
 
   messages$ = this.store.select(ChatSelectors.selectMessages);
   response$ = this.store.select(ChatSelectors.selectResponse);
@@ -43,15 +44,18 @@ export class ChatComponent {
   selectedChatId$ = this.store.select(ChatSelectors.selectSelectedChatId);
 
   constructor() {
-    // auto-scroll effect
-    this.messages$.subscribe(() => this.autoScroll());
-    this.response$.subscribe(() => this.autoScroll());
+    this.response$.subscribe(() => {
+      if (!this.scrolledUp()) {
+        this.autoScroll();
+      }
+    });
   }
 
   ngAfterViewInit() {
     const el = this.messageContainer.nativeElement;
     el.addEventListener('scroll', () => {
-      this.scrolledUp.set(!this.isUserNearBottom());
+      this.scrolledUp.set(!this.isNearBottom(0));
+      this.showFab.set(!this.isNearBottom(200));
     });
   }
 
@@ -70,23 +74,21 @@ export class ChatComponent {
   }
 
   scrollToBottom(): void {
-    this.messageContainer.nativeElement.scroll({
-      top: this.messageContainer.nativeElement.scrollHeight,
-      left: 0,
+    const el = this.messageContainer.nativeElement;
+    console.log('scroll to bottom');
+    el.scroll({
+      top: el.scrollHeight,
       behavior: 'smooth',
     });
   }
 
   private autoScroll() {
-    // wait for Angular to render new items
-    setTimeout(() => this.scrollToBottom(), 50);
+    setTimeout(() => this.scrollToBottom(), 0);
   }
 
-  private isUserNearBottom(): boolean {
+  private isNearBottom(threshold: number = 50): boolean {
     const el = this.messageContainer.nativeElement;
-    const threshold = 150;
-    const position = el.scrollTop + el.offsetHeight;
-    const height = el.scrollHeight;
-    return position > height - threshold;
+    const position = el.scrollTop + el.clientHeight;
+    return position >= el.scrollHeight - threshold;
   }
 }

@@ -6,6 +6,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MediaService } from './common/media/media.service';
 import { SidenavComponent } from './common/sidenav/sidenav.component';
+import { NavigationLoadingComponent } from './common/load/load.component';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { SidenavComponent } from './common/sidenav/sidenav.component';
     MatButtonModule,
     RouterLink,
     SidenavComponent,
+    NavigationLoadingComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

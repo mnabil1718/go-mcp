@@ -9,10 +9,16 @@ export const initState: ChatState = {
   thinking: false,
   response: null,
   generating: false,
+  loading: false,
 };
 
 export const chatsReducer = createReducer(
   initState,
+
+  on(ChatActions.getChats, (state) => ({
+    ...state,
+    loading: true,
+  })),
 
   on(ChatActions.createOptimistic, (state, { temp_id, prompt }) => ({
     ...state,
@@ -36,6 +42,11 @@ export const chatsReducer = createReducer(
     ],
     thinking: true,
     generating: true,
+  })),
+
+  on(ChatActions.getById, (state) => ({
+    ...state,
+    loading: true,
   })),
 
   on(ChatActions.sendOptimistic, (state, { temp_id, chat_id, message }) => ({
@@ -65,6 +76,7 @@ export const chatsReducer = createReducer(
   on(ChatAPIActions.getChatsSuccess, (state, { chats }) => ({
     ...state,
     chats,
+    loading: false,
   })),
 
   on(ChatAPIActions.createOptimisticSuccess, (state, { temp_id, chat }) => ({
@@ -85,6 +97,7 @@ export const chatsReducer = createReducer(
     ...state,
     selectedChatId: chatWithMessages.id,
     messages: chatWithMessages.messages,
+    loading: false,
   })),
 
   on(ChatAPIActions.saveMessageSuccess, (state, { temp_id, message }) => ({

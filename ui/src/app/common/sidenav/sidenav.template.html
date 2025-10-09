@@ -11,7 +11,11 @@
     <div class="mb-7"></div>
     <h3 matSubheader>Chats</h3>
     @for (chat of chats$ | async; track chat.id) {
-    <mat-list-item [activated]="false" matListItemTitle [routerLink]="['c', chat.id]">
+    <mat-list-item
+      [activated]="activeChatId === chat.id"
+      matListItemTitle
+      [routerLink]="['c', chat.id]"
+    >
       <span class="mat-label-large">
         {{ chat.title ?? 'New Chat' }}
       </span>

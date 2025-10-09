@@ -25,4 +25,5 @@ export interface ChatState {
   response: Readonly<string | null>;
   thinking: Readonly<boolean>; // from first request sent to first token returned
   generating: Readonly<boolean>; // from first request sent to last token returned
+  loading: Readonly<boolean>; // loading state async API hit
 }

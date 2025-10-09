@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 
 import * as ChatSelectors from '../../chat/store/chat.selector';
 import { AsyncPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, UrlSegment } from '@angular/router';
 
 @Component({
   selector: 'sidenav-component',
@@ -15,6 +15,12 @@ import { RouterLink } from '@angular/router';
 })
 export class SidenavComponent {
   private store = inject(Store);
-
+  private route = inject(ActivatedRoute);
   chats$ = this.store.select(ChatSelectors.selectChats);
+
+  readonly activeChatId: string | null;
+
+  constructor() {
+    this.activeChatId = this.route.snapshot.paramMap.get('id');
+  }
 }
