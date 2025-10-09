@@ -6,3 +6,17 @@ body {
   font-family: Manrope, sans-serif;
   }
 
+.code-block {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1.5rem;
+  padding-top: 2rem;
+  border-radius: 8px;
+}
+
+
+

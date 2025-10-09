@@ -12,11 +12,11 @@ export class MarkdownComponent {
 
   container = viewChild.required<ElementRef<HTMLDivElement>>('md');
 
-  private onContentChanged = effect(() => {
+  private onContentChanged = effect(async () => {
     const el = this.container();
     const content = this.content();
     if (!el || !content) return;
 
-    el.nativeElement.innerHTML = this.md.parse(content);
+    el.nativeElement.innerHTML = await this.md.parse(content);
   });
 }

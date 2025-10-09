@@ -84,7 +84,7 @@ export class ChatComponent {
 
   private isUserNearBottom(): boolean {
     const el = this.messageContainer.nativeElement;
-    const threshold = 50;
+    const threshold = 150;
     const position = el.scrollTop + el.offsetHeight;
     const height = el.scrollHeight;
     return position > height - threshold;
