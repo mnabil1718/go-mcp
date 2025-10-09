@@ -102,6 +102,7 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 
 	// Prepare chat history context
 	messages := make([]map[string]any, 0, len(ch.Messages))
+
 	for _, m := range ch.Messages {
 		messages = append(messages, map[string]any{
 			"role":    m.Role,
