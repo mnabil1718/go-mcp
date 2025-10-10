@@ -18,5 +18,12 @@ pre {
   border-radius: 8px;
 }
 
+:not(pre) > code {
+  background-color: var(--mat-sys-surface-dim);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.90em;
+}
+
 
 
