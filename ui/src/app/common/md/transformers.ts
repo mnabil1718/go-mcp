@@ -15,8 +15,8 @@ export const codeBlockTransformer = (options: Options = {}): ShikiTransformer =>
         'button',
         {
           type: 'button',
-          class: `absolute top-1.5 end-1.5 py-1 px-2 rounded-sm text-[11px] text-white/70
-                  hover:text-white/90 cursor-pointer transition flex items-center gap-1`,
+          class: `rounded-sm hover:text-white/90 cursor-pointer
+                  transition flex items-center gap-1`,
           onclick: `
             const btn = this;
             const code = btn.nextElementSibling;
@@ -84,7 +84,16 @@ export const codeBlockTransformer = (options: Options = {}): ShikiTransformer =>
         ]
       );
 
-      return h('div', { class: 'relative code-block' }, [copyButton, hast]);
+      const metaBar = h(
+        'div',
+        {
+          class: `absolute top-0 w-full py-1 px-2 text-[11px]
+            text-white/70 flex items-center justify-between`,
+        },
+        [h('div', [this.options.lang]), copyButton]
+      );
+
+      return h('div', { class: 'relative code-block' }, [metaBar, hast]);
     },
   };
 };
