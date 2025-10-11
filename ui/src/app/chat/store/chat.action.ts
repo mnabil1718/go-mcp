@@ -12,7 +12,7 @@ export const ChatActions = createActionGroup({
     sendOptimistic: props<{ temp_id: string; chat_id: string; message: string }>(),
     saveMessageFromCreate: props<{ temp_id: string; chat_id: string; message: string }>(),
     generateTitle: props<{ id: string }>(),
-    respond: props<{ id: string }>(),
+    respond: props<{ id: string; temp_id: string }>(),
   },
 });
 
@@ -25,8 +25,8 @@ export const ChatAPIActions = createActionGroup({
     getChatsSuccess: props<{ chats: Chat[] }>(),
     getByIdSuccess: props<ChatWithMessages>(),
     saveMessageSuccess: props<{ temp_id: string; message: Message }>(),
-    respondStream: props<OllamaMessage>(),
-    respondSuccess: props<Message>(),
+    respondStream: props<{ chunk: OllamaMessage; temp_id: string }>(),
+    respondSuccess: props<{ message: Message; temp_id: string }>(),
 
     failure: props<{ message: string }>(),
   },

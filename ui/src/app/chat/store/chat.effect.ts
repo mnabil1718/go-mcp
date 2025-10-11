@@ -80,7 +80,7 @@ export class ChatsEffect {
         this.service.generateTitle(action.id).pipe(
           mergeMap((chat) => [
             ChatAPIActions.generateTitleSuccess(chat),
-            ChatActions.respond({ id: action.id }),
+            ChatActions.respond({ id: action.id, temp_id: crypto.randomUUID() }),
           ]),
           catchError((error) => of(ChatAPIActions.failure({ message: error })))
         )
@@ -126,7 +126,7 @@ export class ChatsEffect {
                 temp_id: action.temp_id,
                 message: msg,
               }),
-              ChatActions.respond({ id: action.chat_id }),
+              ChatActions.respond({ id: action.chat_id, temp_id: crypto.randomUUID() }),
             ]),
             catchError((error) => of(ChatAPIActions.failure({ message: error })))
           )
@@ -142,9 +142,15 @@ export class ChatsEffect {
           map((data) => {
             {
               if (isOllamaMessage(data)) {
-                return ChatAPIActions.respondStream(data as OllamaMessage);
+                return ChatAPIActions.respondStream({
+                  chunk: data as OllamaMessage,
+                  temp_id: action.temp_id,
+                });
               }
-              return ChatAPIActions.respondSuccess(data as Message);
+              return ChatAPIActions.respondSuccess({
+                message: data as Message,
+                temp_id: action.temp_id,
+              });
             }
           }),
           catchError((err) => of(ChatAPIActions.failure({ message: err })))

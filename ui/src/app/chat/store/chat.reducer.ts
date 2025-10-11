@@ -7,7 +7,6 @@ export const initState: ChatState = {
   messages: [],
   selectedChatId: null,
   thinking: false,
-  response: null,
   generating: false,
   loading: false,
 };
@@ -65,10 +64,20 @@ export const chatsReducer = createReducer(
     generating: true,
   })),
 
-  on(ChatActions.respond, (state, _) => ({
+  on(ChatActions.respond, (state, { id, temp_id }) => ({
     ...state,
     generating: true,
     thinking: true,
+    messages: [
+      ...state.messages,
+      {
+        id: temp_id,
+        chat_id: id,
+        role: 'assistant',
+        sent_at: new Date().toISOString(),
+        content: '',
+      },
+    ],
   })),
 
   // API
@@ -105,17 +114,39 @@ export const chatsReducer = createReducer(
     messages: state.messages.map((msg) => (msg.id === temp_id ? message : msg)),
   })),
 
-  on(ChatAPIActions.respondStream, (state, chunk) => ({
+  on(ChatAPIActions.respondStream, (state, props) => ({
     ...state,
     thinking: false,
-    response: (state.response ?? '') + chunk.content,
-    // response: chunk.content,
+    messages: state.messages.map((m) => {
+      if (m.id === props.temp_id) {
+        // update content
+        return { ...m, content: m.content + props.chunk.content };
+      }
+
+      return m;
+    }),
   })),
 
-  on(ChatAPIActions.respondSuccess, (state, message) => ({
+  on(ChatAPIActions.respondSuccess, (state, props) => ({
     ...state,
     response: null,
-    messages: [...state.messages, message],
+    messages: state.messages.map((m) => {
+      // prevent UI from re-render scroll position
+      if (m.id === props.temp_id) {
+        return {
+          ...m,
+          sent_at: props.message.sent_at,
+          content: props.message.content,
+        };
+      }
+
+      return m;
+    }),
     generating: false,
+  })),
+
+  on(ChatAPIActions.failure, (state) => ({
+    ...state,
+    loading: false,
   }))
 );

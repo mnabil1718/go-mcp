@@ -1,13 +1,12 @@
 <!-- Messages -->
 <div
   #messageContainer
+  (scroll)="onScroll()"
   class="message-container relative flex flex-col flex-[1_1_0] overflow-y-auto max-h-full p-3 pb-32"
 >
   <ul class="w-full max-w-3xl mx-auto flex flex-col space-y-5">
     @for (message of messages$ | async; track message.id) {
     <message [role]="message.role" [message]="message.content" />
-    } @if (response$ | async) {
-    <markdown [content]="(response$ | async)!" />
     } @if (thinking$ | async) {
     <chat-loader />
     }

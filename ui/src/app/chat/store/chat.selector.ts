@@ -8,7 +8,6 @@ export const selectSelectedChatId = createSelector(
   (state) => state.selectedChatId
 );
 export const selectMessages = createSelector(selectChatState, (state) => state.messages);
-export const selectResponse = createSelector(selectChatState, (state) => state.response);
 export const selectThinking = createSelector(selectChatState, (state) => state.thinking);
 export const selectGenerating = createSelector(selectChatState, (state) => state.generating);
 export const selectLoading = createSelector(selectChatState, (state) => state.loading);

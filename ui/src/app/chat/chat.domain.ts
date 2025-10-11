@@ -22,7 +22,6 @@ export interface ChatState {
   chats: ReadonlyArray<Chat>;
   selectedChatId: Readonly<string | null>; // selected chat id, points to a specific chat in chats
   messages: ReadonlyArray<Message>; // selected chat messages only: each have chat_id
-  response: Readonly<string | null>;
   thinking: Readonly<boolean>; // from first request sent to first token returned
   generating: Readonly<boolean>; // from first request sent to last token returned
   loading: Readonly<boolean>; // loading state async API hit

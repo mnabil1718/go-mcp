@@ -87,13 +87,19 @@ export const codeBlockTransformer = (options: Options = {}): ShikiTransformer =>
       const metaBar = h(
         'div',
         {
-          class: `absolute top-0 w-full py-1 px-2 text-[11px]
+          class: `absolute top-0 w-full py-1 px-3 text-[11px]
             text-white/70 flex items-center justify-between`,
         },
         [h('div', [this.options.lang]), copyButton]
       );
 
-      return h('div', { class: 'relative code-block' }, [metaBar, hast]);
+      return h(
+        'div',
+        {
+          class: 'relative code-block',
+        },
+        [metaBar, hast]
+      );
     },
   };
 };

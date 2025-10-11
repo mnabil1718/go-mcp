@@ -7,9 +7,7 @@ import { MarkdownService } from './markdown.service';
 })
 export class MarkdownComponent {
   content = input.required<string>();
-
   private md = inject(MarkdownService);
-
   container = viewChild.required<ElementRef<HTMLDivElement>>('md');
 
   private onContentChanged = effect(async () => {

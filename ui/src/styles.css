@@ -13,8 +13,8 @@ body {
 
 pre {
   overflow-x: auto;
-  padding: 1.5rem;
-  padding-top: 2rem;
+  padding: 24px;
+  padding-top: 30px;
   border-radius: 8px;
 }
 

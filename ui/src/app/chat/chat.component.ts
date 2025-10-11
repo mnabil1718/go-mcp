@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ChatboxComponent } from '../common/chatbox/chatbox.component';
@@ -11,6 +11,7 @@ import { AsyncPipe } from '@angular/common';
 import { take } from 'rxjs';
 import { MessageComponent } from '../message/message.component';
 import { MarkdownComponent } from '../common/md/markdown.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'chat',
@@ -22,7 +23,6 @@ import { MarkdownComponent } from '../common/md/markdown.component';
     MatButtonModule,
     AsyncPipe,
     MessageComponent,
-    MarkdownComponent,
   ],
   templateUrl: 'chat.template.html',
   styleUrl: './chat.css',
@@ -35,29 +35,51 @@ export class ChatComponent {
 
   @ViewChild('messageContainer') messageContainer!: ElementRef<HTMLDivElement>;
   scrolledUp = signal<boolean>(false);
+  followAutoScroll = signal<boolean>(false);
   showFab = signal<boolean>(false);
 
   messages$ = this.store.select(ChatSelectors.selectMessages);
-  response$ = this.store.select(ChatSelectors.selectResponse);
   thinking$ = this.store.select(ChatSelectors.selectThinking);
   generating$ = this.store.select(ChatSelectors.selectGenerating);
   selectedChatId$ = this.store.select(ChatSelectors.selectSelectedChatId);
 
-  constructor() {
-    this.response$.subscribe(() => {
-      if (!this.scrolledUp()) {
-        this.autoScroll();
-      }
-    });
-  }
+  private lastScrollTop = 0;
+  messagesSignal = toSignal(this.messages$);
 
   ngAfterViewInit() {
-    const el = this.messageContainer.nativeElement;
-    el.addEventListener('scroll', () => {
-      this.scrolledUp.set(!this.isNearBottom(0));
-      this.showFab.set(!this.isNearBottom(200));
-    });
+    this.setSignals();
   }
+
+  onMessagesChange = effect(() => {
+    if (this.messagesSignal() && this.followAutoScroll()) {
+      this.autoScroll();
+    }
+  });
+
+  onScroll() {
+    this.setSignals();
+  }
+
+  private setSignals() {
+    if (!this.messageContainer) return;
+
+    const el = this.messageContainer.nativeElement;
+    const current = el.scrollTop;
+
+    this.scrolledUp.set(current < this.lastScrollTop);
+    this.followAutoScroll.set(this.isNearBottom(50) && !this.scrolledUp());
+    this.showFab.set(!this.isNearBottom(200));
+
+    // remember position for next scroll event
+    this.lastScrollTop = current;
+  }
+
+  onShowFab = effect(() => {
+    console.log('states', {
+      scrolledUp: this.scrolledUp(),
+      followScroll: this.followAutoScroll(),
+    });
+  });
 
   send(prompt: string) {
     this.selectedChatId$.pipe(take(1)).subscribe((id) => {
@@ -75,7 +97,6 @@ export class ChatComponent {
 
   scrollToBottom(): void {
     const el = this.messageContainer.nativeElement;
-    console.log('scroll to bottom');
     el.scroll({
       top: el.scrollHeight,
       behavior: 'smooth',
@@ -83,7 +104,7 @@ export class ChatComponent {
   }
 
   private autoScroll() {
-    setTimeout(() => this.scrollToBottom(), 0);
+    setTimeout(() => this.scrollToBottom(), 1);
   }
 
   private isNearBottom(threshold: number = 50): boolean {
