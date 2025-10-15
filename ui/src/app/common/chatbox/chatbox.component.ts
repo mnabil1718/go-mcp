@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { ChatboxService } from './chatbox.service';
 
 @Component({
   selector: 'chatbox',
@@ -21,9 +22,8 @@ import { MatInputModule } from '@angular/material/input';
   ],
 })
 export class ChatboxComponent {
+  service = inject(ChatboxService);
   onSubmitCallback = input.required<(prompt: string) => void>(); // return signal with callback
-  prompt = new FormControl('');
-  sendUp = signal<boolean>(false);
   isGenerating = input.required<boolean>();
 
   @ViewChild('chat') chat!: ElementRef<HTMLTextAreaElement>;
@@ -34,10 +34,10 @@ export class ChatboxComponent {
   }
 
   onInput() {
-    if (this.prompt.value !== null) {
-      const isTooLong = this.prompt.value.length > 56;
-      const hasNewLine = this.prompt.value.includes('\n');
-      this.sendUp.set(isTooLong || hasNewLine);
+    if (this.service.prompt.value !== null) {
+      const isTooLong = this.service.prompt.value.length > 56;
+      const hasNewLine = this.service.prompt.value.includes('\n');
+      this.service.sendUp.set(isTooLong || hasNewLine);
     }
   }
 
@@ -45,20 +45,24 @@ export class ChatboxComponent {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
 
-      if (this.prompt.value !== null && !this.isGenerating() && this.prompt.value.trim()) {
-        this.onSubmitCallback()(this.prompt.value.trim());
-        this.prompt.setValue('');
-        this.sendUp.set(false);
+      if (
+        this.service.prompt.value !== null &&
+        !this.isGenerating() &&
+        this.service.prompt.value.trim()
+      ) {
+        this.onSubmitCallback()(this.service.prompt.value.trim());
+        this.service.prompt.setValue('');
+        this.service.sendUp.set(false);
       }
     }
   }
 
   onSubmit(e: Event) {
     e.preventDefault();
-    if (this.prompt.value !== null) {
-      this.onSubmitCallback()(this.prompt.value.trim());
-      this.prompt.setValue('');
-      this.sendUp.set(false);
+    if (this.service.prompt.value !== null) {
+      this.onSubmitCallback()(this.service.prompt.value.trim());
+      this.service.prompt.setValue('');
+      this.service.sendUp.set(false);
     }
   }
 }

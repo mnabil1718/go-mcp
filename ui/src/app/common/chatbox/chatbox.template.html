@@ -1,6 +1,6 @@
 <form (submit)="onSubmit($event)">
   <mat-form-field class="w-full">
-    <div class="items-end" [class.flex]="!sendUp()">
+    <div class="items-end" [class.flex]="!this.service.sendUp()">
       <textarea
         matInput
         #chat
@@ -12,7 +12,7 @@
         [cdkTrapFocusAutoCapture]="true"
         placeholder="Start chatting..."
         class="!mb-2"
-        [formControl]="prompt"
+        [formControl]="this.service.prompt"
         (input)="onInput()"
         (keydown)="onKeyDown($event)"
       ></textarea>
@@ -22,7 +22,12 @@
           type="submit"
           class="transition-all duration-150"
           aria-label="Send message"
-          [disabled]="prompt.invalid || !prompt.value || isGenerating() || !prompt.value.trim()"
+          [disabled]="
+            this.service.prompt.invalid ||
+            !this.service.prompt.value ||
+            isGenerating() ||
+            !this.service.prompt.value.trim()
+          "
         >
           <mat-icon>send</mat-icon>
         </button>
