@@ -12,20 +12,11 @@
     <div class="mb-7"></div>
     <h3 matSubheader>Chats</h3>
     @for (chat of chats$ | async; track chat.id) {
-    <!-- Changing element [active] to `true` if routerLinkActive matches -->
-    <a
-      mat-list-item
-      #rla="routerLinkActive"
-      [activated]="rla.isActive"
-      matListItemTitle
-      [routerLink]="['c', chat.id]"
-      routerLinkActive
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <span class="mat-label-large">
-        {{ chat.title ?? 'New Chat' }}
-      </span>
-    </a>
+    <sidenav-item-component
+      [label]="chat.title ?? 'New Chat'"
+      [routerLinkParam]="['c', chat.id]"
+      [itemMenu]="getChatMenu(chat)"
+    />
     } }
   </mat-nav-list>
 </div>

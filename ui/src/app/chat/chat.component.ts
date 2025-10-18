@@ -10,7 +10,6 @@ import * as ChatSelectors from './store/chat.selector';
 import { AsyncPipe } from '@angular/common';
 import { take } from 'rxjs';
 import { MessageComponent } from '../message/message.component';
-import { MarkdownComponent } from '../common/md/markdown.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
