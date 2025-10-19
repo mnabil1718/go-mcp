@@ -2,7 +2,7 @@ import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angul
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ChatboxComponent } from '../common/chatbox/chatbox.component';
-import { ChatLoaderComponent } from './chat-loader.component';
+import { ChatLoaderComponent } from './chat.loader.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ChatActions } from './store/chat.action';
@@ -72,13 +72,6 @@ export class ChatComponent {
     // remember position for next scroll event
     this.lastScrollTop = current;
   }
-
-  onShowFab = effect(() => {
-    console.log('states', {
-      scrolledUp: this.scrolledUp(),
-      followScroll: this.followAutoScroll(),
-    });
-  });
 
   send(prompt: string) {
     this.selectedChatId$.pipe(take(1)).subscribe((id) => {

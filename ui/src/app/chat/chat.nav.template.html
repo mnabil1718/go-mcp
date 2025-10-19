@@ -1,0 +1,5 @@
+<nav-item-component
+  [label]="chat().title ?? 'New Chat'"
+  [routerLinkParam]="['c', chat().id]"
+  [itemMenu]="getChatMenu()"
+/>

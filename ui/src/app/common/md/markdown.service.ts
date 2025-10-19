@@ -40,6 +40,7 @@ export class MarkdownService {
         import('@shikijs/langs/php'),
         import('@shikijs/langs/jsx'),
         import('@shikijs/langs/json'),
+        import('@shikijs/langs/elixir'),
       ],
       engine: createOnigurumaEngine(() => import('shiki/wasm')),
     });

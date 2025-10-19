@@ -12,11 +12,7 @@
     <div class="mb-7"></div>
     <h3 matSubheader>Chats</h3>
     @for (chat of chats$ | async; track chat.id) {
-    <sidenav-item-component
-      [label]="chat.title ?? 'New Chat'"
-      [routerLinkParam]="['c', chat.id]"
-      [itemMenu]="getChatMenu(chat)"
-    />
+    <chat-nav-component [chat]="chat" />
     } }
   </mat-nav-list>
 </div>

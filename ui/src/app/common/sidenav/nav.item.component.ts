@@ -7,7 +7,7 @@ import { RouterLink, RouterLinkActive, UrlTree } from '@angular/router';
 import { SidenavItemMenu } from './sidenav.domain';
 
 @Component({
-  selector: 'sidenav-item-component',
+  selector: 'nav-item-component',
   imports: [
     MatListModule,
     RouterLink,
@@ -51,13 +51,13 @@ import { SidenavItemMenu } from './sidenav.domain';
         routerLinkActive
       >
         <span class="mat-label-large">
-          {{ label() }} dan kita semua bisa berdamai dengan situasi saat ini
+          {{ label() }}
         </span>
       </a>
     </mat-list-item>
   `,
 })
-export class SidenavItemComponent {
+export class NavItemComponent {
   readonly icon = input<string>();
   readonly label = input.required<string | undefined>();
   readonly routerLinkParam = input.required<string | readonly any[] | UrlTree | null | undefined>();
@@ -65,12 +65,4 @@ export class SidenavItemComponent {
   readonly itemMenuLength = computed(() => this.itemMenu()?.length ?? 0);
   hovered = signal<boolean>(false);
   menuOpened = signal<boolean>(false);
-
-  clickMenu() {
-    console.log('menu');
-  }
-
-  clickLink() {
-    console.log('link');
-  }
 }

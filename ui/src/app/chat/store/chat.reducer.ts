@@ -43,6 +43,22 @@ export const chatsReducer = createReducer(
     generating: true,
   })),
 
+  on(ChatActions.renameOptimistic, (state, { id, title }) => ({
+    ...state,
+    chats: state.chats.map((ch) => {
+      if (ch.id === id) {
+        return { ...ch, title };
+      }
+
+      return ch;
+    }),
+  })),
+
+  on(ChatActions.delete, (state, _) => ({
+    ...state,
+    loading: true,
+  })),
+
   on(ChatActions.getById, (state) => ({
     ...state,
     loading: true,
@@ -95,6 +111,17 @@ export const chatsReducer = createReducer(
     messages: state.messages.map((msg) =>
       msg.chat_id === temp_id ? { ...msg, chat_id: chat.id } : msg
     ),
+  })),
+
+  on(ChatAPIActions.renameOptimisticSuccess, (state, chat) => ({
+    ...state,
+    chats: state.chats.map((ch) => (ch.id === chat.id ? { ...ch, title: chat.title } : ch)),
+  })),
+
+  on(ChatAPIActions.deleteSuccess, (state, { id }) => ({
+    ...state,
+    loading: false,
+    chats: state.chats.filter((c) => c.id !== id),
   })),
 
   on(ChatAPIActions.generateTitleSuccess, (state, chat) => ({

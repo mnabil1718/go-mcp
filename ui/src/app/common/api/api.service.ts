@@ -48,6 +48,19 @@ export class ApiService {
   }
 
   /**
+   * PATCH request
+   * @param endpoint API endpoint
+   * @param body request payload
+   * @param opts optional HttpOptions
+   * @returns Observable
+   */
+  patch<T>(endpoint: string, body: any, opts?: HttpOptions): Observable<ApiResult<T>> {
+    return this.http
+      .patch<ApiResponse<T>>(`${environment.apiUrl}/${endpoint}`, body, opts)
+      .pipe(this.pipeline());
+  }
+
+  /**
    * GET Stream via Server-Sent Events
    * @param endpoint API endpoint
    * @param withCredentials boolean
@@ -84,5 +97,17 @@ export class ApiService {
 
       return () => es.close();
     });
+  }
+
+  /**
+   * DELETE request
+   * @param endpoint API endpoint
+   * @param opts optional HttpOptions
+   * @returns Observable
+   */
+  delete<T>(endpoint: string, opts?: HttpOptions): Observable<ApiResult<T>> {
+    return this.http
+      .delete<ApiResponse<T>>(`${environment.apiUrl}/${endpoint}`, opts)
+      .pipe(this.pipeline());
   }
 }

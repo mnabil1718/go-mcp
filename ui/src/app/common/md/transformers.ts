@@ -19,7 +19,8 @@ export const codeBlockTransformer = (options: Options = {}): ShikiTransformer =>
                   transition flex items-center gap-1`,
           onclick: `
             const btn = this;
-            const code = btn.nextElementSibling;
+            const wrapper = btn.closest('.code-block');
+            const code = wrapper.querySelector('pre > code');
             if (!code) return;
 
             const [spanDefault, spanCopied] = btn.querySelectorAll('span.copy-span');
