@@ -62,3 +62,8 @@ func SanitizeTitle(t string) string {
 
 	return s
 }
+
+// convert string s to *string pointer
+func ToSPtr(s string) *string {
+	return &s
+}

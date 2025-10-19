@@ -14,6 +14,10 @@ type ControllerPostMessageRequest struct {
 	Message string `json:"message" binding:"required"`
 }
 
+type ControllerPatchTitleRequest struct {
+	Title string `json:"title" binding:"required,max=80"`
+}
+
 type ControllerCreateChatRequest struct {
 	Title string `json:"title" binding:"required,min=1"`
 }
@@ -28,6 +32,11 @@ type ServiceGetByIDResponse struct {
 type ServiceStreamRequest struct {
 	ChatID string
 	Model  string
+}
+
+type ServiceRenameRequest struct {
+	ChatID string
+	Title  string
 }
 
 type ServiceGenerateTitleRequest = ServiceStreamRequest

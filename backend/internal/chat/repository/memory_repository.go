@@ -114,3 +114,17 @@ func (r *InMemoryRepository) GetById(id string) (*chat.ChatWithMessages, error) 
 
 	return res, nil
 }
+
+func (r *InMemoryRepository) DeleteById(id string) error {
+	r.db.Mu.Lock()
+	defer r.db.Mu.Unlock()
+
+	for k, v := range r.db.Messages {
+		if v.ChatID == id {
+			delete(r.db.Messages, k)
+		}
+	}
+	delete(r.db.Chats, id)
+
+	return nil
+}

@@ -50,6 +50,32 @@ func (cr *ChatController) PostTitle(c *gin.Context) {
 	commons.SuccessResponse(c, http.StatusOK, nil, ch)
 }
 
+func (cr *ChatController) PatchTitle(c *gin.Context) {
+	var param ControllerIdUriRequest
+	if err := c.ShouldBindUri(&param); err != nil {
+		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var req ControllerPatchTitleRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	r := ServiceRenameRequest{
+		ChatID: param.ID,
+		Title:  req.Title,
+	}
+	ch, err := cr.s.Rename(r)
+	if err != nil {
+		commons.TranslateDomainError(c, err)
+		return
+	}
+
+	commons.SuccessResponse(c, http.StatusOK, nil, ch)
+}
+
 func (cr *ChatController) GetAll(c *gin.Context) {
 	chats, err := cr.s.GetAll()
 	if err != nil {
@@ -67,7 +93,7 @@ func (cr *ChatController) GetById(c *gin.Context) {
 		return
 	}
 
-	chat, err := cr.s.GetById(c.Param("id"))
+	chat, err := cr.s.GetById(req.ID)
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
@@ -84,7 +110,6 @@ func (cr *ChatController) PostMessage(c *gin.Context) {
 	}
 
 	var req ControllerPostMessageRequest
-
 	if err := c.ShouldBindJSON(&req); err != nil {
 		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -119,4 +144,19 @@ func (cr *ChatController) GetStream(c *gin.Context) {
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 	}
+}
+
+func (cr *ChatController) Delete(c *gin.Context) {
+	var req ControllerIdUriRequest
+	if err := c.ShouldBindUri(&req); err != nil {
+		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := cr.s.Delete(req.ID); err != nil {
+		commons.TranslateDomainError(c, err)
+		return
+	}
+
+	commons.SuccessResponse(c, http.StatusOK, commons.ToSPtr("chat deleted succesfully"), nil)
 }

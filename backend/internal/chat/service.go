@@ -94,6 +94,19 @@ func (s *ChatService) GenerateTitle(ctx context.Context, r ServiceGenerateTitleR
 	return updatedCh, nil
 }
 
+func (s *ChatService) Rename(r ServiceRenameRequest) (*Chat, error) {
+	if err := s.r.CheckIdExists(r.ChatID); err != nil {
+		return nil, err
+	}
+
+	updatedCh, err := s.r.UpdateTitle(r.ChatID, r.Title)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedCh, nil
+}
+
 func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r ServiceStreamRequest) error {
 	ch, err := s.r.GetById(r.ChatID)
 	if err != nil {
@@ -166,4 +179,8 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 	}
 
 	return nil
+}
+
+func (s *ChatService) Delete(id string) error {
+	return s.r.DeleteById(id)
 }
