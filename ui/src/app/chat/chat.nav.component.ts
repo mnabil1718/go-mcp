@@ -42,7 +42,7 @@ export class ChatNavComponent {
       }
 
       const newTitle = res.trim();
-      this.store.dispatch(ChatActions.renameOptimistic({ id: this.chat().id, title: newTitle }));
+      this.store.dispatch(ChatActions.rename({ id: this.chat().id, title: newTitle }));
     });
   }
 

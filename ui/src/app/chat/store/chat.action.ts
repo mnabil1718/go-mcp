@@ -13,7 +13,7 @@ export const ChatActions = createActionGroup({
     saveMessageFromCreate: props<{ temp_id: string; chat_id: string; message: string }>(),
     generateTitle: props<{ id: string }>(),
     respond: props<{ id: string; temp_id: string }>(),
-    renameOptimistic: props<{ id: string; title: string }>(),
+    rename: props<{ id: string; title: string }>(),
     delete: props<{ id: string }>(),
   },
 });
@@ -30,7 +30,7 @@ export const ChatAPIActions = createActionGroup({
     respondStream: props<{ chunk: OllamaMessage; temp_id: string }>(),
     respondSuccess: props<{ message: Message; temp_id: string }>(),
     deleteSuccess: props<{ id: string }>(),
-    renameOptimisticSuccess: props<Chat>(),
+    renameSuccess: props<Chat>(),
 
     failure: props<{ message: string }>(),
   },

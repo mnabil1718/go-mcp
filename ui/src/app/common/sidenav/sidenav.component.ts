@@ -6,10 +6,10 @@ import { Store } from '@ngrx/store';
 
 import * as ChatSelectors from '../../chat/store/chat.selector';
 import { AsyncPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ChatNavComponent } from '../../chat/chat.nav.component';
+import { NavItemComponent } from './nav.item.component';
 
 @Component({
   selector: 'sidenav-component',
@@ -18,10 +18,10 @@ import { ChatNavComponent } from '../../chat/chat.nav.component';
     MatIconModule,
     MatDividerModule,
     AsyncPipe,
-    RouterLink,
     MatButtonModule,
     MatMenuModule,
     ChatNavComponent,
+    NavItemComponent,
   ],
   templateUrl: 'sidenav.template.html',
 })

@@ -163,9 +163,9 @@ export class ChatsEffect {
     );
   });
 
-  renameOptimistic$ = createEffect(() => {
+  rename$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(ChatActions.renameOptimistic),
+      ofType(ChatActions.rename),
       // using switchMap to ignore previous
       // request in case of frequent user-retry
       switchMap((action) =>
@@ -175,7 +175,7 @@ export class ChatsEffect {
             title: action.title,
           })
           .pipe(
-            map((ch) => ChatAPIActions.renameOptimisticSuccess(ch)),
+            map((ch) => ChatAPIActions.renameSuccess(ch)),
             catchError((error) => of(ChatAPIActions.failure({ message: error })))
           )
       )

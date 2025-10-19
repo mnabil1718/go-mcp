@@ -20,6 +20,10 @@ import { SidenavItemMenu } from './sidenav.domain';
     <!-- Changing element [active] to "true" if routerLinkActive matches -->
     <mat-list-item
       [activated]="rla.isActive"
+      #rla="routerLinkActive"
+      [routerLink]="routerLinkParam()"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLinkActive
       (mouseenter)="hovered.set(true)"
       (mouseleave)="hovered.set(false)"
       class="relative"
@@ -27,33 +31,30 @@ import { SidenavItemMenu } from './sidenav.domain';
       @if(icon()) {
       <mat-icon matListItemIcon fontSet="material-symbols-outlined">{{ icon() }}</mat-icon>
       } @if (itemMenuLength() > 0 && (hovered() || menuOpened())) {
-      <div matListItemMeta class="!mr-1">
-        <button
-          matIconButton
-          [matMenuTriggerFor]="menu"
-          (menuOpened)="menuOpened.set(true)"
-          (menuClosed)="menuOpened.set(false)"
-        >
-          <mat-icon>more_horiz</mat-icon>
-        </button>
+      <!-- click without navigate, use $event.stopPropagation() -->
+      <button
+        matListItemMeta
+        matIconButton
+        [matMenuTriggerFor]="menu"
+        (menuOpened)="menuOpened.set(true)"
+        (menuClosed)="menuOpened.set(false)"
+        (click)="$event.stopPropagation()"
+        class="cursor-pointer right-0 !mr-1 flex items-center"
+      >
+        <mat-icon>more_horiz</mat-icon>
         <mat-menu #menu="matMenu">
           @for (item of itemMenu(); track $index) {
           <button (click)="item.actionCallback()" mat-menu-item>{{ item.label }}</button>
           }
         </mat-menu>
-      </div>
+      </button>
       }
-      <a
-        #rla="routerLinkActive"
-        matListItemTitle
-        [routerLink]="routerLinkParam()"
-        [routerLinkActiveOptions]="{ exact: true }"
-        routerLinkActive
-      >
+
+      <h2 matListItemTitle class="w-full block">
         <span class="mat-label-large">
           {{ label() }}
         </span>
-      </a>
+      </h2>
     </mat-list-item>
   `,
 })

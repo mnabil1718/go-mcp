@@ -1,12 +1,7 @@
 <div class="p-3">
   <mat-nav-list>
     <h3 matSubheader>Navigations</h3>
-
-    <!-- Changing element [active] to `true` if routerLinkActive matches -->
-    <a mat-list-item routerLink="/">
-      <span class="mat-label-large">New Chat</span>
-      <mat-icon matListItemIcon fontSet="material-symbols-outlined">edit</mat-icon>
-    </a>
+    <nav-item-component label="New Chat" routerLinkParam="/" icon="edit" />
 
     @if ((chats$ | async)!.length > 0) {
     <div class="mb-7"></div>
