@@ -41,6 +41,7 @@ export class MarkdownService {
         import('@shikijs/langs/jsx'),
         import('@shikijs/langs/json'),
         import('@shikijs/langs/elixir'),
+        import('@shikijs/langs/terraform'),
       ],
       engine: createOnigurumaEngine(() => import('shiki/wasm')),
     });

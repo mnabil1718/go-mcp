@@ -51,7 +51,7 @@ export class ChatRenameDialogComponent {
   keyDownHandler(e: KeyboardEvent): void {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (this.title.value !== null && this.title.value.trim()) {
+      if (this.title.value && this.title.value !== null && this.title.value.trim() !== '') {
         this.dialogRef.close(this.title.value);
       }
     }

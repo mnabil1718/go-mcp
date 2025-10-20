@@ -8,7 +8,7 @@ import * as ChatSelectors from '../../chat/store/chat.selector';
 import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { ChatNavComponent } from '../../chat/chat.nav.component';
+import { ChatNavComponent } from '../../chat/nav/nav.component';
 import { NavItemComponent } from './nav.item.component';
 
 @Component({
