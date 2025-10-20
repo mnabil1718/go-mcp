@@ -13,17 +13,18 @@ import { MatInputModule } from '@angular/material/input';
       [activated]="rla.isActive"
       #rla="routerLinkActive"
       [routerLink]="routerLinkParam()"
-      (click)="$event.stopPropagation()"
       [routerLinkActiveOptions]="{ exact: true }"
       routerLinkActive
       class="relative"
     >
       <input
         #input
+        matInput
         [(ngModel)]="value"
         (blur)="onBlur()"
         (keydown)="onKeyDown($event)"
         (ngModelChange)="value.set($event)"
+        (click)="$event.stopPropagation()"
         class="w-full mat-label-large outline-0"
       />
     </mat-list-item>
