@@ -11,6 +11,12 @@ import (
 type Config struct {
 	Port           int
 	LLMApiEndpoint string
+	DB             struct {
+		DSN          string
+		MaxOpenConns int
+		MaxIdleConns int
+		MaxIdleTime  string
+	}
 }
 
 var (
@@ -35,6 +41,11 @@ func LoadConfig() *Config {
 
 	config.Port = viper.GetInt("PORT")
 	config.LLMApiEndpoint = viper.GetString("LLM_API_ENDPOINT")
+
+	config.DB.DSN = viper.GetString("DB_DSN")
+	config.DB.MaxOpenConns = viper.GetInt("DB_MAX_OPEN_CONNS")
+	config.DB.MaxIdleConns = viper.GetInt("DB_MAX_IDLE_CONNS")
+	config.DB.MaxIdleTime = viper.GetString("DB_MAX_IDLE_TIME")
 
 	return &config
 }

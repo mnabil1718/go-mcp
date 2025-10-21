@@ -1,5 +1,7 @@
 package message
 
+import "context"
+
 type Repository interface {
-	SaveMessage(chatID, message string, role Role) (*Message, error)
+	SaveMessage(ctx context.Context, chatID, message string, role Role) (*Message, error)
 }

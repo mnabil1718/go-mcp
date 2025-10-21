@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"sort"
 	"time"
 
@@ -19,7 +20,7 @@ func NewMemoryRepository(db *db.InMemoryDB) chat.Repository {
 	return &InMemoryRepository{db: db}
 }
 
-func (r *InMemoryRepository) CheckIdExists(id string) error {
+func (r *InMemoryRepository) CheckIdExists(ctx context.Context, id string) error {
 	r.db.Mu.RLock()
 	defer r.db.Mu.RUnlock()
 
@@ -30,7 +31,7 @@ func (r *InMemoryRepository) CheckIdExists(id string) error {
 	return nil
 }
 
-func (r *InMemoryRepository) GetAll() ([]*chat.Chat, error) {
+func (r *InMemoryRepository) GetAll(ctx context.Context) ([]*chat.Chat, error) {
 	r.db.Mu.RLock()
 	defer r.db.Mu.RUnlock()
 
@@ -47,7 +48,7 @@ func (r *InMemoryRepository) GetAll() ([]*chat.Chat, error) {
 	return chats, nil
 }
 
-func (r *InMemoryRepository) Create() (*chat.Chat, error) {
+func (r *InMemoryRepository) Create(ctx context.Context) (*chat.Chat, error) {
 	r.db.Mu.Lock()
 	defer r.db.Mu.Unlock()
 
@@ -64,7 +65,7 @@ func (r *InMemoryRepository) Create() (*chat.Chat, error) {
 	return ch, nil
 }
 
-func (r *InMemoryRepository) UpdateTitle(id, title string) (*chat.Chat, error) {
+func (r *InMemoryRepository) UpdateTitle(ctx context.Context, id, title string) (*chat.Chat, error) {
 	r.db.Mu.Lock()
 	defer r.db.Mu.Unlock()
 
@@ -85,7 +86,7 @@ func (r *InMemoryRepository) UpdateTitle(id, title string) (*chat.Chat, error) {
 
 }
 
-func (r *InMemoryRepository) GetById(id string) (*chat.ChatWithMessages, error) {
+func (r *InMemoryRepository) GetById(ctx context.Context, id string) (*chat.ChatWithMessages, error) {
 	r.db.Mu.RLock()
 	defer r.db.Mu.RUnlock()
 
@@ -115,7 +116,7 @@ func (r *InMemoryRepository) GetById(id string) (*chat.ChatWithMessages, error) 
 	return res, nil
 }
 
-func (r *InMemoryRepository) DeleteById(id string) error {
+func (r *InMemoryRepository) DeleteById(ctx context.Context, id string) error {
 	r.db.Mu.Lock()
 	defer r.db.Mu.Unlock()
 

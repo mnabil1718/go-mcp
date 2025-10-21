@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/mnabil1718/mcp-go/internal/chat"
 	cr "github.com/mnabil1718/mcp-go/internal/chat/repository"
 	"github.com/mnabil1718/mcp-go/internal/db"
@@ -10,11 +12,14 @@ import (
 )
 
 func (a *App) WireDependencies() {
-	db := db.NewInMemoryDB()
+	db, err := db.NewPool(*a.Config)
+	if err != nil {
+		log.Fatalf("failed to initialize database: %v", err)
+	}
 
 	// repo
-	chatRepo := cr.NewMemoryRepository(db)
-	msgRepo := mr.NewInMemoryRepository(db)
+	chatRepo := cr.NewPostgresqlRepository(db)
+	msgRepo := mr.NewPostgresqlRepository(db)
 
 	// llm client
 	llmClient := llm.NewOllamaClient(a.Config.LLMApiEndpoint)

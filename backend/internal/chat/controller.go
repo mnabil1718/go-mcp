@@ -21,7 +21,7 @@ func NewChatController(s Service, cfg *config.Config) Controller {
 
 func (cr *ChatController) Post(c *gin.Context) {
 
-	ch, err := cr.s.Create()
+	ch, err := cr.s.Create(c.Request.Context())
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
@@ -67,7 +67,7 @@ func (cr *ChatController) PatchTitle(c *gin.Context) {
 		ChatID: param.ID,
 		Title:  req.Title,
 	}
-	ch, err := cr.s.Rename(r)
+	ch, err := cr.s.Rename(c.Request.Context(), r)
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
@@ -77,7 +77,7 @@ func (cr *ChatController) PatchTitle(c *gin.Context) {
 }
 
 func (cr *ChatController) GetAll(c *gin.Context) {
-	chats, err := cr.s.GetAll()
+	chats, err := cr.s.GetAll(c.Request.Context())
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
@@ -93,7 +93,7 @@ func (cr *ChatController) GetById(c *gin.Context) {
 		return
 	}
 
-	chat, err := cr.s.GetById(req.ID)
+	chat, err := cr.s.GetById(c.Request.Context(), req.ID)
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
@@ -115,7 +115,7 @@ func (cr *ChatController) PostMessage(c *gin.Context) {
 		return
 	}
 
-	msg, err := cr.s.SaveMessage(rUri.ID, req.Message, message.MessageRoleUser)
+	msg, err := cr.s.SaveMessage(c.Request.Context(), rUri.ID, req.Message, message.MessageRoleUser)
 	if err != nil {
 		commons.TranslateDomainError(c, err)
 		return
@@ -153,7 +153,7 @@ func (cr *ChatController) Delete(c *gin.Context) {
 		return
 	}
 
-	if err := cr.s.Delete(req.ID); err != nil {
+	if err := cr.s.Delete(c.Request.Context(), req.ID); err != nil {
 		commons.TranslateDomainError(c, err)
 		return
 	}

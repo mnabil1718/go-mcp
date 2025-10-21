@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,7 +17,7 @@ func NewInMemoryRepository(db *db.InMemoryDB) message_pkg.Repository {
 	return &InMemoryRepository{db: db}
 }
 
-func (r *InMemoryRepository) SaveMessage(chatID, message string, role message_pkg.Role) (*message_pkg.Message, error) {
+func (r *InMemoryRepository) SaveMessage(ctx context.Context, chatID, message string, role message_pkg.Role) (*message_pkg.Message, error) {
 	r.db.Mu.Lock()
 	defer r.db.Mu.Unlock()
 

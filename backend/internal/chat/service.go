@@ -25,8 +25,8 @@ func NewChatService(r Repository, mr message.Repository, cl llm.LLMClient) Servi
 	}
 }
 
-func (s *ChatService) Create() (*Chat, error) {
-	ch, err := s.r.Create()
+func (s *ChatService) Create(ctx context.Context) (*Chat, error) {
+	ch, err := s.r.Create(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +34,8 @@ func (s *ChatService) Create() (*Chat, error) {
 	return ch, nil
 }
 
-func (s *ChatService) GetAll() ([]*Chat, error) {
-	chats, err := s.r.GetAll()
+func (s *ChatService) GetAll(ctx context.Context) ([]*Chat, error) {
+	chats, err := s.r.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -43,8 +43,8 @@ func (s *ChatService) GetAll() ([]*Chat, error) {
 	return chats, nil
 }
 
-func (s *ChatService) GetById(id string) (*ChatWithMessages, error) {
-	res, err := s.r.GetById(id)
+func (s *ChatService) GetById(ctx context.Context, id string) (*ChatWithMessages, error) {
+	res, err := s.r.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -52,8 +52,8 @@ func (s *ChatService) GetById(id string) (*ChatWithMessages, error) {
 	return res, nil
 }
 
-func (s *ChatService) SaveMessage(chatID, message string, role message.Role) (*message.Message, error) {
-	msg, err := s.mr.SaveMessage(chatID, message, role)
+func (s *ChatService) SaveMessage(ctx context.Context, chatID, message string, role message.Role) (*message.Message, error) {
+	msg, err := s.mr.SaveMessage(ctx, chatID, message, role)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (s *ChatService) SaveMessage(chatID, message string, role message.Role) (*m
 }
 
 func (s *ChatService) GenerateTitle(ctx context.Context, r ServiceGenerateTitleRequest) (*Chat, error) {
-	ch, err := s.r.GetById(r.ChatID)
+	ch, err := s.r.GetById(ctx, r.ChatID)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (s *ChatService) GenerateTitle(ctx context.Context, r ServiceGenerateTitleR
 		return nil, err
 	}
 
-	updatedCh, err := s.r.UpdateTitle(r.ChatID, *title)
+	updatedCh, err := s.r.UpdateTitle(ctx, r.ChatID, *title)
 	if err != nil {
 		return nil, err
 	}
@@ -94,12 +94,12 @@ func (s *ChatService) GenerateTitle(ctx context.Context, r ServiceGenerateTitleR
 	return updatedCh, nil
 }
 
-func (s *ChatService) Rename(r ServiceRenameRequest) (*Chat, error) {
-	if err := s.r.CheckIdExists(r.ChatID); err != nil {
+func (s *ChatService) Rename(ctx context.Context, r ServiceRenameRequest) (*Chat, error) {
+	if err := s.r.CheckIdExists(ctx, r.ChatID); err != nil {
 		return nil, err
 	}
 
-	updatedCh, err := s.r.UpdateTitle(r.ChatID, r.Title)
+	updatedCh, err := s.r.UpdateTitle(ctx, r.ChatID, r.Title)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (s *ChatService) Rename(r ServiceRenameRequest) (*Chat, error) {
 }
 
 func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r ServiceStreamRequest) error {
-	ch, err := s.r.GetById(r.ChatID)
+	ch, err := s.r.GetById(ctx, r.ChatID)
 	if err != nil {
 		return err
 	}
@@ -136,6 +136,7 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 		defer close(errChan)
 		var assistantResp string
 
+		// uninterrupted respond, use new context
 		err := s.cl.Respond(context.Background(), payload, func(chunk llm.Chunk) error {
 
 			// preprocessing here
@@ -167,7 +168,8 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 		}
 
 		if assistantResp != "" {
-			if _, err := s.mr.SaveMessage(r.ChatID, assistantResp, message.MessageRoleAssistant); err != nil {
+			// uninterrupted saving, using new context
+			if _, err := s.mr.SaveMessage(context.Background(), r.ChatID, assistantResp, message.MessageRoleAssistant); err != nil {
 				errChan <- err
 			}
 		}
@@ -181,6 +183,6 @@ func (s *ChatService) Stream(ctx context.Context, w http.ResponseWriter, r Servi
 	return nil
 }
 
-func (s *ChatService) Delete(id string) error {
-	return s.r.DeleteById(id)
+func (s *ChatService) Delete(ctx context.Context, id string) error {
+	return s.r.DeleteById(ctx, id)
 }
