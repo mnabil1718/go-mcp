@@ -7,7 +7,6 @@ import { ChatActions, ChatAPIActions } from './chat.action';
 import { ToastService } from '../../common/toast/toast.service';
 import { Message, OllamaMessage } from '../../message/message.domain';
 import { isOllamaMessage } from '../../common/helpers/object';
-import * as ChatSelectors from './chat.selector';
 import { Router } from '@angular/router';
 
 @Injectable()
