@@ -33,7 +33,7 @@ func (cr *ChatController) Post(c *gin.Context) {
 func (cr *ChatController) PostTitle(c *gin.Context) {
 	var param ControllerIdUriRequest
 	if err := c.ShouldBindUri(&param); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 
@@ -53,13 +53,13 @@ func (cr *ChatController) PostTitle(c *gin.Context) {
 func (cr *ChatController) PatchTitle(c *gin.Context) {
 	var param ControllerIdUriRequest
 	if err := c.ShouldBindUri(&param); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 
 	var req ControllerPatchTitleRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 
@@ -89,7 +89,7 @@ func (cr *ChatController) GetAll(c *gin.Context) {
 func (cr *ChatController) GetById(c *gin.Context) {
 	var req ControllerIdUriRequest
 	if err := c.ShouldBindUri(&req); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 
@@ -105,13 +105,13 @@ func (cr *ChatController) GetById(c *gin.Context) {
 func (cr *ChatController) PostMessage(c *gin.Context) {
 	var rUri ControllerIdUriRequest
 	if err := c.ShouldBindUri(&rUri); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 
 	var req ControllerPostMessageRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 
@@ -127,7 +127,7 @@ func (cr *ChatController) PostMessage(c *gin.Context) {
 func (cr *ChatController) GetStream(c *gin.Context) {
 	var req ControllerIdUriRequest
 	if err := c.ShouldBindUri(&req); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 
@@ -149,7 +149,7 @@ func (cr *ChatController) GetStream(c *gin.Context) {
 func (cr *ChatController) Delete(c *gin.Context) {
 	var req ControllerIdUriRequest
 	if err := c.ShouldBindUri(&req); err != nil {
-		commons.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		commons.TranslateValidationError(c, err)
 		return
 	}
 

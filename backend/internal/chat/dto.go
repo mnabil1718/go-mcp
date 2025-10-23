@@ -7,7 +7,7 @@ import (
 )
 
 type ControllerIdUriRequest struct {
-	ID string `uri:"id" binding:"required,uuid"`
+	ID string `uri:"id" json:"id" binding:"required,uuid"`
 }
 
 type ControllerPostMessageRequest struct {
@@ -19,7 +19,7 @@ type ControllerPatchTitleRequest struct {
 }
 
 type ControllerCreateChatRequest struct {
-	Title string `json:"title" binding:"required,min=1"`
+	Title string `json:"title" binding:"required"`
 }
 
 type ServiceGetByIDResponse struct {

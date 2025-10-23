@@ -5,6 +5,7 @@ import (
 
 	"github.com/mnabil1718/mcp-go/internal/chat"
 	cr "github.com/mnabil1718/mcp-go/internal/chat/repository"
+	"github.com/mnabil1718/mcp-go/internal/commons"
 	"github.com/mnabil1718/mcp-go/internal/db"
 	"github.com/mnabil1718/mcp-go/internal/healthcheck"
 	"github.com/mnabil1718/mcp-go/internal/llm"
@@ -15,6 +16,10 @@ func (a *App) WireDependencies() {
 	db, err := db.NewPool(*a.Config)
 	if err != nil {
 		log.Fatalf("failed to initialize database: %v", err)
+	}
+
+	if err = commons.UseGlobalValidator(); err != nil {
+		log.Fatalf("failed to initialize validator: %v", err)
 	}
 
 	// repo
