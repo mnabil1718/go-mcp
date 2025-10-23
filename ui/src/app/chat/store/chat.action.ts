@@ -32,6 +32,6 @@ export const ChatAPIActions = createActionGroup({
     deleteSuccess: props<{ id: string }>(),
     renameSuccess: props<Chat>(),
 
-    failure: props<{ message: string }>(),
+    failure: props<{ error: Error }>(),
   },
 });

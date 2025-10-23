@@ -8,6 +8,7 @@ import { ToastService } from '../../common/toast/toast.service';
 import { Message, OllamaMessage } from '../../message/message.domain';
 import { isOllamaMessage } from '../../common/helpers/object';
 import { Router } from '@angular/router';
+import { getErrorMessage } from '../../common/helpers/error';
 
 @Injectable()
 export class ChatsEffect {
@@ -26,7 +27,7 @@ export class ChatsEffect {
       exhaustMap(() =>
         this.service.getChats().pipe(
           map((chats) => ChatAPIActions.getChatsSuccess({ chats })),
-          catchError((error) => of(ChatAPIActions.failure({ message: error })))
+          catchError((error) => of(ChatAPIActions.failure({ error })))
         )
       )
     );
@@ -67,7 +68,7 @@ export class ChatsEffect {
               ChatAPIActions.saveMessageSuccess({ temp_id: action.temp_id, message: msg }),
               ChatActions.generateTitle({ id: action.chat_id }),
             ]),
-            catchError((error) => of(ChatAPIActions.failure({ message: error })))
+            catchError((error) => of(ChatAPIActions.failure({ error })))
           )
       )
     );
@@ -82,7 +83,7 @@ export class ChatsEffect {
             ChatAPIActions.generateTitleSuccess(chat),
             ChatActions.respond({ id: action.id, temp_id: crypto.randomUUID() }),
           ]),
-          catchError((error) => of(ChatAPIActions.failure({ message: error })))
+          catchError((error) => of(ChatAPIActions.failure({ error })))
         )
       )
     );
@@ -133,7 +134,7 @@ export class ChatsEffect {
       exhaustMap((action) =>
         this.service.getById(action.id).pipe(
           map((ch) => ChatAPIActions.getByIdSuccess(ch)),
-          catchError((error) => of(ChatAPIActions.failure({ message: error })))
+          catchError((error) => of(ChatAPIActions.failure({ error })))
         )
       )
     );
@@ -156,7 +157,7 @@ export class ChatsEffect {
               }),
               ChatActions.respond({ id: action.chat_id, temp_id: crypto.randomUUID() }),
             ]),
-            catchError((error) => of(ChatAPIActions.failure({ message: error })))
+            catchError((error) => of(ChatAPIActions.failure({ error })))
           )
       )
     );
@@ -175,7 +176,7 @@ export class ChatsEffect {
           })
           .pipe(
             map((ch) => ChatAPIActions.renameSuccess(ch)),
-            catchError((error) => of(ChatAPIActions.failure({ message: error })))
+            catchError((error) => of(ChatAPIActions.failure({ error })))
           )
       )
     );
@@ -200,7 +201,7 @@ export class ChatsEffect {
               });
             }
           }),
-          catchError((err) => of(ChatAPIActions.failure({ message: err })))
+          catchError((error) => of(ChatAPIActions.failure({ error })))
         )
       )
     )
@@ -212,7 +213,7 @@ export class ChatsEffect {
       exhaustMap((action) =>
         this.service.delete(action.id).pipe(
           map((_) => ChatAPIActions.deleteSuccess({ id: action.id })),
-          catchError((error) => of(ChatAPIActions.failure({ message: error })))
+          catchError((error) => of(ChatAPIActions.failure({ error })))
         )
       )
     );
@@ -222,8 +223,8 @@ export class ChatsEffect {
     () =>
       this.actions$.pipe(
         ofType(ChatAPIActions.failure),
-        map(({ message }) => {
-          this.toast.showError(message);
+        tap(({ error }) => {
+          this.toast.showError(getErrorMessage(error));
         })
       ),
     { dispatch: false } // no action dispatched, purely side effect

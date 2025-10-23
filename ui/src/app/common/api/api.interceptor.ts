@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angul
 import { inject } from '@angular/core';
 import { catchError, Observable, retry, throwError, timer } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
+import { ValidationError } from '../exceptions/validation.error';
 
 const MAX_NUMBER_OF_RETRY_NO_CONNECTION: number = 5;
 const RETRY_DELAY: number = 1000;
@@ -24,7 +25,6 @@ export function retryInterceptor(
           return throwError(() => error);
         }
 
-        console.log(`Attempt ${retryAttempt}: retrying in ${retryAttempt * RETRY_DELAY}ms`);
         // retry after 1s, 2s, etc...
         return timer(retryAttempt * RETRY_DELAY);
       },
@@ -44,8 +44,11 @@ export function errorResponseInterceptor(
         // Network err
         error = new Error('Connection error. Please check your internet connection');
       } else if (err.error?.message) {
-        // Backend err
+        // Backend singular err
         error = new Error(err.error.message);
+      } else if (err.error?.errors) {
+        // Backend multiple fields validation err
+        error = new ValidationError('Validation error', err.error.errors);
       } else {
         // Unhandled HTTP err
         error = new Error(`Error status ${err.status}`);
