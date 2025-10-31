@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { ChatState, ChatWithMessages } from '../chat.domain';
+import { ChatState } from '../chat.domain';
 import { ChatActions, ChatAPIActions } from './chat.action';
 
 export const initState: ChatState = {

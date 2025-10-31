@@ -1,7 +1,7 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
-import { NavItemComponent } from '../../common/sidenav/nav.item.component';
+import { NavItemComponent } from '../../common/components/sidenav/nav.item.component';
 import { Chat } from '../chat.domain';
-import { SidenavItemMenu } from '../../common/sidenav/sidenav.domain';
+import { SidenavItemMenu } from '../../common/components/sidenav/sidenav.domain';
 import { MatDialog } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';

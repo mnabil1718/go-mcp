@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, signal, WritableSignal, inject } from '@angular/core';
+import { Injectable, OnDestroy, signal, WritableSignal, inject, Signal } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 
 /**
@@ -16,7 +16,7 @@ export class MediaService implements OnDestroy {
     { mql: MediaQueryList; signal: WritableSignal<boolean>; listener: () => void }
   >();
 
-  match(query: string = '(max-width: 320px)') {
+  match(query: string = '(max-width: 320px)'): Signal<boolean> {
     if (!this.queries.has(query)) {
       const mql = this.media.matchMedia(query);
       const sig = signal(mql.matches);

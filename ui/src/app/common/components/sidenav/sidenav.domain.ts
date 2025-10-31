@@ -4,3 +4,9 @@ export interface SidenavMenuItem {
 }
 
 export type SidenavItemMenu = SidenavMenuItem[];
+
+export interface StaticNavItem {
+  label: string;
+  routerLinkParam: string | string[];
+  iconName?: string;
+}

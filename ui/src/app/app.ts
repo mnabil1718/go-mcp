@@ -1,32 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { MediaService } from './common/media/media.service';
-import { SidenavComponent } from './common/sidenav/sidenav.component';
-import { NavigationLoadingComponent } from './common/load/load.component';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { NavigationLoadingComponent } from './common/components/load/load.component';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatIcon,
-    MatButtonModule,
-    RouterLink,
-    SidenavComponent,
-    NavigationLoadingComponent,
-  ],
+  imports: [RouterOutlet, NavigationLoadingComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('ui');
-
-  private media = inject(MediaService);
-  isMobile = this.media.match('(max-width: 600px)');
-  isOpened = signal<boolean>(this.isMobile() ? false : true);
-}
+export class App {}

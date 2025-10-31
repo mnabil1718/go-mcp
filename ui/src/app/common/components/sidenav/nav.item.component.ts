@@ -1,11 +1,11 @@
-import { Component, computed, inject, input, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink, RouterLinkActive, UrlTree } from '@angular/router';
 import { SidenavItemMenu } from './sidenav.domain';
-import { MediaService } from '../media/media.service';
+import { MediaService } from '../../media/media.service';
 
 @Component({
   selector: 'nav-item-component',
@@ -66,12 +66,15 @@ import { MediaService } from '../media/media.service';
 })
 export class NavItemComponent {
   readonly icon = input<string>();
-  private media = inject(MediaService);
-  isTablet = this.media.match('(max-width: 1024px)');
   readonly label = input.required<string | undefined>();
   readonly routerLinkParam = input.required<string | readonly any[] | UrlTree | null | undefined>();
   readonly itemMenu = input<SidenavItemMenu>();
   readonly itemMenuLength = computed(() => this.itemMenu()?.length ?? 0);
+
+  private media = inject(MediaService);
+
+  isTablet = this.media.match('(max-width: 1024px)');
+
   hovered = signal<boolean>(false);
   menuOpened = signal<boolean>(false);
 

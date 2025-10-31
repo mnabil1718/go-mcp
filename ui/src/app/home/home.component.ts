@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { ChatboxComponent } from '../common/chatbox/chatbox.component';
+import { ChatboxComponent } from '../common/components/chatbox/chatbox.component';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { ChatActions } from '../chat/store/chat.action';
 import * as ChatSelectors from '../chat/store/chat.selector';
-import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'home',

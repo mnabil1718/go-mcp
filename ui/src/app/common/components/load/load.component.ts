@@ -1,9 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import * as ChatSelectors from '../../chat/store/chat.selector';
+import * as ChatSelectors from '../../../chat/store/chat.selector';
 
 @Component({
   selector: 'navigation-loading',

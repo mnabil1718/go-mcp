@@ -1,0 +1,26 @@
+<div>
+  @if (this.service.isMobile()) {
+  <div class="sidenav-header sticky top-0 z-10 py-3 px-2 flex justify-end">
+    <button mat-icon-button (click)="this.service.toggle()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  }
+  <div class="p-3">
+    <mat-nav-list>
+      <h3 matSubheader>Navigations</h3>
+      @for (item of this.staticNavigations; track $index) {
+      <nav-item-component
+        [label]="item.label"
+        [routerLinkParam]="item.routerLinkParam"
+        [icon]="item.iconName"
+      />
+      } @if ((chats$ | async)!.length > 0) {
+      <div class="mb-7"></div>
+      <h3 matSubheader>Chats</h3>
+      @for (chat of chats$ | async; track chat.id) {
+      <chat-nav-component [chat]="chat" />
+      } }
+    </mat-nav-list>
+  </div>
+</div>
