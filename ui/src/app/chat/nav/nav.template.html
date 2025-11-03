@@ -1,11 +1,11 @@
 @if (!renameMode()) {
-<nav-item-component
+<nav-item
   [label]="chat().title ?? 'New Chat'"
   [routerLinkParam]="['c', chat().id]"
   [itemMenu]="getChatMenu()"
 />
 } @else {
-<rename-chat-nav-component
+<rename-chat-nav
   [routerLinkParam]="['c', chat().id]"
   [value]="chat().title ?? 'New Chat'"
   (valueChanged)="inlineRenameHandler($event)"

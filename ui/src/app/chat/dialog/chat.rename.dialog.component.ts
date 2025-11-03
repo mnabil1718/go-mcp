@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ChatRenameDialogData } from '../chat.domain';
 
 @Component({
-  selector: 'chat-rename-dialog-component',
+  selector: 'chat-rename-dialog',
   imports: [
     MatFormFieldModule,
     MatInputModule,

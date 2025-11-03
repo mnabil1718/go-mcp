@@ -1,0 +1,8 @@
+.preview-container {
+  background-color: var(--mat-sys-surface-container-highest);
+}
+
+
+.preview {
+  box-shadow: var(--mat-sys-level2)
+}

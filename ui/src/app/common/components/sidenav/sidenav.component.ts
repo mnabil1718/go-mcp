@@ -17,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
-  selector: 'sidenav-component',
+  selector: 'sidenav',
   imports: [
     MatListModule,
     MatIconModule,

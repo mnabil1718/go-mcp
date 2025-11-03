@@ -8,7 +8,7 @@ import { SidenavItemMenu } from './sidenav.domain';
 import { MediaService } from '../../media/media.service';
 
 @Component({
-  selector: 'nav-item-component',
+  selector: 'nav-item',
   imports: [
     MatListModule,
     RouterLink,

@@ -3,9 +3,10 @@ import { ChatComponent } from './chat/chat.component';
 import { HomeComponent } from './home/home.component';
 import { ChatResolver, ChatTitleResolver } from './chat/chat.resolver';
 import { EditorComponent } from './common/components/editor/editor.component';
-import { ResumeIndexComponent } from './resume/pages/index.resume.component';
+import { IndexResumeComponent } from './resume/pages/index/index.resume.component';
 import { MainLayoutComponent } from './common/layouts/main/main.layout.component';
 import { ResumeLayoutComponent } from './common/layouts/resume/resume.layout.component';
+import { EditResumeComponent } from './resume/pages/edit/edit.resume.component';
 
 export const routes: Routes = [
   {
@@ -19,16 +20,20 @@ export const routes: Routes = [
         resolve: { chat: ChatResolver },
         title: ChatTitleResolver,
       },
+      {
+        path: 'r',
+        component: IndexResumeComponent,
+        title: 'Jahri.ai - Resume Builder',
+      },
     ],
   },
   {
-    path: 'r',
+    path: 'r/:id',
     component: ResumeLayoutComponent,
     children: [
       {
         path: '',
-        component: ResumeIndexComponent,
-        title: 'Jahri.ai - Resume Builder',
+        component: EditResumeComponent,
       },
     ],
   },

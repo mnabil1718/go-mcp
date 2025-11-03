@@ -10,7 +10,7 @@
     <mat-nav-list>
       <h3 matSubheader>Navigations</h3>
       @for (item of this.staticNavigations; track $index) {
-      <nav-item-component
+      <nav-item
         [label]="item.label"
         [routerLinkParam]="item.routerLinkParam"
         [icon]="item.iconName"
@@ -19,7 +19,7 @@
       <div class="mb-7"></div>
       <h3 matSubheader>Chats</h3>
       @for (chat of chats$ | async; track chat.id) {
-      <chat-nav-component [chat]="chat" />
+      <chat-nav [chat]="chat" />
       } }
     </mat-nav-list>
   </div>

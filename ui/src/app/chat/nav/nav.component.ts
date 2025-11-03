@@ -14,7 +14,7 @@ import { RenameNavComponent } from './rename.nav.component';
 import { MediaService } from '../../common/media/media.service';
 
 @Component({
-  selector: 'chat-nav-component',
+  selector: 'chat-nav',
   imports: [
     NavItemComponent,
     ReactiveFormsModule,

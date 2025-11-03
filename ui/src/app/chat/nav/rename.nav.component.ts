@@ -5,7 +5,7 @@ import { RouterLink, RouterLinkActive, UrlTree } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'rename-chat-nav-component',
+  selector: 'rename-chat-nav',
   imports: [MatListModule, RouterLink, RouterLinkActive, FormsModule, MatInputModule],
   template: `
     <!-- Changing element [active] to "true" if routerLinkActive matches -->

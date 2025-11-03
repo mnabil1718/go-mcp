@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'chat-delete-dialog-component',
+  selector: 'chat-delete-dialog',
   styles: `
     .error-confirm {
       background-color: var(--mat-sys-error) !important;

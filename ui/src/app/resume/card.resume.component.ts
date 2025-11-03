@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'resume-item-component',
+  selector: 'resume-card',
   imports: [MatCardModule, MatButtonModule, MatIconModule],
   template: ` <li class="w-full aspect-[1/1.414]">
     <mat-card
@@ -23,7 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
     </mat-card>
   </li>`,
 })
-export class ResumeItemCardComponent {
+export class ResumeCardComponent {
   hovered = signal<boolean>(false);
   createNewResume(): void {}
 }

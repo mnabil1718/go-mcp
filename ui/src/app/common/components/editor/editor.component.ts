@@ -4,7 +4,7 @@ import { QuillModule } from 'ngx-quill';
 import 'quill/dist/quill.snow.css';
 
 @Component({
-  selector: 'editor-component',
+  selector: 'editor',
   imports: [QuillModule, MatIconModule],
   templateUrl: 'editor.template.html',
 })
