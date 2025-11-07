@@ -39,8 +39,9 @@ import { MediaService } from '../../media/media.service';
     }
   `,
   host: {
-    'style.position': 'relative',
-    'style.display': 'block',
+    class: 'relative block',
+    '[class.border-l]': '!isTablet()',
+    '[class.border-slate-300]': '!isTablet()',
     '[style.width.px]': 'isTablet() ? parentWidth() : currentWidth()',
   },
 })
