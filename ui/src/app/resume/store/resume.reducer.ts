@@ -22,6 +22,7 @@ export const resumesReducer = createReducer(
         id: temp_id,
         title: 'My New Resume',
         created_at: new Date().toISOString(),
+        children: [],
       },
       ...state.resumes,
     ],
