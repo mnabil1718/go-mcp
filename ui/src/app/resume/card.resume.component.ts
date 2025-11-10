@@ -1,7 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { Store } from '@ngrx/store';
+import { ResumeActions } from './store/resume.action';
 
 @Component({
   selector: 'resume-card',
@@ -24,6 +26,9 @@ import { MatIconModule } from '@angular/material/icon';
   </li>`,
 })
 export class ResumeCardComponent {
+  store = inject(Store);
   hovered = signal<boolean>(false);
-  createNewResume(): void {}
+  createNewResume(): void {
+    this.store.dispatch(ResumeActions.initCreate({ temp_id: crypto.randomUUID() }));
+  }
 }

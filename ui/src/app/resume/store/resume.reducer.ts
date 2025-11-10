@@ -4,9 +4,8 @@ import { ResumeActions, ResumeAPIActions } from './resume.action';
 
 export const initState: ResumeState = {
   resumes: [],
-  sections: [],
-  section_items: [],
-  selectedResumeId: null,
+  selectedId: null,
+  selectedTree: null,
   loading: false,
 };
 
@@ -15,25 +14,25 @@ export const resumesReducer = createReducer(
 
   // User
 
-  on(ResumeActions.create, (state, { temp_id }) => ({
+  on(ResumeActions.initCreate, (state, _) => ({
     ...state,
-    resumes: [
-      {
-        id: temp_id,
-        title: 'My New Resume',
-        created_at: new Date().toISOString(),
-        children: [],
-      },
-      ...state.resumes,
-    ],
+    loading: true,
+  })),
+
+  on(ResumeActions.create, (state, { temp_id, seed_tree, resume }) => ({
+    ...state,
+    resumes: [resume, ...state.resumes],
     selectedResumeId: temp_id,
+    selectedTree: seed_tree,
   })),
 
   // API
 
   on(ResumeAPIActions.createSuccess, (state, { temp_id, resume }) => ({
     ...state,
-    selectedResumeId: resume.id,
+    loading: false,
+    selectedId: resume.id,
     resumes: state.resumes.map((r) => (r.id === temp_id ? resume : r)),
+    selectedTree: state.selectedTree ? { ...state.selectedTree, id: resume.id } : null,
   }))
 );

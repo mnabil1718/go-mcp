@@ -1,11 +1,12 @@
-import { createActionGroup, props } from '@ngrx/store';
-import { Resume } from '../resume.domain';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { Resume, ResumeNode } from '../resume.domain';
 
 export const ResumeActions = createActionGroup({
   source: 'Resumes',
   events: {
     // user intent
-    create: props<{ temp_id: string }>(),
+    initCreate: props<{ temp_id: string }>(),
+    create: props<{ temp_id: string; seed_tree: ResumeNode; resume: Resume }>(),
   },
 });
 

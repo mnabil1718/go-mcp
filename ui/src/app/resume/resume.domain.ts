@@ -46,9 +46,8 @@ export interface SectionItem {
 
 export interface ResumeState {
   resumes: ReadonlyArray<Resume>;
-  sections: ReadonlyArray<Profile | Section>;
-  section_items: ReadonlyArray<SectionItem>;
-  selectedResumeId: Readonly<string | null>;
+  selectedId: Readonly<string | null>;
+  selectedTree: Readonly<ResumeNode | null>;
   loading: Readonly<boolean>;
 }
 

@@ -15,6 +15,8 @@ import { provideEffects } from '@ngrx/effects';
 import { chatsReducer } from './chat/store/chat.reducer';
 import { ChatsEffect } from './chat/store/chat.effect';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { resumesReducer } from './resume/store/resume.reducer';
+import { ResumeEffect } from './resume/store/resume.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,7 +35,8 @@ export const appConfig: ApplicationConfig = {
       connectInZone: true, // If set to true, the connection is established within the Angular zone
     }),
     provideState({ name: 'chat', reducer: chatsReducer }),
-    provideEffects(ChatsEffect),
+    provideState({ name: 'resume', reducer: resumesReducer }),
+    provideEffects([ChatsEffect, ResumeEffect]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
   ],
 };
