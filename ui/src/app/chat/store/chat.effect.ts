@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
+import { Router } from '@angular/router';
 import { ChatService } from '../chat.service';
 import { catchError, exhaustMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { ChatActions, ChatAPIActions } from './chat.action';
 import { ToastService } from '../../common/toast/toast.service';
 import { Message, OllamaMessage } from '../../message/message.domain';
 import { isOllamaMessage } from '../../common/helpers/object';
-import { Router } from '@angular/router';
 import { getErrorMessage } from '../../common/helpers/error';
 
 @Injectable()

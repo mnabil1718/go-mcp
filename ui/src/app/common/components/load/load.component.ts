@@ -1,9 +1,10 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as ChatSelectors from '../../../chat/store/chat.selector';
+import * as ResumeSelectors from '../../../resume/store/resume.selector';
 
 @Component({
   selector: 'navigation-loading',
@@ -19,6 +20,9 @@ import * as ChatSelectors from '../../../chat/store/chat.selector';
 export class NavigationLoadingComponent {
   private store = inject(Store);
   private router = inject(Router);
-  readonly storeLoading = toSignal(this.store.select(ChatSelectors.selectLoading));
-  readonly loading = computed(() => !!this.router.currentNavigation() || this.storeLoading());
+  readonly chatStoreLoading = toSignal(this.store.select(ChatSelectors.selectLoading));
+  readonly resumeStoreLoading = toSignal(this.store.select(ResumeSelectors.selectResumeLoading));
+  readonly loading = computed(
+    () => !!this.router.currentNavigation() || this.chatStoreLoading() || this.resumeStoreLoading()
+  );
 }

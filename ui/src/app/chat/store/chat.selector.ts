@@ -17,3 +17,14 @@ export const selectSelectedChat = createSelector(
   (chats, selectedChatId) =>
     selectedChatId ? chats.find((ch) => ch.id === selectedChatId) ?? null : null
 );
+
+export const selectChatTitle = (id: string) =>
+  createSelector(selectChats, (cs) => {
+    for (const c of cs) {
+      if (c.id === id) {
+        return c.title;
+      }
+    }
+
+    return null;
+  });

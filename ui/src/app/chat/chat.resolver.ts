@@ -22,13 +22,10 @@ export const ChatResolver: ResolveFn<boolean> = async (
 
 export const ChatTitleResolver: ResolveFn<string> = (route) => {
   const store = inject(Store);
-  const chatId = route.paramMap.get('id');
+  const id = route.paramMap.get('id') ?? '';
 
-  return store.select(ChatSelectors.selectChats).pipe(
-    map((chats) => {
-      const chat = chats.find((c) => c.id === chatId);
-      return chat && chat.title ? chat.title : 'Jahri.ai - New Chat';
-    }),
-    take(1)
+  return store.select(ChatSelectors.selectChatTitle(id)).pipe(
+    take(1),
+    map((title) => title ?? 'Jahri.ai - New Chat')
   );
 };

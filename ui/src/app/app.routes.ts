@@ -3,10 +3,11 @@ import { ChatComponent } from './chat/chat.component';
 import { HomeComponent } from './home/home.component';
 import { ChatResolver, ChatTitleResolver } from './chat/chat.resolver';
 import { EditorComponent } from './common/components/editor/editor.component';
-import { IndexResumeComponent } from './resume/pages/index/index.resume.component';
+import { IndexResumeComponent } from './resume/index/index.resume.component';
 import { MainLayoutComponent } from './common/layouts/main/main.layout.component';
 import { ResumeLayoutComponent } from './common/layouts/resume/resume.layout.component';
-import { EditResumeComponent } from './resume/pages/edit/edit.resume.component';
+import { EditResumeComponent } from './resume/edit/edit.resume.component';
+import { ResumeResolver, ResumeTitleResolver } from './resume/resume.resolver';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,8 @@ export const routes: Routes = [
       {
         path: '',
         component: EditResumeComponent,
+        resolve: { resume: ResumeResolver },
+        title: ResumeTitleResolver,
       },
     ],
   },
