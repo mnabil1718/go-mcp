@@ -26,7 +26,9 @@ import { MediaService } from '../../media/media.service';
       [class.bg-blue-500]="isDragging()"
       [class.bg-transparent]="!isDragging()"
       (dblclick)="onDoubleClick()"
-      class="absolute flex left-0 top-0 inset-y-0 justify-center items-center w-1 transition-colors duration-200 group hover:bg-blue-500 hover:cursor-ew-resize"
+      [class.left-0]="position() === 'right'"
+      [class.right-0]="position() === 'left'"
+      class="absolute flex top-0 inset-y-0 justify-center items-center w-1 transition-colors duration-200 group hover:bg-blue-500 hover:cursor-ew-resize"
     >
       <span
         [class.bg-blue-500]="isDragging()"

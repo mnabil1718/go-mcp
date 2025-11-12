@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { ResizablePanel } from '../../common/components/resizable/panel.resizable.component';
-import { ResumeFormComponent } from '../form/form.component';
+import { ResumeFormComponent } from '../form/form.resume.component';
 
 @Component({
   selector: 'edit-resume',

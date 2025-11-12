@@ -1,0 +1,14 @@
+<mat-accordion [multi]="false">
+  @for (section of this.service.sections.controls; track $index) { @if (section.get('type')?.value
+  === 'profile') {
+  <profile-resume-form [form]="$any(section)" />
+  } @if (section.get('type')?.value === 'section') {
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> {{ section.get('title')?.value }} </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p>This is the primary content of the panel.</p>
+  </mat-expansion-panel>
+
+  } }
+</mat-accordion>

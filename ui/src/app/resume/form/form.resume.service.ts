@@ -13,7 +13,7 @@ export class ResumeFormService {
   private fb = inject(FormBuilder);
   private fg: FormGroup = this.fb.group({});
 
-  set formGroup(tree: ResumeNode | null) {
+  set form(tree: ResumeNode | null) {
     if (tree) {
       this.fg = this.fb.group({
         title: [tree.title, Validators.required],
@@ -22,8 +22,12 @@ export class ResumeFormService {
     }
   }
 
-  get formGroup(): FormGroup {
+  get form(): FormGroup {
     return this.fg;
+  }
+
+  get sections(): FormArray {
+    return this.fg.get('children') as FormArray;
   }
 
   // Arrays
@@ -56,6 +60,7 @@ export class ResumeFormService {
   // Nodes
   private buildProfileGroup(node: ProfileNode): FormGroup {
     return this.fb.group({
+      type: ['profile'],
       photo_url: [node.photo_url ?? ''],
       name: [node.name ?? ''],
       content: [node.content ?? ''],
@@ -64,6 +69,7 @@ export class ResumeFormService {
 
   private buildSectionGroup(node: SectionNode): FormGroup {
     return this.fb.group({
+      type: ['section'],
       title: [node.title ?? ''],
       content: [node.content ?? ''],
       children: this.buildSectionItemArray(node.children),

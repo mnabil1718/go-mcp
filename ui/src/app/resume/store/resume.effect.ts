@@ -7,11 +7,13 @@ import { ResumeActions, ResumeAPIActions } from './resume.action';
 import { exhaustMap, map, of } from 'rxjs';
 import { buildSeedTree } from '../resume.data';
 import { Resume, ResumeNode } from '../resume.domain';
+import { ResumeFormService } from '../form/form.resume.service';
 
 @Injectable()
 export class ResumeEffect {
   private actions$ = inject(Actions);
   private service = inject(ResumeService);
+  private formService = inject(ResumeFormService);
   private toast = inject(ToastService);
   private router = inject(Router);
 
@@ -21,6 +23,7 @@ export class ResumeEffect {
       exhaustMap(({ temp_id }) => {
         const seed_tree: ResumeNode = buildSeedTree(temp_id);
         const resume = this.service.treeToResume(seed_tree);
+        this.formService.form = seed_tree;
         return of(ResumeActions.create({ temp_id, seed_tree, resume }));
       })
     );
