@@ -26,6 +26,11 @@ export const resumesReducer = createReducer(
     selectedTree: seed_tree,
   })),
 
+  on(ResumeActions.getById, (state, _) => ({
+    ...state,
+    loading: true,
+  })),
+
   // API
 
   on(ResumeAPIActions.createSuccess, (state, { temp_id, resume }) => ({
@@ -34,5 +39,12 @@ export const resumesReducer = createReducer(
     selectedId: resume.id,
     resumes: state.resumes.map((r) => (r.id === temp_id ? resume : r)),
     selectedTree: state.selectedTree ? { ...state.selectedTree, id: resume.id } : null,
+  })),
+
+  on(ResumeAPIActions.getByIdSuccess, (state, { tree }) => ({
+    ...state,
+    loading: false,
+    selectedId: tree.id,
+    selectedTree: tree,
   }))
 );

@@ -1,11 +1,13 @@
 <mat-expansion-panel>
   <mat-expansion-panel-header>
-    <mat-panel-title> Profile Section </mat-panel-title>
+    <mat-panel-title> Profile </mat-panel-title>
   </mat-expansion-panel-header>
   <div [formGroup]="form()">
-    <mat-form-field>
+    <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
-      <input matInput placeholder="Placeholder" formControlName="name" />
+      <input matInput placeholder="Ivan Zhang" formControlName="name" />
     </mat-form-field>
+    <file-input formControlName="photo_url" />
+    <editor [control]="$any(form().get('content'))" />
   </div>
 </mat-expansion-panel>

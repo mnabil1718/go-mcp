@@ -1,10 +1,5 @@
 import { ResumeNode } from './resume.domain';
 
-export const RESUME_NODE_TYPE = 'resume';
-export const SECTION_NODE_TYPE = 'section';
-export const PROFILE_NODE_TYPE = 'profile';
-export const SECTION_ITEM_NODE_TYPE = 'section_item';
-
 function _genId(): string {
   return crypto.randomUUID();
 }
@@ -12,25 +7,21 @@ function _genId(): string {
 export function buildSeedTree(temp_id: string): ResumeNode {
   return {
     id: temp_id,
-    type: RESUME_NODE_TYPE,
     title: 'My New Resume',
     created_at: new Date().toISOString(),
-    children: [
+    profile: {
+      id: _genId(),
+      name: 'Your Name',
+      content: 'Example',
+    },
+    sections: [
       {
         id: _genId(),
-        type: PROFILE_NODE_TYPE,
         position: 1,
-        name: 'Your Name',
-      },
-      {
-        id: _genId(),
-        type: SECTION_NODE_TYPE,
-        position: 2,
         title: 'Professional Experience',
-        children: [
+        section_items: [
           {
             id: _genId(),
-            type: SECTION_ITEM_NODE_TYPE,
             position: 1,
             title: 'Freelance Fullstack Engineer',
             subtext: 'Tingkatin Technology',
@@ -43,7 +34,6 @@ export function buildSeedTree(temp_id: string): ResumeNode {
           },
           {
             id: _genId(),
-            type: SECTION_ITEM_NODE_TYPE,
             position: 2,
             title: 'Fullstack Developer',
             subtext: 'Dikshatek Technology',
@@ -56,7 +46,6 @@ export function buildSeedTree(temp_id: string): ResumeNode {
           },
           {
             id: _genId(),
-            type: SECTION_ITEM_NODE_TYPE,
             position: 3,
             title: 'Freelance Web Developer',
             subtext: 'Upwork',
@@ -71,13 +60,11 @@ export function buildSeedTree(temp_id: string): ResumeNode {
       },
       {
         id: _genId(),
-        type: SECTION_NODE_TYPE,
-        position: 3,
+        position: 2,
         title: 'Education',
-        children: [
+        section_items: [
           {
             id: _genId(),
-            type: SECTION_ITEM_NODE_TYPE,
             position: 1,
             title: 'UIN Sunan Gunung Djati Bandung',
             subtext: 'Informatics Engineering',
@@ -92,13 +79,11 @@ export function buildSeedTree(temp_id: string): ResumeNode {
       },
       {
         id: _genId(),
-        type: SECTION_NODE_TYPE,
-        position: 4,
+        position: 3,
         title: 'Training & Certifications',
-        children: [
+        section_items: [
           {
             id: _genId(),
-            type: SECTION_ITEM_NODE_TYPE,
             position: 1,
             title: 'IDCamp 2024 Backend Developer Path',
             subtext: 'Dicoding Indonesia',
@@ -110,7 +95,6 @@ export function buildSeedTree(temp_id: string): ResumeNode {
           },
           {
             id: _genId(),
-            type: SECTION_ITEM_NODE_TYPE,
             position: 1,
             title: 'Coursera Google IT Automation with Python',
             subtext: 'Coursera',
@@ -124,11 +108,10 @@ export function buildSeedTree(temp_id: string): ResumeNode {
       },
       {
         id: _genId(),
-        type: SECTION_NODE_TYPE,
-        position: 5,
+        position: 4,
         title: 'Skills',
         content: 'Go, SQL, Typescript, PHP, Laravel, NodeJS, Python, Docker, Linux, Git',
-        children: [],
+        section_items: [],
       },
     ],
   };

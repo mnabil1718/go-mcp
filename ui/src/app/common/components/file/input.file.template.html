@@ -1,0 +1,64 @@
+<label
+  (dragover)="!disabled() && onDragOver($event)"
+  (dragleave)="!disabled() && onDragLeave($event)"
+  (drop)="!disabled() && onDrop($event)"
+  [class.cursor-not-allowed]="disabled()"
+  [class.opacity-50]="disabled()"
+  [class.border-slate-500]="!disabled() && dragging()"
+  [class.border-slate-300]="!disabled() && !dragging()"
+  [class.bg-surface-dim]="!disabled() && !dragging()"
+  [class.bg-surface-dimmer]="!disabled() && dragging()"
+  class="relative overflow-hidden p-2 w-full rounded-md h-28 border border-dashed flex justify-center items-center group hover:cursor-pointer"
+>
+  <input
+    #input
+    class="hidden"
+    type="file"
+    (click)="onClick()"
+    [disabled]="disabled()"
+    [multiple]="opts().multiple"
+    [accept]="opts().accept.join(',')"
+    (change)="onInputChanged($event)"
+  />
+  @if (!file_preview()) {
+  <div
+    [ngClass]="{ 'group-hover:text-gray-600': !disabled() }"
+    class="relative p-3 flex flex-col items-center text-gray-400 mat-label-large space-y-1"
+  >
+    <mat-icon>add_photo_alternate</mat-icon>
+    <span> Drag & drop to upload file or click to browse </span>
+  </div>
+  } @else {
+  <div
+    class="relative flex file-preview-container bg-surface border border-slate-300 rounded-md overflow-hidden w-full h-full"
+  >
+    <div
+      [class.bg-surface-dimmer]="!is_image"
+      class="h-full flex justify-center items-center aspect-[3/4]"
+    >
+      @if (is_image) {
+      <img [src]="file_preview()!.url" class="h-full w-full object-cover" />
+      } @else {
+      <mat-icon fontSet="material-symbols-outlined" class="!text-slate-500">draft</mat-icon>
+      }
+    </div>
+    <div class="w-full flex flex-col min-w-0 p-2">
+      <div class="flex justify-end">
+        <button
+          matIconButton="outlined"
+          matTooltip="Remove file"
+          matTooltipPosition="below"
+          class="text-error"
+          (click)="reset()"
+        >
+          <mat-icon fontSet="material-symbols-outlined">close_small</mat-icon>
+        </button>
+      </div>
+      <h6 class="file-label mat-label-large text-gray-600 truncate min-w-0 max-w-full">
+        {{ file_preview()?.file_name }}
+      </h6>
+      <p class="mat-label-small text-gray-500">{{ file_size }}</p>
+    </div>
+  </div>
+  }
+</label>

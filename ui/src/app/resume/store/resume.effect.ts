@@ -53,4 +53,15 @@ export class ResumeEffect {
       ),
     { dispatch: false }
   );
+
+  getById$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ResumeActions.getById),
+      exhaustMap(({ id }) => {
+        const seed_tree: ResumeNode = buildSeedTree(id);
+        this.formService.form = seed_tree;
+        return of(ResumeAPIActions.getByIdSuccess({ tree: seed_tree }));
+      })
+    );
+  });
 }

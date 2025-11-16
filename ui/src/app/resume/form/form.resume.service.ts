@@ -17,7 +17,8 @@ export class ResumeFormService {
     if (tree) {
       this.fg = this.fb.group({
         title: [tree.title, Validators.required],
-        children: this.buildSectionArray(tree.children),
+        profile: this.buildProfileGroup(tree.profile),
+        sections: this.buildSectionArray(tree.sections),
       });
     }
   }
@@ -27,21 +28,15 @@ export class ResumeFormService {
   }
 
   get sections(): FormArray {
-    return this.fg.get('children') as FormArray;
+    return this.fg.get('sections') as FormArray;
   }
 
   // Arrays
-  public buildSectionArray(sections: Array<ProfileNode | SectionNode>): FormArray {
+  public buildSectionArray(sections: Array<SectionNode>): FormArray {
     let array: FormArray = this.fb.array([]);
 
     for (const s of sections) {
-      if (s.type === 'profile') {
-        array.push(this.buildProfileGroup(s));
-      }
-
-      if (s.type === 'section') {
-        array.push(this.buildSectionGroup(s));
-      }
+      array.push(this.buildSectionGroup(s));
     }
 
     return array;
@@ -58,21 +53,19 @@ export class ResumeFormService {
   }
 
   // Nodes
-  private buildProfileGroup(node: ProfileNode): FormGroup {
+  private buildProfileGroup(node: ProfileNode | undefined): FormGroup {
     return this.fb.group({
-      type: ['profile'],
-      photo_url: [node.photo_url ?? ''],
-      name: [node.name ?? ''],
-      content: [node.content ?? ''],
+      photo_url: [node?.photo_url ?? null],
+      name: [node?.name ?? ''],
+      content: [node?.content ?? ''],
     });
   }
 
   private buildSectionGroup(node: SectionNode): FormGroup {
     return this.fb.group({
-      type: ['section'],
       title: [node.title ?? ''],
       content: [node.content ?? ''],
-      children: this.buildSectionItemArray(node.children),
+      section_items: this.buildSectionItemArray(node.section_items),
     });
   }
 

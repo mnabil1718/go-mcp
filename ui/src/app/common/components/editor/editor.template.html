@@ -1,7 +1,10 @@
 <quill-editor
   [modules]="modules"
   theme="snow"
-  placeholder="Start typing here..."
+  placeholder="Start writing content here..."
   class="w-full h-full"
+  [formControl]="control()"
+  [bounds]="'self'"
+  [styles]="{ height: '150px' }"
 >
 </quill-editor>

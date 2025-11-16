@@ -1,3 +1,5 @@
+import { FilePreview } from '../common/components/file/input.file.domain';
+
 // Common
 export interface ResumeDate {
   ranged: boolean;
@@ -19,7 +21,6 @@ export interface Resume {
 export interface Profile {
   id: string;
   resume_id: string;
-  position: number;
   photo_url?: string;
   name?: string;
   content?: ResumeRichText;
@@ -53,36 +54,31 @@ export interface ResumeState {
 
 // UI / In-memory Tree
 
-export interface NodeBase {
+export interface ResumeNode {
   id: string;
-  type: string;
-}
-
-export interface ResumeNode extends NodeBase {
-  type: 'resume';
   title: string;
   created_at: string;
-  children: Array<SectionNode | ProfileNode>;
+  profile?: ProfileNode;
+  sections: Array<SectionNode>;
 }
 
-export interface ProfileNode extends NodeBase {
-  type: 'profile'; // literal discriminator, so compiler knows we are working with Profile
-  position: number;
-  photo_url?: string;
+export interface ProfileNode {
+  id: string;
   name?: string;
+  photo_url?: FilePreview;
   content?: ResumeRichText;
 }
 
-export interface SectionNode extends NodeBase {
-  type: 'section'; // literal discriminator, so compiler knows we are working with Section
+export interface SectionNode {
+  id: string;
   position: number;
   title?: string;
   content?: ResumeRichText;
-  children: Array<SectionItemNode>;
+  section_items: Array<SectionItemNode>;
 }
 
-export interface SectionItemNode extends NodeBase {
-  type: 'section_item';
+export interface SectionItemNode {
+  id: string;
   position: number;
   content?: ResumeRichText;
   title?: string;
