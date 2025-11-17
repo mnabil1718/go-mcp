@@ -3,12 +3,12 @@ import { Component, input } from '@angular/core';
 import { FormControl, ValidationErrors } from '@angular/forms';
 
 @Component({
-  selector: 'resume-form-field',
+  selector: 'field-form',
   imports: [CommonModule],
-  styleUrl: 'field.form.resume.css',
-  templateUrl: 'field.form.resume.template.html',
+  styleUrl: 'field.form.css',
+  templateUrl: 'field.form.template.html',
 })
-export class ResumeFormFieldComponent {
+export class FieldFormComponent {
   control = input.required<FormControl>();
   label = input.required<string>();
   hint = input<string>('');

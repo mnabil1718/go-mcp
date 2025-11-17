@@ -1,0 +1,34 @@
+<div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+  <mat-slide-toggle [checked]="showContent()" (change)="showContent.set($event.checked)"
+    >Show content</mat-slide-toggle
+  >
+  <button matButton="tonal" (click)="addSectionItem()">
+    <mat-icon>add</mat-icon> Add Section Item
+  </button>
+</div>
+
+<form [hidden]="!showContent()" [formGroup]="form()">
+  <field-form label="Content" [control]="$any(content)">
+    <editor [control]="$any(content)" />
+  </field-form>
+</form>
+
+<mat-accordion [multi]="false">
+  @for (sc of section_items.controls; track $index) {
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <input
+          [formControl]="$any(sc.get('title'))"
+          placeholder="Enter Section Item Title..."
+          (keydown)="$event.stopPropagation()"
+          (keyup)="$event.stopPropagation()"
+          (click)="$event.stopPropagation()"
+          class="w-full placeholder:text-slate-400 outline-0"
+        />
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <section-item-form [form]="$any(sc)" />
+  </mat-expansion-panel>
+  }
+</mat-accordion>

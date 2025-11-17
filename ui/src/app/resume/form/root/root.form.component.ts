@@ -4,19 +4,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ResumeFormService } from '../form.resume.service';
-import { ProfileResumeFormComponent } from '../profile/profile.form.resume.component';
+import { ProfileFormComponent } from '../profile/profile.form.component';
+import { SectionResumeFormComponent } from '../section/section.form.component';
 
 @Component({
-  selector: 'root-resume-form',
+  selector: 'root-form',
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatExpansionModule,
-    ProfileResumeFormComponent,
+    ProfileFormComponent,
+    SectionResumeFormComponent,
   ],
-  templateUrl: 'root.form.resume.template.html',
+  templateUrl: 'root.form.template.html',
 })
-export class RootResumeFormComponent {
+export class RootFormComponent {
   service = inject(ResumeFormService);
 }

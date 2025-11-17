@@ -1,0 +1,25 @@
+<mat-accordion [multi]="false">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Profile </mat-panel-title>
+    </mat-expansion-panel-header>
+    <profile-form [form]="service.profile" />
+  </mat-expansion-panel>
+  @for (section of this.service.sections.controls; track $index) {
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <input
+          [formControl]="$any(section.get('title'))"
+          placeholder="Enter Section Title..."
+          (keydown)="$event.stopPropagation()"
+          (keyup)="$event.stopPropagation()"
+          (click)="$event.stopPropagation()"
+          class="w-full placeholder:text-slate-400 outline-0"
+        />
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <section-form [form]="$any(section)" />
+  </mat-expansion-panel>
+  }
+</mat-accordion>

@@ -17,6 +17,7 @@ import { ChatsEffect } from './chat/store/chat.effect';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { resumesReducer } from './resume/store/resume.reducer';
 import { ResumeEffect } from './resume/store/resume.effect';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,5 +39,6 @@ export const appConfig: ApplicationConfig = {
     provideState({ name: 'resume', reducer: resumesReducer }),
     provideEffects([ChatsEffect, ResumeEffect]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideMomentDateAdapter(),
   ],
 };

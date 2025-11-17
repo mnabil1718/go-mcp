@@ -31,6 +31,10 @@ export class ResumeFormService {
     return this.fg.get('sections') as FormArray;
   }
 
+  get profile(): FormGroup {
+    return this.fg.get('profile') as FormGroup;
+  }
+
   // Arrays
   public buildSectionArray(sections: Array<SectionNode>): FormArray {
     let array: FormArray = this.fb.array([]);
@@ -53,7 +57,7 @@ export class ResumeFormService {
   }
 
   // Nodes
-  private buildProfileGroup(node: ProfileNode | undefined): FormGroup {
+  public buildProfileGroup(node: ProfileNode | undefined): FormGroup {
     return this.fb.group({
       photo_url: [node?.photo_url ?? null],
       name: [node?.name ?? ''],
@@ -61,7 +65,7 @@ export class ResumeFormService {
     });
   }
 
-  private buildSectionGroup(node: SectionNode): FormGroup {
+  public buildSectionGroup(node: SectionNode): FormGroup {
     return this.fb.group({
       title: [node.title ?? ''],
       content: [node.content ?? ''],
@@ -69,7 +73,7 @@ export class ResumeFormService {
     });
   }
 
-  private buildSectionItemGroup(node: SectionItemNode): FormGroup {
+  public buildSectionItemGroup(node: SectionItemNode): FormGroup {
     return this.fb.group({
       content: [node.content ?? ''],
       title: [node.title ?? ''],
@@ -79,7 +83,7 @@ export class ResumeFormService {
     });
   }
 
-  private buildDateGroup(date?: ResumeDate): FormGroup {
+  public buildDateGroup(date?: ResumeDate): FormGroup {
     return this.fb.group({
       ranged: [date?.ranged ?? false, Validators.required],
       start: [date?.start ?? '', Validators.required],

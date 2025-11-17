@@ -1,4 +1,4 @@
-import { ResumeNode } from './resume.domain';
+import { ResumeNode, SectionItemNode } from './resume.domain';
 
 function _genId(): string {
   return crypto.randomUUID();

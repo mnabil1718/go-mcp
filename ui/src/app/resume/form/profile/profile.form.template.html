@@ -1,0 +1,16 @@
+<div [formGroup]="form()">
+  <mat-form-field class="w-full mb-4">
+    <mat-label>Name</mat-label>
+    <input matInput placeholder="Ivan Zhang" formControlName="name" />
+  </mat-form-field>
+  <field-form
+    label="Profile Photo"
+    hint="Accepts .jpg, .jpeg, .png, .webp. For best result upload image with 3:4 aspect ratio."
+    [control]="$any(photo_url)"
+  >
+    <file-input formControlName="photo_url" />
+  </field-form>
+  <field-form label="Content" [control]="$any(content)">
+    <editor [control]="$any(content)" />
+  </field-form>
+</div>

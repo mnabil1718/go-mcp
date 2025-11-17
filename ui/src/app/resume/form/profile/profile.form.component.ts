@@ -6,10 +6,10 @@ import { MatInputModule } from '@angular/material/input';
 import { ResumeFormService } from '../form.resume.service';
 import { EditorComponent } from '../../../common/components/editor/editor.component';
 import { FileInputComponent } from '../../../common/components/file/input.file.component';
-import { ResumeFormFieldComponent } from '../field/field.form.resume.component';
+import { FieldFormComponent } from '../field/field.form.component';
 
 @Component({
-  selector: 'profile-resume-form',
+  selector: 'profile-form',
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -17,13 +17,13 @@ import { ResumeFormFieldComponent } from '../field/field.form.resume.component';
     MatExpansionModule,
     EditorComponent,
     FileInputComponent,
-    ResumeFormFieldComponent,
+    FieldFormComponent,
   ],
   styles: `
   `,
-  templateUrl: 'profile.form.resume.template.html',
+  templateUrl: 'profile.form.template.html',
 })
-export class ProfileResumeFormComponent {
+export class ProfileFormComponent {
   form = input.required<FormGroup>();
   service = inject(ResumeFormService);
 
