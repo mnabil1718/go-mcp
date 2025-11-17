@@ -8,6 +8,7 @@ import 'quill/dist/quill.snow.css';
   selector: 'editor',
   imports: [QuillModule, MatIconModule, ReactiveFormsModule],
   templateUrl: 'editor.template.html',
+  styleUrl: 'editor.css',
 })
 export class EditorComponent {
   control = input.required<FormControl>();

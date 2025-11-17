@@ -75,13 +75,13 @@ export class FileInputComponent implements ControlValueAccessor, Validator {
 
     if (val.size > this.opts().max_size) {
       return {
-        image: { message: `file size cannot exceeds ${appendSizeUnit(this.opts().max_size)}` },
+        image: { message: `file size cannot exceeds ${appendSizeUnit(this.opts().max_size)}.` },
       };
     }
 
     if (!this.opts().accept.includes(val.mime_type)) {
       return {
-        image: { message: 'file has to be an image' },
+        image: { message: 'file has to be an image.' },
       };
     }
 

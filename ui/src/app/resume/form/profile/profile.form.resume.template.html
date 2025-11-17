@@ -6,8 +6,19 @@
     <mat-form-field class="w-full">
       <mat-label>Name</mat-label>
       <input matInput placeholder="Ivan Zhang" formControlName="name" />
+      @if (name?.invalid) {
+      <mat-error></mat-error>
+      }
     </mat-form-field>
-    <file-input formControlName="photo_url" />
-    <editor [control]="$any(form().get('content'))" />
+    <resume-form-field
+      label="Profile Photo"
+      hint="Accepts .jpg, .jpeg, .png, .webp. For best result upload image with 3:4 aspect ratio."
+      [control]="$any(photo_url)"
+    >
+      <file-input formControlName="photo_url" />
+    </resume-form-field>
+    <resume-form-field label="Content" [control]="$any(content)">
+      <editor [control]="$any(content)" />
+    </resume-form-field>
   </div>
 </mat-expansion-panel>

@@ -1,0 +1,11 @@
+<div class="relative mb-4">
+  <label class="mat-label-large">{{ label() }}</label>
+  <ng-content></ng-content>
+  @if (control().invalid && (control().dirty || control().touched)) {
+  <p class="mat-label-small text-error">
+    {{ getErrorMessage(control().errors) }}
+  </p>
+  } @else {
+  <p class="mat-label-small text-slate-500">{{ hint() }}</p>
+  }
+</div>
