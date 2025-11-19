@@ -2,9 +2,10 @@ import { FilePreview } from '../common/components/file/input.file.domain';
 
 // Common
 export interface ResumeDate {
+  format: string; // flexible yyyy-mm-dd or yyyy-mm or yyyy (ISO date string)
   ranged: boolean;
-  start: string; // flexible yyyy-mm-dd or yyyy-mm or yyyy (ISO date string)
-  end?: string; // flexible yyyy-mm-dd or yyyy-mm or yyyy (ISO date string)
+  start: string;
+  end?: string;
   present?: boolean;
 }
 

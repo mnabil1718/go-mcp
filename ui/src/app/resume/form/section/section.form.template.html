@@ -18,13 +18,9 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <input
-          [formControl]="$any(sc.get('title'))"
+        <title-input-form
+          [control]="$any(sc.get('title'))"
           placeholder="Enter Section Item Title..."
-          (keydown)="$event.stopPropagation()"
-          (keyup)="$event.stopPropagation()"
-          (click)="$event.stopPropagation()"
-          class="w-full placeholder:text-slate-400 outline-0"
         />
       </mat-panel-title>
     </mat-expansion-panel-header>

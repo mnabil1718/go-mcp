@@ -10,6 +10,7 @@ import { ResumeFormService } from '../form.resume.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SectionItemFormComponent } from '../section-item/section-item.form.component';
+import { TitleInputFormComponent } from '../title-input/title-input.form.component';
 
 @Component({
   selector: 'section-form',
@@ -24,6 +25,7 @@ import { SectionItemFormComponent } from '../section-item/section-item.form.comp
     MatExpansionModule,
     MatSlideToggleModule,
     SectionItemFormComponent,
+    TitleInputFormComponent,
   ],
   templateUrl: 'section.form.template.html',
 })

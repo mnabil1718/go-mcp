@@ -1,5 +1,6 @@
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { inject, Injectable } from '@angular/core';
+import moment from 'moment';
 import {
   ProfileNode,
   ResumeDate,
@@ -7,6 +8,7 @@ import {
   SectionItemNode,
   SectionNode,
 } from '../resume.domain';
+import { DATE_FORMAT } from '../../common/date/date.domain';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeFormService {
@@ -85,10 +87,14 @@ export class ResumeFormService {
 
   public buildDateGroup(date?: ResumeDate): FormGroup {
     return this.fb.group({
-      ranged: [date?.ranged ?? false, Validators.required],
-      start: [date?.start ?? '', Validators.required],
-      end: [date?.end ?? ''],
       present: [date?.present ?? false],
+      ranged: [date?.ranged ?? false, Validators.required],
+      format: [date?.format ?? DATE_FORMAT.DATE_MONTH_YEAR, Validators.required],
+      end: [date?.end ? moment(date.end, date.format || DATE_FORMAT.DATE_MONTH_YEAR, true) : null],
+      start: [
+        date?.start ? moment(date.start, date.format || DATE_FORMAT.DATE_MONTH_YEAR, true) : null,
+        Validators.required,
+      ],
     });
   }
 }

@@ -13,8 +13,6 @@ import { DateFormComponent } from '../date/date.form.component';
 @Component({
   selector: 'section-item-form',
   imports: [
-    EditorComponent,
-    FieldFormComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatButtonModule,

@@ -1,0 +1,8 @@
+<input
+  [formControl]="control()"
+  [placeholder]="placeholder()"
+  (keydown)="$event.stopPropagation()"
+  (keyup)="$event.stopPropagation()"
+  (click)="$event.stopPropagation()"
+  class="w-full placeholder:text-slate-400 outline-0"
+/>

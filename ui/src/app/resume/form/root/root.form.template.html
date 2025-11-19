@@ -9,13 +9,9 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <input
-          [formControl]="$any(section.get('title'))"
+        <title-input-form
+          [control]="$any(section.get('title'))"
           placeholder="Enter Section Title..."
-          (keydown)="$event.stopPropagation()"
-          (keyup)="$event.stopPropagation()"
-          (click)="$event.stopPropagation()"
-          class="w-full placeholder:text-slate-400 outline-0"
         />
       </mat-panel-title>
     </mat-expansion-panel-header>

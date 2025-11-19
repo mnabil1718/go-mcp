@@ -1,0 +1,15 @@
+<mat-sidenav-container class="h-screen w-screen flex flex-col">
+  <mat-sidenav
+    #sidenav
+    [fixedInViewport]="true"
+    [fixedTopGap]="0"
+    [fixedBottomGap]="0"
+    [opened]="this.sidenavService.isOpened()"
+    [mode]="this.sidenavService.isMobile() ? 'over' : 'side'"
+  >
+    <sidenav />
+  </mat-sidenav>
+  <mat-sidenav-content class="!flex flex-col flex-1 border-l border-slate-300">
+    <ng-content />
+  </mat-sidenav-content>
+</mat-sidenav-container>

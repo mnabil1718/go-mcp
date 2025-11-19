@@ -1,31 +1,12 @@
-import { Component, inject, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { Component } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
-import { SidenavComponent } from '../../components/sidenav/sidenav.component';
-import { SidenavService } from '../../components/sidenav/sidenav.service';
 import { ResumeToolbarComponent } from '../../components/toolbar/resume.toolbar.component';
+import { RootLayoutComponent } from '../root/root.layout.component';
 
 @Component({
   selector: 'resume-layout',
-  imports: [
-    RouterOutlet,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatButtonModule,
-    SidenavComponent,
-    ResumeToolbarComponent,
-  ],
+  imports: [RouterOutlet, MatToolbarModule, ResumeToolbarComponent, RootLayoutComponent],
   templateUrl: 'resume.layout.template.html',
 })
-export class ResumeLayoutComponent {
-  sidenavService = inject(SidenavService);
-  @ViewChild('sidenav') sidenav!: MatSidenav;
-
-  ngOnInit() {
-    this.sidenavService.toggle$.subscribe(() => {
-      this.sidenav.toggle();
-    });
-  }
-}
+export class ResumeLayoutComponent {}

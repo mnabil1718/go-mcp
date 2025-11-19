@@ -6,6 +6,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ResumeFormService } from '../form.resume.service';
 import { ProfileFormComponent } from '../profile/profile.form.component';
 import { SectionResumeFormComponent } from '../section/section.form.component';
+import { TitleInputFormComponent } from '../title-input/title-input.form.component';
 
 @Component({
   selector: 'root-form',
@@ -16,6 +17,7 @@ import { SectionResumeFormComponent } from '../section/section.form.component';
     MatExpansionModule,
     ProfileFormComponent,
     SectionResumeFormComponent,
+    TitleInputFormComponent,
   ],
   templateUrl: 'root.form.template.html',
 })
