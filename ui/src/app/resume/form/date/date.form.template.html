@@ -1,28 +1,57 @@
-<form [formGroup]="form()" class="grid grid-cols-2">
-  <mat-form-field>
-    <mat-label>Date Format</mat-label>
-    <mat-select [formControl]="$any(format)" (valueChange)="onChange($event)">
-      @for (format of format_list; track $index) {
-      <mat-option [value]="format">{{ format }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-  <!-- <mat-checkbox [formControl]="$any(ranged)">Range</mat-checkbox> -->
+<form [formGroup]="form()" class="flex flex-col gap-2">
+  <mat-expansion-panel class="w-full">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Expand Date Settings </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>
+      <mat-form-field class="w-full">
+        <mat-label>Date Format</mat-label>
+        <mat-select formControlName="format" (valueChange)="onFormatChange($event)">
+          @for (format of format_list; track $index) {
+          <mat-option [value]="format">{{ format }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div class="flex flex-col md:flex-row space-x-4 space-y-2">
+        <mat-slide-toggle formControlName="ranged">Date Range</mat-slide-toggle>
+        @if (ranged?.value) {
+        <mat-slide-toggle formControlName="present">This is still ongoing</mat-slide-toggle>
+        }
+      </div>
+    </div>
+  </mat-expansion-panel>
 
-  @if (ranged?.value) {
-  <mat-form-field class="col-span-2">
-    <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [rangePicker]="picker">
-      <input matStartDate [formControl]="$any(start)" placeholder="Start date" />
-      <input matEndDate [formControl]="$any(end)" placeholder="End date" />
-    </mat-date-range-input>
-    <mat-hint>{{ format?.value }} - {{ format?.value }}</mat-hint>
+  @if (!ranged?.value) {
+  <mat-form-field class="w-full">
+    <mat-label>Choose a date</mat-label>
+    <input matInput formControlName="start" [matDatepicker]="picker" />
+    <mat-hint>{{ format?.value }}</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker startView="multi-year" #picker></mat-date-range-picker>
+    <mat-datepicker [touchUi]="isMobile()" #picker></mat-datepicker>
   </mat-form-field>
+  } @else {
+  <div class="flex flex-col md:flex-row items-center gap-2">
+    <mat-form-field class="flex-1 w-full">
+      <mat-label>Start Date</mat-label>
+      <input matInput formControlName="start" [matDatepicker]="pickerStart" />
+      <mat-hint>{{ format?.value }}</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+      <mat-datepicker [touchUi]="isMobile()" #pickerStart></mat-datepicker>
+    </mat-form-field>
+
+    @if (!present?.value) {
+    <mat-form-field class="flex-1 w-full">
+      <mat-label>End Date</mat-label>
+      <input matInput formControlName="end" [matDatepicker]="pickerEnd" />
+      <mat-hint>{{ format?.value }}</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker [touchUi]="isMobile()" #pickerEnd></mat-datepicker>
+    </mat-form-field>
+    } @else {
+    <mat-form-field class="flex-1 w-full">
+      <input matInput [value]="'Present'" readonly />
+    </mat-form-field>
+    }
+  </div>
   }
 </form>
-
-<div>
-  <div>{{ start?.value }}</div>
-</div>

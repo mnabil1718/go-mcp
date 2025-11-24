@@ -1,11 +1,13 @@
-<form [formGroup]="form()" class="relative w-full grid grid-cols-2 gap-4">
-  <mat-form-field class="col-span-1">
-    <mat-label>Subtext</mat-label>
-    <input matInput placeholder="Enter subtext..." formControlName="subtext" />
-  </mat-form-field>
-  <mat-form-field class="col-span-1">
-    <mat-label>Right Subtext</mat-label>
-    <input matInput placeholder="Enter right subtext..." formControlName="right_subtext" />
-  </mat-form-field>
-  <date-form [form]="$any(date)" class="col-span-2" />
+<form [formGroup]="form()" class="relative gap-2 w-full">
+  <div class="flex flex-col md:flex-row items-center gap-2">
+    <mat-form-field class="flex-1 !w-full">
+      <mat-label>Subtext</mat-label>
+      <input matInput placeholder="Enter subtext..." formControlName="subtext" />
+    </mat-form-field>
+    <mat-form-field class="flex-1 !w-full">
+      <mat-label>Right Subtext</mat-label>
+      <input matInput placeholder="Enter right subtext..." formControlName="right_subtext" />
+    </mat-form-field>
+  </div>
+  <date-form [form]="$any(date)" />
 </form>

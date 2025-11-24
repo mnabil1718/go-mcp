@@ -14,7 +14,7 @@ export class CustomDateAdapter extends MomentDateAdapter {
   }
 
   override format(date: Moment, displayFormat: string): string {
-    // TODO: implement
-    return '';
+    if (!date) return '';
+    return date.format(this.service.format());
   }
 }

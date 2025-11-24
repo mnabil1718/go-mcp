@@ -1,7 +1,7 @@
-export enum DATE_FORMAT {
-  DATE_MONTH_YEAR = 'YYYY-MM-DD',
-  MONTH_YEAR = 'YYYY-MM',
+export enum DATE_DISPLAY_FORMAT {
+  DATE_MONTH_YEAR = 'DD/MM/YYYY',
+  MONTH_YEAR = 'MM/YYYY',
   YEAR = 'YYYY',
 }
 
-export const DATE_FORMAT_LIST = Object.values(DATE_FORMAT);
+export const DATE_DISPLAY_FORMAT_LIST = Object.values(DATE_DISPLAY_FORMAT);

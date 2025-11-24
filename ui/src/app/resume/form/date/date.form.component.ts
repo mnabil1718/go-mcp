@@ -1,42 +1,54 @@
-import { JsonPipe } from '@angular/common';
-import { Component, Inject, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { DATE_FORMAT, DATE_FORMAT_LIST } from '../../../common/date/date.domain';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
-import { CustomDateFormat } from '../../../common/date/date.format';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import moment from 'moment';
+import { DATE_DISPLAY_FORMAT, DATE_DISPLAY_FORMAT_LIST } from '../../../common/date/date.domain';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { matDateFormats } from '../../../common/date/date.format';
+import { MediaService } from '../../../common/media/media.service';
+import { Moment } from 'moment';
+import { CustomDateService } from '../../../common/date/date.format.service';
+import { CustomDateAdapter } from '../../../common/date/date.format.adapter';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 @Component({
   selector: 'date-form',
-  providers: [{ provide: MAT_DATE_FORMATS, useClass: CustomDateFormat }],
+  providers: [
+    CustomDateService,
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_FORMATS, deps: [CustomDateService], useFactory: matDateFormats },
+  ],
   imports: [
+    MatSlideToggleModule,
     ReactiveFormsModule,
     MatDatepickerModule,
     MatFormFieldModule,
-    MatInputModule,
+    MatExpansionModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatInputModule,
   ],
+  styleUrl: 'date.form.css',
   templateUrl: 'date.form.template.html',
 })
 export class DateFormComponent {
+  media = inject(MediaService);
+  adapter = inject(DateAdapter<Moment>);
+  service = inject(CustomDateService);
   form = input.required<FormGroup>();
-
-  constructor(@Inject(MAT_DATE_FORMATS) private formatter: CustomDateFormat) {}
+  isMobile = this.media.match('(max-width: 600px)');
 
   ngOnInit() {
-    this.format?.valueChanges.subscribe((v: DATE_FORMAT) => {
-      this.formatter.format = v;
+    this.format?.valueChanges.subscribe((v: DATE_DISPLAY_FORMAT) => {
+      this.service.format.set(v);
     });
   }
 
   get format_list(): string[] {
-    return DATE_FORMAT_LIST;
+    return DATE_DISPLAY_FORMAT_LIST;
   }
 
   get format() {
@@ -47,6 +59,10 @@ export class DateFormComponent {
     return this.form().get('ranged');
   }
 
+  get present() {
+    return this.form().get('present');
+  }
+
   get start() {
     return this.form().get('start');
   }
@@ -55,32 +71,24 @@ export class DateFormComponent {
     return this.form().get('end');
   }
 
-  onChange(fmt: DATE_FORMAT): void {
-    this.formatter.format = fmt;
+  get endDisplay(): string {
+    const present = this.present?.value;
+    const endValue = this.end?.value;
+
+    if (present) return 'present';
+    if (endValue) return this.adapter.format(endValue, this.service.format());
+    return '';
+  }
+
+  onFormatChange(fmt: DATE_DISPLAY_FORMAT): void {
+    this.service.format.set(fmt);
     this.form().setControl('start', new FormControl(this.start?.value));
     this.form().setControl('end', new FormControl(this.end?.value));
   }
 
-  onYearSelected(event: moment.Moment, dp: MatDatepicker<any>) {
-    const ctrl = this.start || this.end;
-    if (!ctrl) return;
-
-    const value = moment(ctrl.value ?? new Date());
-    value.year(event.year());
-
-    ctrl.setValue(value);
-    dp.close();
-  }
-
-  onMonthSelected(event: moment.Moment, dp: MatDatepicker<any>) {
-    const ctrl = this.start || this.end;
-    if (!ctrl) return;
-
-    const value = moment(ctrl.value ?? new Date());
-    value.year(event.year());
-    value.month(event.month());
-
-    ctrl.setValue(value);
-    dp.close(); // prevent selecting day
-  }
+  // onPresentChange(e: MatCheckboxChange) {
+  //   const checked = e.checked;
+  //   if (!checked) return;
+  //   this.end?.setValue(moment());
+  // }
 }

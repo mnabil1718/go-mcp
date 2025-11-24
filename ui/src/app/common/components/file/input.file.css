@@ -1,22 +1,4 @@
-.bg-surface {
-  background-color: var(--mat-sys-surface);
-}
 
-.bg-surface-dim {
-  background-color: var(--mat-sys-surface-container);
-}
-
-.bg-surface-dimmer {
-  background-color: var(--mat-sys-surface-container-high);
-}
-
-.text-error {
-  color: var(--mat-sys-error);
-}
-
-.bg-secondary-container {
-  background-color: var(--mat-sys-secondary-container);
-}
 
 :host.ng-invalid label {
   border-color: var(--mat-sys-error);

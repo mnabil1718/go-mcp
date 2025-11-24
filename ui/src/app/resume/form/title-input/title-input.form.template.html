@@ -2,6 +2,7 @@
   [formControl]="control()"
   [placeholder]="placeholder()"
   (keydown)="$event.stopPropagation()"
+  (keydown.enter)="onEnter($event)"
   (keyup)="$event.stopPropagation()"
   (click)="$event.stopPropagation()"
   class="w-full placeholder:text-slate-400 outline-0"

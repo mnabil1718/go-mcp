@@ -1,4 +1,4 @@
-import { DATE_FORMAT } from '../common/date/date.domain';
+import { DATE_DISPLAY_FORMAT } from '../common/date/date.domain';
 import { ResumeNode } from './resume.domain';
 
 function _genId(): string {
@@ -31,7 +31,7 @@ export function buildSeedTree(temp_id: string): ResumeNode {
               ranged: true,
               start: '2021-06-12',
               end: '2023-12-10',
-              format: DATE_FORMAT.DATE_MONTH_YEAR,
+              format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
             },
           },
           {
@@ -42,7 +42,7 @@ export function buildSeedTree(temp_id: string): ResumeNode {
             right_subtext: 'Jakarta, Indonesia',
             date: {
               ranged: true,
-              format: DATE_FORMAT.DATE_MONTH_YEAR,
+              format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
               start: '2023-12-11',
               end: '2024-03-11',
             },
@@ -55,7 +55,7 @@ export function buildSeedTree(temp_id: string): ResumeNode {
             right_subtext: 'Bogor, Indonesia',
             date: {
               ranged: true,
-              format: DATE_FORMAT.DATE_MONTH_YEAR,
+              format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
               start: '2024-03-11',
               present: true,
             },
@@ -77,7 +77,7 @@ export function buildSeedTree(temp_id: string): ResumeNode {
               ranged: true,
               start: '2017-11',
               end: '2023-12-27',
-              format: DATE_FORMAT.DATE_MONTH_YEAR,
+              format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
             },
           },
         ],
@@ -96,7 +96,7 @@ export function buildSeedTree(temp_id: string): ResumeNode {
               ranged: true,
               start: '2024-09',
               end: '2025-05',
-              format: DATE_FORMAT.DATE_MONTH_YEAR,
+              format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
             },
           },
           {
@@ -108,7 +108,7 @@ export function buildSeedTree(temp_id: string): ResumeNode {
               ranged: true,
               start: '2021-10',
               end: '2021-11',
-              format: DATE_FORMAT.DATE_MONTH_YEAR,
+              format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
             },
           },
         ],

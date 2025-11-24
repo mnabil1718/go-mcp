@@ -32,5 +32,27 @@ quill-editor.ng-invalid {
   border: 1px solid var(--mat-sys-error) !important;
 }
 
+.bg-surface {
+  background-color: var(--mat-sys-surface);
+}
+
+.bg-surface-dim {
+  color: var(--mat-sys-on-surface-variant);
+  background-color: var(--mat-sys-surface-container);
+}
+
+.bg-surface-dimmer {
+  color: var(--mat-sys-on-surface-variant);
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+.text-error {
+  color: var(--mat-sys-error);
+}
+
+.bg-secondary-container {
+  background-color: var(--mat-sys-secondary-container);
+}
+
 
 

@@ -8,7 +8,7 @@ import {
   SectionItemNode,
   SectionNode,
 } from '../resume.domain';
-import { DATE_FORMAT } from '../../common/date/date.domain';
+import { DATE_DISPLAY_FORMAT } from '../../common/date/date.domain';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeFormService {
@@ -85,16 +85,21 @@ export class ResumeFormService {
     });
   }
 
+  // format BE / API ISO date string.
+  // Ex: 2025-12-12 to moment time
+  public parseDate(s?: string): moment.Moment | null {
+    if (!s) return null;
+
+    return moment(s);
+  }
+
   public buildDateGroup(date?: ResumeDate): FormGroup {
     return this.fb.group({
+      end: [this.parseDate(date?.end)],
       present: [date?.present ?? false],
       ranged: [date?.ranged ?? false, Validators.required],
-      format: [date?.format ?? DATE_FORMAT.DATE_MONTH_YEAR, Validators.required],
-      end: [date?.end ? moment(date.end, date.format || DATE_FORMAT.DATE_MONTH_YEAR, true) : null],
-      start: [
-        date?.start ? moment(date.start, date.format || DATE_FORMAT.DATE_MONTH_YEAR, true) : null,
-        Validators.required,
-      ],
+      start: [this.parseDate(date?.start), Validators.required],
+      format: [date?.format ?? DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR, Validators.required],
     });
   }
 }
