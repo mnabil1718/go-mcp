@@ -1,4 +1,12 @@
-import { Component, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  input,
+  QueryList,
+  signal,
+  ViewChildren,
+} from '@angular/core';
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,6 +41,7 @@ export class SectionResumeFormComponent {
   form = input.required<FormGroup>();
   service = inject(ResumeFormService);
   showContent = signal<boolean>(false);
+  @ViewChildren('sectionItems', { read: ElementRef }) sectionItems!: QueryList<ElementRef>;
 
   get title() {
     return this.form().get('title');
@@ -56,5 +65,19 @@ export class SectionResumeFormComponent {
         right_subtext: 'San Francisco, CA',
       })
     );
+  }
+
+  scrollTo(element: Element | null) {
+    if (!element) return;
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  ngAfterViewInit() {
+    this.section_items.valueChanges.subscribe(() => {
+      const last = this.sectionItems.last;
+      if (!last) return;
+
+      this.scrollTo(last.nativeElement);
+    });
   }
 }

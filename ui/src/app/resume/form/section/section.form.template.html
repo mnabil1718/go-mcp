@@ -15,7 +15,7 @@
 
 <mat-accordion [multi]="false">
   @for (sc of section_items.controls; track $index) {
-  <mat-expansion-panel>
+  <mat-expansion-panel #sectionItems>
     <mat-expansion-panel-header>
       <mat-panel-title>
         <title-input-form

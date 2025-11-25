@@ -6,7 +6,7 @@
     <profile-form [form]="service.profile" />
   </mat-expansion-panel>
   @for (section of this.service.sections.controls; track $index) {
-  <mat-expansion-panel>
+  <mat-expansion-panel #sections>
     <mat-expansion-panel-header>
       <mat-panel-title>
         <title-input-form
