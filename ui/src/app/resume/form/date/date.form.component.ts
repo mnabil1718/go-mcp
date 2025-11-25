@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -71,24 +71,16 @@ export class DateFormComponent {
     return this.form().get('end');
   }
 
-  get endDisplay(): string {
-    const present = this.present?.value;
-    const endValue = this.end?.value;
-
-    if (present) return 'present';
-    if (endValue) return this.adapter.format(endValue, this.service.format());
-    return '';
-  }
-
   onFormatChange(fmt: DATE_DISPLAY_FORMAT): void {
     this.service.format.set(fmt);
     this.form().setControl('start', new FormControl(this.start?.value));
     this.form().setControl('end', new FormControl(this.end?.value));
   }
 
-  // onPresentChange(e: MatCheckboxChange) {
-  //   const checked = e.checked;
-  //   if (!checked) return;
-  //   this.end?.setValue(moment());
-  // }
+  getEndErrorMessage(errors: ValidationErrors | null | undefined): string {
+    if (!errors) return '';
+    const endErr = errors['end'];
+    if (endErr) return endErr.message;
+    return '';
+  }
 }

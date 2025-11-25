@@ -9,6 +9,7 @@ import {
   SectionNode,
 } from '../resume.domain';
 import { DATE_DISPLAY_FORMAT } from '../../common/date/date.domain';
+import { endRequiredIfRanged, validDateRangeValidator } from './date/date.form.validator';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeFormService {
@@ -94,12 +95,17 @@ export class ResumeFormService {
   }
 
   public buildDateGroup(date?: ResumeDate): FormGroup {
-    return this.fb.group({
-      end: [this.parseDate(date?.end)],
-      present: [date?.present ?? false],
-      ranged: [date?.ranged ?? false, Validators.required],
-      start: [this.parseDate(date?.start), Validators.required],
-      format: [date?.format ?? DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR, Validators.required],
-    });
+    return this.fb.group(
+      {
+        end: [this.parseDate(date?.end)],
+        present: [date?.present ?? false],
+        ranged: [date?.ranged ?? false, Validators.required],
+        start: [this.parseDate(date?.start), Validators.required],
+        format: [date?.format ?? DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR, Validators.required],
+      },
+      {
+        validators: validDateRangeValidator(),
+      }
+    );
   }
 }

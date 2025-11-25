@@ -46,6 +46,10 @@
       <mat-hint>{{ format?.value }}</mat-hint>
       <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-datepicker [touchUi]="isMobile()" #pickerEnd></mat-datepicker>
+
+      @if (end?.invalid) {
+      <mat-error>{{ getEndErrorMessage(end?.errors) }}</mat-error>
+      }
     </mat-form-field>
     } @else {
     <mat-form-field class="flex-1 w-full">
