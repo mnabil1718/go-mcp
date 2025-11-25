@@ -37,6 +37,9 @@
       <mat-hint>{{ format?.value }}</mat-hint>
       <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
       <mat-datepicker [touchUi]="isMobile()" #pickerStart></mat-datepicker>
+      @if (start?.hasError('required')) {
+      <mat-error> Start date is required. </mat-error>
+      }
     </mat-form-field>
 
     @if (!present?.value) {

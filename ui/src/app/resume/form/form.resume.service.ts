@@ -9,7 +9,7 @@ import {
   SectionNode,
 } from '../resume.domain';
 import { DATE_DISPLAY_FORMAT } from '../../common/date/date.domain';
-import { endRequiredIfRanged, validDateRangeValidator } from './date/date.form.validator';
+import { validDateRangeValidator } from './date/date.form.validator';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeFormService {

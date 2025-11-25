@@ -83,4 +83,8 @@ export class DateFormComponent {
     if (endErr) return endErr.message;
     return '';
   }
+
+  getStartErrorMessage(errors: ValidationErrors | null | undefined): string {
+    return 'date is required.';
+  }
 }
