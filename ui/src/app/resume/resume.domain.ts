@@ -87,3 +87,7 @@ export interface SectionItemNode {
   right_subtext?: string;
   date?: ResumeDate;
 }
+
+export interface ResumeDeleteDialogData {
+  type: 'section' | 'section_item';
+}

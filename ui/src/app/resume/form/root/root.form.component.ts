@@ -7,6 +7,10 @@ import { ResumeFormService } from '../form.resume.service';
 import { ProfileFormComponent } from '../profile/profile.form.component';
 import { SectionResumeFormComponent } from '../section/section.form.component';
 import { TitleInputFormComponent } from '../title-input/title-input.form.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'root-form',
@@ -18,10 +22,13 @@ import { TitleInputFormComponent } from '../title-input/title-input.form.compone
     ProfileFormComponent,
     SectionResumeFormComponent,
     TitleInputFormComponent,
+    MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: 'root.form.template.html',
 })
 export class RootFormComponent {
+  dialog = inject(MatDialog);
   service = inject(ResumeFormService);
   @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>;
 
@@ -36,6 +43,26 @@ export class RootFormComponent {
       if (!last) return;
 
       this.scrollTo(last.nativeElement);
+    });
+  }
+
+  onDelete(e: Event, idx: number): void {
+    e.stopPropagation();
+
+    const ref = this.dialog.open(ResumeDeleteDialogComponent, {
+      data: { type: 'section' },
+      maxWidth: '400px',
+      width: '100%',
+    });
+
+    ref.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      if (confirmed) {
+        this.service.removeSectionAt(idx);
+      }
     });
   }
 }

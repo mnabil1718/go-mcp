@@ -7,13 +7,20 @@
   </mat-expansion-panel>
   @for (section of this.service.sections.controls; track $index) {
   <mat-expansion-panel #sections>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
+    <mat-expansion-panel-header class="flex group">
+      <mat-panel-title class="flex-1">
         <title-input-form
           [control]="$any(section.get('title'))"
           placeholder="Enter Section Title..."
         />
       </mat-panel-title>
+      <mat-panel-description class="!flex-none">
+        <span class="hidden group-hover:flex">
+          <button matIconButton (click)="onDelete($event, $index)">
+            <mat-icon fontSet="material-symbols-outlined" class="text-error">delete</mat-icon>
+          </button>
+        </span>
+      </mat-panel-description>
     </mat-expansion-panel-header>
     <section-form [form]="$any(section)" />
   </mat-expansion-panel>

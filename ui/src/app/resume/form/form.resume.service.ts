@@ -108,4 +108,16 @@ export class ResumeFormService {
       }
     );
   }
+
+  // Utils
+
+  public removeSectionAt(idx: number): void {
+    this.sections.removeAt(idx);
+  }
+
+  // arr passed by reference because FormArray is type
+  // obj/class this method mutate passed in FormArray
+  public removeSectionItemAt(arr: FormArray, idx: number): void {
+    arr.removeAt(idx);
+  }
 }

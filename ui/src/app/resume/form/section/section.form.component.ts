@@ -19,6 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SectionItemFormComponent } from '../section-item/section-item.form.component';
 import { TitleInputFormComponent } from '../title-input/title-input.form.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.component';
 
 @Component({
   selector: 'section-form',
@@ -38,6 +40,7 @@ import { TitleInputFormComponent } from '../title-input/title-input.form.compone
   templateUrl: 'section.form.template.html',
 })
 export class SectionResumeFormComponent {
+  dialog = inject(MatDialog);
   form = input.required<FormGroup>();
   service = inject(ResumeFormService);
   showContent = signal<boolean>(false);
@@ -78,6 +81,26 @@ export class SectionResumeFormComponent {
       if (!last) return;
 
       this.scrollTo(last.nativeElement);
+    });
+  }
+
+  onDelete(e: Event, idx: number) {
+    e.stopPropagation();
+
+    const ref = this.dialog.open(ResumeDeleteDialogComponent, {
+      data: { type: 'section_item' },
+      maxWidth: '400px',
+      width: '100%',
+    });
+
+    ref.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      if (confirmed) {
+        this.service.removeSectionItemAt(this.section_items, idx);
+      }
     });
   }
 }

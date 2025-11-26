@@ -16,13 +16,20 @@
 <mat-accordion [multi]="false">
   @for (sc of section_items.controls; track $index) {
   <mat-expansion-panel #sectionItems>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
+    <mat-expansion-panel-header class="flex group">
+      <mat-panel-title class="flex-1">
         <title-input-form
           [control]="$any(sc.get('title'))"
           placeholder="Enter Section Item Title..."
         />
       </mat-panel-title>
+      <mat-panel-description class="!flex-none">
+        <span class="hidden group-hover:flex">
+          <button matIconButton (click)="onDelete($event, $index)">
+            <mat-icon fontSet="material-symbols-outlined" class="text-error">delete</mat-icon>
+          </button>
+        </span>
+      </mat-panel-description>
     </mat-expansion-panel-header>
     <section-item-form [form]="$any(sc)" />
   </mat-expansion-panel>
