@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormArray, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
@@ -44,6 +44,17 @@ export class RootFormComponent {
 
       this.scrollTo(last.nativeElement);
     });
+  }
+
+  addSection(): void {
+    this.service.sections.push(
+      this.service.buildSectionGroup({
+        id: crypto.randomUUID(),
+        position: this.service.sections.length + 1,
+        title: 'New Section',
+        section_items: [],
+      })
+    );
   }
 
   onDelete(e: Event, idx: number): void {
