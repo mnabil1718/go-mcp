@@ -2,7 +2,12 @@
   <button matButton="tonal" (click)="addSection()"><mat-icon>add</mat-icon> Add Section</button>
 </div>
 
-<mat-accordion [multi]="false">
+<mat-accordion
+  [multi]="false"
+  cdkDropList
+  [cdkDropListData]="service.sections.controls"
+  (cdkDropListDropped)="onDrop($event)"
+>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title> Profile </mat-panel-title>
@@ -10,9 +15,10 @@
     <profile-form [form]="service.profile" />
   </mat-expansion-panel>
   @for (section of this.service.sections.controls; track $index) {
-  <mat-expansion-panel #sections>
-    <mat-expansion-panel-header class="flex group">
-      <mat-panel-title class="flex-1">
+  <mat-expansion-panel cdkDrag #sections>
+    <mat-expansion-panel-header class="relative flex group">
+      <drag-handle cdkDragHandle class="absolute inset-y-0 left-0 flex items-center px-1" />
+      <mat-panel-title class="relative flex-1">
         <title-input-form
           [control]="$any(section.get('title'))"
           placeholder="Enter Section Title..."
@@ -30,3 +36,5 @@
   </mat-expansion-panel>
   }
 </mat-accordion>
+
+<pre>{{ service.form.value | json }}</pre>

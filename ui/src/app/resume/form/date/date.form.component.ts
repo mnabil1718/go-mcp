@@ -73,8 +73,10 @@ export class DateFormComponent {
 
   onFormatChange(fmt: DATE_DISPLAY_FORMAT): void {
     this.service.format.set(fmt);
-    this.form().setControl('start', new FormControl(this.start?.value));
-    this.form().setControl('end', new FormControl(this.end?.value));
+
+    // Refresh validation only
+    this.start?.updateValueAndValidity({ emitEvent: false });
+    this.end?.updateValueAndValidity({ emitEvent: false });
   }
 
   getEndErrorMessage(errors: ValidationErrors | null | undefined): string {

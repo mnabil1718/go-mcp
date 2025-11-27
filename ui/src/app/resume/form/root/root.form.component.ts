@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormArray, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
@@ -11,6 +11,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DragHandleComponent } from '../../drag.handle.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'root-form',
@@ -24,6 +27,9 @@ import { MatDialog } from '@angular/material/dialog';
     TitleInputFormComponent,
     MatIconModule,
     MatButtonModule,
+    DragDropModule,
+    DragHandleComponent,
+    JsonPipe,
   ],
   templateUrl: 'root.form.template.html',
 })
@@ -75,5 +81,13 @@ export class RootFormComponent {
         this.service.removeSectionAt(idx);
       }
     });
+  }
+
+  onDrop(event: CdkDragDrop<AbstractControl[]>) {
+    const arr = this.service.sections;
+
+    moveItemInArray(arr.controls, event.previousIndex, event.currentIndex);
+
+    arr.updateValueAndValidity();
   }
 }
