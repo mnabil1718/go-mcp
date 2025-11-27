@@ -111,6 +111,14 @@ export class ResumeFormService {
 
   // Utils
 
+  public addSection(s: SectionNode): void {
+    this.sections.push(this.buildSectionGroup(s));
+  }
+
+  public addSectionItem(si: SectionItemNode, arr: FormArray): void {
+    arr.push(this.buildSectionItemGroup(si));
+  }
+
   public removeSectionAt(idx: number): void {
     this.sections.removeAt(idx);
   }

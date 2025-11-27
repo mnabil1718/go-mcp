@@ -1,13 +1,12 @@
 import { Component, inject, input } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { DATE_DISPLAY_FORMAT, DATE_DISPLAY_FORMAT_LIST } from '../../../common/date/date.domain';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { matDateFormats } from '../../../common/date/date.format';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MediaService } from '../../../common/media/media.service';
 import { Moment } from 'moment';
 import { CustomDateService } from '../../../common/date/date.format.service';
@@ -18,8 +17,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
   selector: 'date-form',
   providers: [
     CustomDateService,
+    { provide: MAT_DATE_LOCALE, useValue: 'id' },
     { provide: DateAdapter, useClass: CustomDateAdapter },
-    { provide: MAT_DATE_FORMATS, deps: [CustomDateService], useFactory: matDateFormats },
   ],
   imports: [
     MatSlideToggleModule,
@@ -74,9 +73,10 @@ export class DateFormComponent {
   onFormatChange(fmt: DATE_DISPLAY_FORMAT): void {
     this.service.format.set(fmt);
 
-    // Refresh validation only
-    this.start?.updateValueAndValidity({ emitEvent: false });
-    this.end?.updateValueAndValidity({ emitEvent: false });
+    const startVal = this.start?.value;
+    const endVal = this.end?.value;
+    this.start?.setValue(startVal);
+    this.end?.setValue(endVal);
   }
 
   getEndErrorMessage(errors: ValidationErrors | null | undefined): string {

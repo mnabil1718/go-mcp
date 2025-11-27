@@ -43,24 +43,18 @@ export class RootFormComponent {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  ngAfterViewInit() {
-    this.service.sections.valueChanges.subscribe(() => {
-      const last = this.sections.last;
-      if (!last) return;
-
-      this.scrollTo(last.nativeElement);
-    });
-  }
-
   addSection(): void {
-    this.service.sections.push(
-      this.service.buildSectionGroup({
-        id: crypto.randomUUID(),
-        position: this.service.sections.length + 1,
-        title: 'New Section',
-        section_items: [],
-      })
-    );
+    this.service.addSection({
+      id: crypto.randomUUID(),
+      position: this.service.sections.length + 1,
+      title: 'New Section',
+      section_items: [],
+    });
+
+    setTimeout(() => {
+      const last = this.sections.last;
+      if (last) this.scrollTo(last.nativeElement);
+    });
   }
 
   onDelete(e: Event, idx: number): void {

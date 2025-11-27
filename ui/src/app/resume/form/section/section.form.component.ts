@@ -59,15 +59,21 @@ export class SectionResumeFormComponent {
   }
 
   addSectionItem(): void {
-    this.section_items.push(
-      this.service.buildSectionItemGroup({
+    this.service.addSectionItem(
+      {
         id: crypto.randomUUID(),
         position: this.section_items.length + 1,
         title: 'New Section Item',
         subtext: 'Good Company, Inc.',
         right_subtext: 'San Francisco, CA',
-      })
+      },
+      this.section_items
     );
+
+    setTimeout(() => {
+      const last = this.sectionItems.last;
+      if (last) this.scrollTo(last.nativeElement);
+    });
   }
 
   scrollTo(element: Element | null) {
@@ -75,14 +81,14 @@ export class SectionResumeFormComponent {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  ngAfterViewInit() {
-    this.section_items.valueChanges.subscribe(() => {
-      const last = this.sectionItems.last;
-      if (!last) return;
+  // ngAfterViewInit() {
+  //   this.section_items.valueChanges.subscribe(() => {
+  //     const last = this.sectionItems.last;
+  //     if (!last) return;
 
-      this.scrollTo(last.nativeElement);
-    });
-  }
+  //     this.scrollTo(last.nativeElement);
+  //   });
+  // }
 
   onDelete(e: Event, idx: number) {
     e.stopPropagation();
