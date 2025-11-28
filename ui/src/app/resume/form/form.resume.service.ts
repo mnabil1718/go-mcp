@@ -86,14 +86,6 @@ export class ResumeFormService {
     });
   }
 
-  // format BE / API ISO date string.
-  // Ex: 2025-12-12 to moment time
-  public parseDate(s?: string): moment.Moment | null {
-    if (!s) return null;
-
-    return moment(s);
-  }
-
   public buildDateGroup(date?: ResumeDate): FormGroup {
     return this.fb.group(
       {
@@ -110,6 +102,14 @@ export class ResumeFormService {
   }
 
   // Utils
+
+  // format BE / API ISO date string.
+  // Ex: 2025-12-12 to moment time
+  public parseDate(s?: string): moment.Moment | null {
+    if (!s) return null;
+
+    return moment(s);
+  }
 
   public addSection(s: SectionNode): void {
     this.sections.push(this.buildSectionGroup(s));

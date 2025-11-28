@@ -2,17 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, inject, input, signal } from '@angular/core';
 import { CdkDragMove, DragDropModule } from '@angular/cdk/drag-drop';
 import { MediaService } from '../../media/media.service';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'resizable-panel',
-  imports: [CommonModule, DragDropModule],
+  imports: [CommonModule, DragDropModule, CdkScrollable],
   styles: `
   .bg-surface {
   background-color: var(--mat-sys-surface);
 }
   `,
   template: `
-    <div class="overflow-auto h-full w-full">
+    <div cdkScrollable class="overflow-auto h-full w-full">
       <ng-content />
     </div>
 

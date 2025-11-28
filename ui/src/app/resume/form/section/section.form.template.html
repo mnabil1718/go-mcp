@@ -13,10 +13,18 @@
   </field-form>
 </form>
 
-<mat-accordion [multi]="false">
+<mat-accordion
+  cdkDropList
+  [id]="`section-item-${idx()}`"
+  [cdkDropListConnectedTo]="container_idx_list"
+  [cdkDropListData]="section_items.controls"
+  (cdkDropListDropped)="onDrop($event)"
+  [multi]="false"
+>
   @for (sc of section_items.controls; track $index) {
-  <mat-expansion-panel #sectionItems>
+  <mat-expansion-panel cdkDrag #sectionItems>
     <mat-expansion-panel-header class="flex group">
+      <drag-handle cdkDragHandle class="absolute inset-y-0 left-0 flex items-center px-1" />
       <mat-panel-title class="flex-1">
         <title-input-form
           [control]="$any(sc.get('title'))"

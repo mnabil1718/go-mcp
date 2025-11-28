@@ -3,7 +3,7 @@
 </div>
 
 <mat-accordion
-  [multi]="false"
+  [multi]="true"
   cdkDropList
   [cdkDropListData]="service.sections.controls"
   (cdkDropListDropped)="onDrop($event)"
@@ -32,9 +32,10 @@
         </span>
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <section-form [form]="$any(section)" />
+    <section-form [idx]="$index" [form]="$any(section)" />
   </mat-expansion-panel>
   }
 </mat-accordion>
 
+<!-- debugging only, will cause console ExpressionChangedAfterItHasBeenCheckedError -->
 <pre>{{ service.form.value | json }}</pre>

@@ -11,7 +11,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDragEnd,
+  CdkDragEnter,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
 import { JsonPipe } from '@angular/common';
 
@@ -79,9 +85,7 @@ export class RootFormComponent {
 
   onDrop(event: CdkDragDrop<AbstractControl[]>) {
     const arr = this.service.sections;
-
     moveItemInArray(arr.controls, event.previousIndex, event.currentIndex);
-
     arr.updateValueAndValidity();
   }
 }
