@@ -54,6 +54,7 @@ import { DragHandleComponent } from '../../drag.handle.component';
     DragHandleComponent,
   ],
   templateUrl: 'section.form.template.html',
+  styleUrl: 'section.form.css',
 })
 export class SectionResumeFormComponent {
   dialog = inject(MatDialog);
@@ -77,6 +78,10 @@ export class SectionResumeFormComponent {
 
   get container_idx_list(): string[] {
     return this.service.sections.controls.map((_, idx) => `section-item-${idx}`);
+  }
+
+  isSectionItemsEmpty() {
+    return this.section_items.controls.length === 0;
   }
 
   addSectionItem(): void {

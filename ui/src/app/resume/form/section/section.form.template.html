@@ -13,33 +13,37 @@
   </field-form>
 </form>
 
-<mat-accordion
+<div
   cdkDropList
   [id]="`section-item-${idx()}`"
+  class="section-items !min-h-12"
+  [class.empty]="isSectionItemsEmpty()"
   [cdkDropListConnectedTo]="container_idx_list"
   [cdkDropListData]="section_items.controls"
   (cdkDropListDropped)="onDrop($event)"
-  [multi]="false"
 >
-  @for (sc of section_items.controls; track $index) {
-  <mat-expansion-panel cdkDrag #sectionItems>
-    <mat-expansion-panel-header class="flex group">
-      <drag-handle cdkDragHandle class="absolute inset-y-0 left-0 flex items-center px-1" />
-      <mat-panel-title class="flex-1">
-        <title-input-form
-          [control]="$any(sc.get('title'))"
-          placeholder="Enter Section Item Title..."
-        />
-      </mat-panel-title>
-      <mat-panel-description class="!flex-none">
-        <span class="hidden group-hover:flex">
-          <button matIconButton (click)="onDelete($event, $index)">
-            <mat-icon fontSet="material-symbols-outlined" class="text-error">delete</mat-icon>
-          </button>
-        </span>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <section-item-form [form]="$any(sc)" />
-  </mat-expansion-panel>
-  }
-</mat-accordion>
+  <mat-accordion>
+    @for (sc of section_items.controls; track $index) {
+    <mat-expansion-panel cdkDrag #sectionItems>
+      <mat-expansion-panel-header class="flex group">
+        <drag-handle cdkDragHandle class="absolute inset-y-0 left-0 flex items-center px-1" />
+        <mat-panel-title class="flex-1">
+          <title-input-form
+            [control]="$any(sc.get('title'))"
+            placeholder="Enter Section Item Title..."
+          />
+        </mat-panel-title>
+        <mat-panel-description class="!flex-none">
+          <span class="hidden group-hover:flex">
+            <button matIconButton (click)="onDelete($event, $index)">
+              <mat-icon fontSet="material-symbols-outlined" class="text-error">delete</mat-icon>
+            </button>
+          </span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *cdkDragPlaceholder class="h-12 w-full bg-surface-dimmer"></div>
+      <section-item-form [form]="$any(sc)" />
+    </mat-expansion-panel>
+    }
+  </mat-accordion>
+</div>
