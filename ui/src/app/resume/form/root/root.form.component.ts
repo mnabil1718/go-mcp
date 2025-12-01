@@ -88,4 +88,8 @@ export class RootFormComponent {
     moveItemInArray(arr.controls, event.previousIndex, event.currentIndex);
     arr.updateValueAndValidity();
   }
+
+  a() {
+    console.log('aaa');
+  }
 }

@@ -1,0 +1,27 @@
+<div
+  cdkDropList
+  cdkDropListGroup
+  [cdkDropListData]="list"
+  (cdkDropListDropped)="drop($event)"
+  class="w-full"
+>
+  @for (item of list; track $index) {
+  <mat-expansion-panel
+    cdkDrag
+    cdkDropList
+    [cdkDropListData]="item"
+    (cdkDropListDropped)="cdrop($event)"
+    (cdkDropListEntered)="a()"
+  >
+    <mat-expansion-panel-header class="relative">
+      <mat-panel-title>Haha</mat-panel-title>
+    </mat-expansion-panel-header>
+    @for (letter of item; track $index) {
+    <div cdkDrag class="flex gap-3 items-center border-2 border-green-400">
+      <div cdkDragHandle class="h-5 w-5 bg-cyan-600"></div>
+      <span>{{ letter }}</span>
+    </div>
+    }
+  </mat-expansion-panel>
+  }
+</div>

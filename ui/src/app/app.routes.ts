@@ -8,6 +8,7 @@ import { MainLayoutComponent } from './common/layouts/main/main.layout.component
 import { ResumeLayoutComponent } from './common/layouts/resume/resume.layout.component';
 import { EditResumeComponent } from './resume/edit/edit.resume.component';
 import { ResumeResolver, ResumeTitleResolver } from './resume/resume.resolver';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,11 @@ export const routes: Routes = [
         path: 'r',
         component: IndexResumeComponent,
         title: 'Jahri.ai - Resume Builder',
+      },
+      {
+        path: 't',
+        component: TestComponent,
+        title: 'Jahri.ai - Test',
       },
     ],
   },

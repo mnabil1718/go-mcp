@@ -15,7 +15,7 @@
     <profile-form [form]="service.profile" />
   </mat-expansion-panel>
   @for (section of this.service.sections.controls; track $index) {
-  <mat-expansion-panel cdkDrag #sections>
+  <mat-expansion-panel cdkDrag cdkDropList (cdkDropListEntered)="a()" #sections>
     <mat-expansion-panel-header class="relative flex group">
       <drag-handle cdkDragHandle class="absolute inset-y-0 left-0 flex items-center px-1" />
       <mat-panel-title class="relative flex-1">
