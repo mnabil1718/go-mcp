@@ -1,11 +1,12 @@
 import {
   CdkDragDrop,
+  CdkDragEnter,
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { Component, QueryList, ViewChildren } from '@angular/core';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'test',
@@ -16,14 +17,20 @@ import { MatExpansionModule } from '@angular/material/expansion';
   },
 })
 export class TestComponent {
+  @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
+
   list: string[][] = [
     ['a', 'b', 'c', 'd'],
     ['e', 'f', 'h', 'i'],
     ['j', 'k', 'l', 'm'],
   ];
 
-  a() {
-    console.log('entered');
+  a(e: CdkDragEnter<string[]>, idx: number) {
+    this.panels.forEach((panel, i) => {
+      if (i === idx) {
+        panel.open();
+      }
+    });
   }
 
   drop(event: CdkDragDrop<string[][]>) {

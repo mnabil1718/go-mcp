@@ -11,7 +11,7 @@
     cdkDropList
     [cdkDropListData]="item"
     (cdkDropListDropped)="cdrop($event)"
-    (cdkDropListEntered)="a()"
+    (cdkDropListEntered)="a($event, $index)"
   >
     <mat-expansion-panel-header class="relative">
       <mat-panel-title>Haha</mat-panel-title>
