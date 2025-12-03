@@ -1,8 +1,8 @@
-import { Component, ElementRef, inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, ElementRef, inject, QueryList, viewChild, ViewChildren } from '@angular/core';
+import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
+import { MatAccordion, MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 import { ResumeFormService } from '../form.resume.service';
 import { ProfileFormComponent } from '../profile/profile.form.component';
 import { SectionResumeFormComponent } from '../section/section.form.component';
@@ -11,17 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  CdkDragDrop,
-  CdkDragEnd,
-  CdkDragEnter,
-  CdkDragMove,
-  DragDropModule,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragMove, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
-import { JsonPipe } from '@angular/common';
-import { DragHoverOpenDirective } from '../directives/drag-hover.directive';
 
 @Component({
   selector: 'root-form',
@@ -37,13 +28,13 @@ import { DragHoverOpenDirective } from '../directives/drag-hover.directive';
     MatButtonModule,
     DragDropModule,
     DragHandleComponent,
-    JsonPipe,
   ],
   templateUrl: 'root.form.template.html',
 })
 export class RootFormComponent {
   dialog = inject(MatDialog);
   service = inject(ResumeFormService);
+  accordion = viewChild.required(MatAccordion);
   @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>; // for scroll
   @ViewChildren('matSections') matSections!: QueryList<MatExpansionPanel>; //for automatic open
 

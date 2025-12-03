@@ -145,7 +145,7 @@ export class SectionResumeFormComponent {
     (event.container.data as any).updateValueAndValidity?.();
   }
 
-  onMove(e: CdkDragMove): void {
-    console.log('dragged over');
+  a() {
+    console.log('moved');
   }
 }

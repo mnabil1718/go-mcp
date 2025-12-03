@@ -1,12 +1,15 @@
-<div class="flex justify-end mb-3">
+<div class="flex justify-between mb-3">
+  <button matButton="outlined" (click)="accordion().closeAll()">
+    <mat-icon fontSet="material-symbols-outlined">collapse_all</mat-icon> Collapse All
+  </button>
   <button matButton="tonal" (click)="addSection()"><mat-icon>add</mat-icon> Add Section</button>
 </div>
 
 <mat-accordion
-  [multi]="false"
   cdkDropList
-  [cdkDropListData]="service.sections.controls"
+  [multi]="true"
   (cdkDropListDropped)="onDrop($event)"
+  [cdkDropListData]="service.sections.controls"
 >
   <mat-expansion-panel>
     <mat-expansion-panel-header>
@@ -41,6 +44,3 @@
   </mat-expansion-panel>
   }
 </mat-accordion>
-
-<!-- debugging only, will cause console ExpressionChangedAfterItHasBeenCheckedError -->
-<pre>{{ service.form.value | json }}</pre>

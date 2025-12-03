@@ -128,4 +128,6 @@ export class ResumeFormService {
   public removeSectionItemAt(arr: FormArray, idx: number): void {
     arr.removeAt(idx);
   }
+
+  // listeners
 }
