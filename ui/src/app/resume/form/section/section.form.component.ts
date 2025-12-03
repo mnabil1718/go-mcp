@@ -30,6 +30,7 @@ import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.c
 import {
   CdkDragDrop,
   CdkDragEnter,
+  CdkDragMove,
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
@@ -62,6 +63,7 @@ export class SectionResumeFormComponent {
   form = input.required<FormGroup>();
   service = inject(ResumeFormService);
   showContent = signal<boolean>(false);
+  dragMovedCallback = input.required<(e: CdkDragMove) => void>();
   @ViewChildren('sectionItems', { read: ElementRef }) sectionItems!: QueryList<ElementRef>;
 
   get title() {
@@ -143,7 +145,7 @@ export class SectionResumeFormComponent {
     (event.container.data as any).updateValueAndValidity?.();
   }
 
-  onDragOver(e: Event): void {
+  onMove(e: CdkDragMove): void {
     console.log('dragged over');
   }
 }

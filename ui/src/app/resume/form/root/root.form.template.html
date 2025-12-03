@@ -3,7 +3,7 @@
 </div>
 
 <mat-accordion
-  [multi]="true"
+  [multi]="false"
   cdkDropList
   [cdkDropListData]="service.sections.controls"
   (cdkDropListDropped)="onDrop($event)"
@@ -15,7 +15,7 @@
     <profile-form [form]="service.profile" />
   </mat-expansion-panel>
   @for (section of this.service.sections.controls; track $index) {
-  <mat-expansion-panel cdkDrag cdkDropList (cdkDropListEntered)="a()" #sections>
+  <mat-expansion-panel cdkDrag #sections #matSections>
     <mat-expansion-panel-header class="relative flex group">
       <drag-handle cdkDragHandle class="absolute inset-y-0 left-0 flex items-center px-1" />
       <mat-panel-title class="relative flex-1">
@@ -33,7 +33,11 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div *cdkDragPlaceholder class="h-12 w-full bg-surface-dimmer"></div>
-    <section-form [idx]="$index" [form]="$any(section)" />
+    <section-form
+      [idx]="$index"
+      [form]="$any(section)"
+      [dragMovedCallback]="childDragMoved.bind(this)"
+    />
   </mat-expansion-panel>
   }
 </mat-accordion>

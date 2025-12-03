@@ -15,11 +15,13 @@ import {
   CdkDragDrop,
   CdkDragEnd,
   CdkDragEnter,
+  CdkDragMove,
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
 import { JsonPipe } from '@angular/common';
+import { DragHoverOpenDirective } from '../directives/drag-hover.directive';
 
 @Component({
   selector: 'root-form',
@@ -42,7 +44,8 @@ import { JsonPipe } from '@angular/common';
 export class RootFormComponent {
   dialog = inject(MatDialog);
   service = inject(ResumeFormService);
-  @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>;
+  @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>; // for scroll
+  @ViewChildren('matSections') matSections!: QueryList<MatExpansionPanel>; //for automatic open
 
   scrollTo(element: Element | null) {
     if (!element) return;
@@ -89,7 +92,18 @@ export class RootFormComponent {
     arr.updateValueAndValidity();
   }
 
-  a() {
-    console.log('aaa');
+  childDragMoved(e: CdkDragMove): void {
+    const p = e.pointerPosition;
+
+    this.sections.forEach((panel, i) => {
+      const bound = panel.nativeElement.getBoundingClientRect();
+      const hov =
+        p.x >= bound.left && p.x <= bound.right && p.y >= bound.top && p.y <= bound.bottom;
+
+      if (hov) {
+        const ms = this.matSections.get(i);
+        if (!ms?.expanded) ms?.open();
+      }
+    });
   }
 }
