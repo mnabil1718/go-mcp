@@ -3,6 +3,7 @@ import {
   ElementRef,
   inject,
   input,
+  output,
   QueryList,
   signal,
   ViewChildren,
@@ -64,8 +65,9 @@ export class SectionResumeFormComponent {
   form = input.required<FormGroup>();
   service = inject(ResumeFormService);
   showContent = signal<boolean>(false);
-  dragMovedCallback = input.required<(e: CdkDragMove) => void>();
-  dragStartCallback = input.required<(e: CdkDragStart) => void>();
+  dragMoveOutput = output<CdkDragMove>();
+  dragStartOutput = output<CdkDragStart>();
+
   @ViewChildren('sectionItems', { read: ElementRef }) sectionItems!: QueryList<ElementRef>;
 
   get title() {

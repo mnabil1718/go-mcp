@@ -39,8 +39,8 @@
     <section-form
       [idx]="$index"
       [form]="$any(section)"
-      [dragMovedCallback]="childDragMoved.bind(this)"
-      [dragStartCallback]="childDragStart.bind(this)"
+      (dragMoveOutput)="childDragMoved($event)"
+      (dragStartOutput)="childDragStart($event)"
     />
   </mat-expansion-panel>
   }
