@@ -24,7 +24,12 @@
 >
   <mat-accordion>
     @for (sc of section_items.controls; track $index) {
-    <mat-expansion-panel cdkDrag (cdkDragMoved)="dragMovedCallback()($event)" #sectionItems>
+    <mat-expansion-panel
+      cdkDrag
+      #sectionItems
+      (cdkDragMoved)="dragMovedCallback()($event)"
+      (cdkDragStarted)="dragStartCallback()($event)"
+    >
       <mat-expansion-panel-header class="flex group">
         <drag-handle cdkDragHandle class="absolute inset-y-0 left-0 flex items-center px-1" />
         <mat-panel-title class="flex-1">

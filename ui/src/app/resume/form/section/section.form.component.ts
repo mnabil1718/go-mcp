@@ -31,6 +31,7 @@ import {
   CdkDragDrop,
   CdkDragEnter,
   CdkDragMove,
+  CdkDragStart,
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
@@ -64,6 +65,7 @@ export class SectionResumeFormComponent {
   service = inject(ResumeFormService);
   showContent = signal<boolean>(false);
   dragMovedCallback = input.required<(e: CdkDragMove) => void>();
+  dragStartCallback = input.required<(e: CdkDragStart) => void>();
   @ViewChildren('sectionItems', { read: ElementRef }) sectionItems!: QueryList<ElementRef>;
 
   get title() {
@@ -143,9 +145,5 @@ export class SectionResumeFormComponent {
 
     (event.previousContainer.data as any).updateValueAndValidity?.();
     (event.container.data as any).updateValueAndValidity?.();
-  }
-
-  a() {
-    console.log('moved');
   }
 }

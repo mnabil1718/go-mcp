@@ -11,7 +11,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { CdkDragDrop, CdkDragMove, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDragMove,
+  CdkDragStart,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
 
 @Component({
@@ -33,6 +39,7 @@ import { DragHandleComponent } from '../../drag.handle.component';
 })
 export class RootFormComponent {
   dialog = inject(MatDialog);
+  boundsMemo: DOMRect[] = []; // cache bounding rects at drag start
   service = inject(ResumeFormService);
   accordion = viewChild.required(MatAccordion);
   @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>; // for scroll
@@ -83,15 +90,18 @@ export class RootFormComponent {
     arr.updateValueAndValidity();
   }
 
+  childDragStart(_: CdkDragStart): void {
+    this.boundsMemo = this.sections.map((s) => s.nativeElement.getBoundingClientRect());
+  }
+
   childDragMoved(e: CdkDragMove): void {
     const p = e.pointerPosition;
 
-    this.sections.forEach((panel, i) => {
-      const bound = panel.nativeElement.getBoundingClientRect();
-      const hov =
+    this.boundsMemo.forEach((bound, i) => {
+      const hovered =
         p.x >= bound.left && p.x <= bound.right && p.y >= bound.top && p.y <= bound.bottom;
 
-      if (hov) {
+      if (hovered) {
         const ms = this.matSections.get(i);
         if (!ms?.expanded) ms?.open();
       }
