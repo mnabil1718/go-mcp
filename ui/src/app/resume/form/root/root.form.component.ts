@@ -20,6 +20,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
 import { PointerPosition } from '../form.resume.domain';
+import { MediaService } from '../../../common/media/media.service';
 
 @Component({
   selector: 'root-form',
@@ -41,7 +42,9 @@ import { PointerPosition } from '../form.resume.domain';
 export class RootFormComponent {
   dialog = inject(MatDialog);
   service = inject(ResumeFormService);
+  private media = inject(MediaService);
   accordion = viewChild.required(MatAccordion);
+  isTablet = this.media.match('(max-width: 1024px)');
   boundsMemo: DOMRect[] = []; // cache bounding rects at drag start
   @ViewChildren('matSections') matSections!: QueryList<MatExpansionPanel>; //for automatic open
   @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>; // for scroll

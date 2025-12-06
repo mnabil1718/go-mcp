@@ -39,7 +39,7 @@
           />
         </mat-panel-title>
         <mat-panel-description class="!flex-none">
-          <span class="hidden group-hover:flex">
+          <span [class.flex]="isTablet()" [class.hidden]="!isTablet()" class="group-hover:flex">
             <button matIconButton (click)="onDelete($event, $index)">
               <mat-icon fontSet="material-symbols-outlined" class="text-error">delete</mat-icon>
             </button>

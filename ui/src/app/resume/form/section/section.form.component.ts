@@ -38,6 +38,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
+import { MediaService } from '../../../common/media/media.service';
 
 @Component({
   selector: 'section-form',
@@ -65,8 +66,10 @@ export class SectionResumeFormComponent {
   form = input.required<FormGroup>();
   service = inject(ResumeFormService);
   showContent = signal<boolean>(false);
+  private media = inject(MediaService);
   dragMoveOutput = output<CdkDragMove>();
   dragStartOutput = output<CdkDragStart>();
+  isTablet = this.media.match('(max-width: 1024px)');
 
   @ViewChildren('sectionItems', { read: ElementRef }) sectionItems!: QueryList<ElementRef>;
 
