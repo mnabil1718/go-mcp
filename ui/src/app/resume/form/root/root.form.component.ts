@@ -19,6 +19,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
+import { PointerPosition } from '../form.resume.domain';
 
 @Component({
   selector: 'root-form',
@@ -39,11 +40,26 @@ import { DragHandleComponent } from '../../drag.handle.component';
 })
 export class RootFormComponent {
   dialog = inject(MatDialog);
-  boundsMemo: DOMRect[] = []; // cache bounding rects at drag start
   service = inject(ResumeFormService);
   accordion = viewChild.required(MatAccordion);
-  @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>; // for scroll
+  boundsMemo: DOMRect[] = []; // cache bounding rects at drag start
   @ViewChildren('matSections') matSections!: QueryList<MatExpansionPanel>; //for automatic open
+  @ViewChildren('sections', { read: ElementRef }) sections!: QueryList<ElementRef>; // for scroll
+
+  private getPointerBoundsId(p: PointerPosition): number {
+    for (let i = 0; i < this.boundsMemo.length; i++) {
+      if (
+        p.x >= this.boundsMemo[i].left &&
+        p.x <= this.boundsMemo[i].right &&
+        p.y >= this.boundsMemo[i].top &&
+        p.y <= this.boundsMemo[i].bottom
+      ) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
 
   scrollTo(element: Element | null) {
     if (!element) return;
@@ -96,15 +112,11 @@ export class RootFormComponent {
 
   childDragMoved(e: CdkDragMove): void {
     const p = e.pointerPosition;
+    const id = this.getPointerBoundsId(p);
 
-    this.boundsMemo.forEach((bound, i) => {
-      const hovered =
-        p.x >= bound.left && p.x <= bound.right && p.y >= bound.top && p.y <= bound.bottom;
-
-      if (hovered) {
-        const ms = this.matSections.get(i);
-        if (!ms?.expanded) ms?.open();
-      }
-    });
+    if (id !== -1) {
+      let panel = this.matSections.get(id);
+      if (!panel?.expanded) panel?.open();
+    }
   }
 }
