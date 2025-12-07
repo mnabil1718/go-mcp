@@ -180,7 +180,7 @@ export class ResumeFormService {
         content: s.get('content')?.value,
         subtext: s.get('subtext')?.value,
         right_subtext: s.get('right_subtext')?.value,
-        date: this.toResumeDate(s.get('date') as FormGroup),
+        date: s.get('date')?.value ? this.toResumeDate(s.get('date') as FormGroup) : undefined,
       });
     }
     return array;
