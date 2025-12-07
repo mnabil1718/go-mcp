@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +13,8 @@ import { CustomDateService } from '../../../common/date/date.format.service';
 import { CustomDateAdapter } from '../../../common/date/date.format.adapter';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'date-form',
   providers: [
@@ -29,16 +31,20 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatCheckboxModule,
     MatSelectModule,
     MatInputModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   styleUrl: 'date.form.css',
   templateUrl: 'date.form.template.html',
 })
 export class DateFormComponent {
   media = inject(MediaService);
-  adapter = inject(DateAdapter<Moment>);
-  service = inject(CustomDateService);
   form = input.required<FormGroup>();
+  service = inject(CustomDateService);
+  delete = output<Event>();
+  adapter = inject(DateAdapter<Moment>);
   isMobile = this.media.match('(max-width: 600px)');
+  isTablet = this.media.match('(max-width: 1024px)');
 
   ngOnInit() {
     this.format?.valueChanges.subscribe((v: DATE_DISPLAY_FORMAT) => {

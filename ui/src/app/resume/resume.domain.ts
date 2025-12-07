@@ -89,5 +89,5 @@ export interface SectionItemNode {
 }
 
 export interface ResumeDeleteDialogData {
-  type: 'section' | 'section_item';
+  type: 'section' | 'section_item' | 'date';
 }

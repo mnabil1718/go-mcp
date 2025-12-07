@@ -104,12 +104,12 @@ export function buildSeedTree(temp_id: string): ResumeNode {
             position: 1,
             title: 'Coursera Google IT Automation with Python',
             subtext: 'Coursera',
-            date: {
-              ranged: true,
-              start: '2021-10',
-              end: '2021-11',
-              format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
-            },
+            // date: {
+            //   ranged: true,
+            //   start: '2021-10',
+            //   end: '2021-11',
+            //   format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
+            // },
           },
         ],
       },

@@ -110,20 +110,20 @@ export class ResumeFormService {
       title: [node.title ?? ''],
       content: [node.content ?? ''],
       subtext: [node.subtext ?? ''],
-      date: this.buildDateGroup(node.date),
       right_subtext: [node.right_subtext ?? ''],
+      date: node.date ? this.buildDateGroup(node.date) : [null],
       id: [{ value: node.id, disabled: true }, Validators.required],
     });
   }
 
-  public buildDateGroup(date?: ResumeDate): FormGroup {
+  public buildDateGroup(date: ResumeDate): FormGroup {
     return this.fb.group(
       {
         end: [this.parseDate(date?.end)],
         present: [date?.present ?? false],
-        ranged: [date?.ranged ?? false, Validators.required],
-        start: [this.parseDate(date?.start), startDateRequiredValidator()],
-        format: [date?.format ?? DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR, Validators.required],
+        format: [date.format, Validators.required],
+        ranged: [date.ranged, Validators.required],
+        start: [this.parseDate(date.start), startDateRequiredValidator()],
       },
       {
         validators: validDateRangeValidator(),

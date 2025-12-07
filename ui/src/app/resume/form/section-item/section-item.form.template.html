@@ -9,5 +9,21 @@
       <input matInput placeholder="Enter right subtext..." formControlName="right_subtext" />
     </mat-form-field>
   </div>
-  <date-form [form]="$any(date)" />
+
+  <div class="flex justify-between items-center mb-2">
+    <mat-slide-toggle [checked]="showContent()" (change)="showContent.set($event.checked)"
+      >Show content</mat-slide-toggle
+    >
+    @if (!!!this.date?.value) {
+    <button matButton="outlined" (click)="addDate()"><mat-icon>add</mat-icon> Add Date</button>
+    }
+  </div>
+
+  <field-form [hidden]="!showContent()" label="Content" [control]="$any(content)">
+    <editor [control]="$any(content)" />
+  </field-form>
+
+  @if (!!this.date?.value) {
+  <date-form [form]="$any(date)" (delete)="onDeleteDate($event)" />
+  }
 </form>

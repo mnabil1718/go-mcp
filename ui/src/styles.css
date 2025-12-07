@@ -25,8 +25,6 @@ pre {
   font-size: 0.90em;
 }
 
-
-
 /* editor style has to be global */
 quill-editor.ng-invalid {
   border: 1px solid var(--mat-sys-error) !important;
@@ -52,6 +50,11 @@ quill-editor.ng-invalid {
 
 .bg-secondary-container {
   background-color: var(--mat-sys-secondary-container);
+}
+
+.error-btn {
+  color: var(--mat-sys-error) !important;
+  border-color: var(--mat-sys-error) !important;
 }
 
 

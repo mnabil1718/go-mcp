@@ -42,10 +42,13 @@ export class ResumeDeleteDialogComponent {
   }
 
   get label(): string {
-    if (this.data.type === 'section') {
-      return 'Section';
+    switch (this.data.type) {
+      case 'section_item':
+        return 'Section Item';
+      case 'date':
+        return 'Date';
+      default:
+        return 'Section';
     }
-
-    return 'Section Item';
   }
 }
