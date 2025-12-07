@@ -6,7 +6,6 @@ export function validDateRangeValidator(): ValidatorFn {
     const start = ctrl.get('start');
     const end = ctrl.get('end');
     const ranged = ctrl.get('ranged');
-    const present = ctrl.get('present');
 
     const startDate = start?.value as Moment | null;
     const endDate = end?.value as Moment | null;
@@ -21,6 +20,18 @@ export function validDateRangeValidator(): ValidatorFn {
     if (!startDate?.isBefore(endDate)) {
       end?.setErrors({ end: { message: 'end date must be after start date.' } });
       return null;
+    }
+
+    return null;
+  };
+}
+
+export function startDateRequiredValidator(): ValidatorFn {
+  return (ctrl: AbstractControl): ValidationErrors | null => {
+    const startDate = ctrl.value as Moment | null;
+
+    if (!startDate) {
+      return { required: { message: 'start date is required.' } };
     }
 
     return null;

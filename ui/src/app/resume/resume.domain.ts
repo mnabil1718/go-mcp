@@ -59,7 +59,7 @@ export interface ResumeNode {
   id: string;
   title: string;
   created_at: string;
-  profile?: ProfileNode;
+  profile: ProfileNode;
   sections: Array<SectionNode>;
 }
 

@@ -87,6 +87,9 @@ export class DateFormComponent {
   }
 
   getStartErrorMessage(errors: ValidationErrors | null | undefined): string {
-    return 'date is required.';
+    if (!errors) return '';
+    const required = errors['required'];
+    if (required.message) return required.message;
+    return 'start date is required.';
   }
 }

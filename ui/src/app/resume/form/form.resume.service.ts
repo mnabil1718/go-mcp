@@ -1,6 +1,6 @@
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { inject, Injectable } from '@angular/core';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import {
   ProfileNode,
   ResumeDate,
@@ -9,7 +9,7 @@ import {
   SectionNode,
 } from '../resume.domain';
 import { DATE_DISPLAY_FORMAT } from '../../common/date/date.domain';
-import { validDateRangeValidator } from './date/date.form.validator';
+import { startDateRequiredValidator, validDateRangeValidator } from './date/date.form.validator';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeFormService {
@@ -22,6 +22,8 @@ export class ResumeFormService {
         title: [tree.title, Validators.required],
         profile: this.buildProfileGroup(tree.profile),
         sections: this.buildSectionArray(tree.sections),
+        id: [{ value: tree.id, disabled: true }, Validators.required], // ensure id is immutable
+        created_at: [{ value: tree.created_at, disabled: true }, Validators.required], // ensure created_at is immutable
       });
     }
   }
@@ -38,11 +40,33 @@ export class ResumeFormService {
     return this.fg.get('profile') as FormGroup;
   }
 
+  // sort position ASC will deep copy passed in array
+  // works for section node and section item node
+  public sort<T extends { position: number }>(arr: T[]): T[] {
+    const res = structuredClone(arr);
+
+    for (let i = 0; i < res.length; i++) {
+      let temp_idx = i;
+      for (let j = i + 1; j < res.length; j++) {
+        if (res[j].position < res[temp_idx].position) {
+          temp_idx = j;
+        }
+      }
+
+      const temp = res[i];
+      res[i] = res[temp_idx];
+      res[temp_idx] = temp;
+    }
+
+    return res;
+  }
+
   // Arrays
   public buildSectionArray(sections: Array<SectionNode>): FormArray {
-    let array: FormArray = this.fb.array([]);
+    const sorted = this.sort(sections);
+    const array: FormArray = this.fb.array([]);
 
-    for (const s of sections) {
+    for (const s of sorted) {
       array.push(this.buildSectionGroup(s));
     }
 
@@ -50,9 +74,10 @@ export class ResumeFormService {
   }
 
   public buildSectionItemArray(section_items: Array<SectionItemNode>): FormArray {
-    let array: FormArray = this.fb.array([]);
+    const sorted = this.sort(section_items);
+    const array: FormArray = this.fb.array([]);
 
-    for (const item of section_items) {
+    for (const item of sorted) {
       array.push(this.buildSectionItemGroup(item));
     }
 
@@ -60,29 +85,34 @@ export class ResumeFormService {
   }
 
   // Nodes
-  public buildProfileGroup(node: ProfileNode | undefined): FormGroup {
+  public buildProfileGroup(node: ProfileNode): FormGroup {
     return this.fb.group({
-      photo_url: [node?.photo_url ?? null],
       name: [node?.name ?? ''],
       content: [node?.content ?? ''],
+      photo_url: [node?.photo_url ?? null],
+      id: [{ value: node.id, disabled: true }, Validators.required],
     });
   }
 
+  // not inclusing position, as when editing might get reordered.
   public buildSectionGroup(node: SectionNode): FormGroup {
     return this.fb.group({
       title: [node.title ?? ''],
       content: [node.content ?? ''],
       section_items: this.buildSectionItemArray(node.section_items),
+      id: [{ value: node.id, disabled: true }, Validators.required],
     });
   }
 
+  // not inclusing position, as when editing might get reordered.
   public buildSectionItemGroup(node: SectionItemNode): FormGroup {
     return this.fb.group({
-      content: [node.content ?? ''],
       title: [node.title ?? ''],
+      content: [node.content ?? ''],
       subtext: [node.subtext ?? ''],
-      right_subtext: [node.right_subtext ?? ''],
       date: this.buildDateGroup(node.date),
+      right_subtext: [node.right_subtext ?? ''],
+      id: [{ value: node.id, disabled: true }, Validators.required],
     });
   }
 
@@ -92,13 +122,78 @@ export class ResumeFormService {
         end: [this.parseDate(date?.end)],
         present: [date?.present ?? false],
         ranged: [date?.ranged ?? false, Validators.required],
-        start: [this.parseDate(date?.start), Validators.required],
+        start: [this.parseDate(date?.start), startDateRequiredValidator()],
         format: [date?.format ?? DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR, Validators.required],
       },
       {
         validators: validDateRangeValidator(),
       }
     );
+  }
+
+  // serialize
+  public toTree(): ResumeNode | null {
+    if (Object.keys(this.fg.controls).length === 0) {
+      return null;
+    }
+
+    return {
+      id: this.fg.get('id')!.value,
+      title: this.fg.get('title')!.value,
+      created_at: this.fg.get('created_at')!.value,
+      profile: this.toProfile(this.profile),
+      sections: this.toSections(this.sections),
+    };
+  }
+
+  public toProfile(profile: FormGroup): ProfileNode {
+    return {
+      id: profile.get('id')!.value,
+      name: profile.get('name')?.value,
+      content: profile.get('content')?.value,
+      photo_url: profile.get('photo_url')?.value,
+    };
+  }
+
+  public toSections(sections: FormArray): SectionNode[] {
+    const array: SectionNode[] = [];
+    for (const [idx, s] of sections.controls.entries()) {
+      array.push({
+        position: idx,
+        id: s.get('id')!.value,
+        title: s.get('title')?.value,
+        content: s.get('content')?.value,
+        section_items: this.toSectionItems(s.get('section_items') as FormArray),
+      });
+    }
+
+    return array;
+  }
+
+  public toSectionItems(section_items: FormArray): SectionItemNode[] {
+    const array: SectionItemNode[] = [];
+    for (const [idx, s] of section_items.controls.entries()) {
+      array.push({
+        position: idx,
+        id: s.get('id')!.value,
+        title: s.get('title')?.value,
+        content: s.get('content')?.value,
+        subtext: s.get('subtext')?.value,
+        right_subtext: s.get('right_subtext')?.value,
+        date: this.toResumeDate(s.get('date') as FormGroup),
+      });
+    }
+    return array;
+  }
+
+  public toResumeDate(date: FormGroup): ResumeDate {
+    return {
+      format: date.get('format')?.value,
+      ranged: date.get('ranged')?.value,
+      present: date.get('present')?.value,
+      end: this.serializeDate(date.get('end')?.value),
+      start: this.serializeDate(date.get('start')?.value)!,
+    };
   }
 
   // Utils
@@ -109,6 +204,14 @@ export class ResumeFormService {
     if (!s) return null;
 
     return moment(s);
+  }
+
+  // from moment Date to string. not following format,
+  // because DB will hold complete date regardless of 'format'.
+  public serializeDate(m?: Moment): string | undefined {
+    if (!m) return;
+
+    return m.format('YYYY-MM-DD');
   }
 
   public addSection(s: SectionNode): void {
