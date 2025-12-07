@@ -15,6 +15,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { DeleteButtonComponent } from '../delete/delete-button.component';
 @Component({
   selector: 'date-form',
   providers: [
@@ -33,6 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    DeleteButtonComponent,
   ],
   styleUrl: 'date.form.css',
   templateUrl: 'date.form.template.html',

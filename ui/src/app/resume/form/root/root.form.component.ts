@@ -21,6 +21,7 @@ import {
 import { DragHandleComponent } from '../../drag.handle.component';
 import { PointerPosition } from '../form.resume.domain';
 import { MediaService } from '../../../common/media/media.service';
+import { DeleteButtonComponent } from '../delete/delete-button.component';
 
 @Component({
   selector: 'root-form',
@@ -36,6 +37,7 @@ import { MediaService } from '../../../common/media/media.service';
     MatButtonModule,
     DragDropModule,
     DragHandleComponent,
+    DeleteButtonComponent,
   ],
   templateUrl: 'root.form.template.html',
 })

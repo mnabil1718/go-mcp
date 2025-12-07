@@ -10,12 +10,12 @@
     </mat-form-field>
   </div>
 
-  <div class="flex justify-between items-center mb-2">
+  <div class="flex justify-between items-center mb-3">
     <mat-slide-toggle [checked]="showContent()" (change)="showContent.set($event.checked)"
       >Show content</mat-slide-toggle
     >
     @if (!!!this.date?.value) {
-    <button matButton="outlined" (click)="addDate()"><mat-icon>add</mat-icon> Add Date</button>
+    <button matButton="tonal" (click)="addDate()"><mat-icon>add</mat-icon> Add Date</button>
     }
   </div>
 

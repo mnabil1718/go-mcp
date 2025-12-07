@@ -4,9 +4,7 @@
       <mat-panel-title> Date Settings </mat-panel-title>
       <mat-panel-description class="!flex-none">
         <span [class.flex]="isTablet()" [class.hidden]="!isTablet()" class="group-hover:flex">
-          <button matIconButton (click)="delete.emit($event)">
-            <mat-icon fontSet="material-symbols-outlined" class="text-error">delete</mat-icon>
-          </button>
+          <delete-button tooltip="Delete Date" (delete)="delete.emit($event)" />
         </span>
       </mat-panel-description>
     </mat-expansion-panel-header>

@@ -39,6 +39,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { DragHandleComponent } from '../../drag.handle.component';
 import { MediaService } from '../../../common/media/media.service';
+import { DeleteButtonComponent } from '../delete/delete-button.component';
 
 @Component({
   selector: 'section-form',
@@ -56,6 +57,7 @@ import { MediaService } from '../../../common/media/media.service';
     TitleInputFormComponent,
     DragDropModule,
     DragHandleComponent,
+    DeleteButtonComponent,
   ],
   templateUrl: 'section.form.template.html',
   styleUrl: 'section.form.css',
