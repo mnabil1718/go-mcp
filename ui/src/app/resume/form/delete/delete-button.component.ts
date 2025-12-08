@@ -13,8 +13,15 @@ import { CommonModule } from '@angular/common';
       <mat-icon fontSet="material-symbols-outlined" class="text-error">delete</mat-icon>
     </button>
   `,
+  host: {
+    '[class.flex]': 'isTablet()',
+    '[class.hidden]': '!isTablet()',
+    class: 'group-hover:flex',
+  },
 })
 export class DeleteButtonComponent {
+  private media = inject(MediaService);
+  isTablet = this.media.match('(max-width: 1024px)');
   delete = output<Event>();
   tooltip = input<string>('Delete');
 }
