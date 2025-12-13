@@ -1,17 +1,17 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
-import { NavItemComponent } from '../../common/components/sidenav/nav.item.component';
+import { Store } from '@ngrx/store';
 import { Chat } from '../chat.domain';
-import { SidenavItemMenu } from '../../common/components/sidenav/sidenav.domain';
+import { Router } from '@angular/router';
+import { ChatActions } from '../store/chat.action';
 import { MatDialog } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { ChatRenameDialogComponent } from '../dialog/chat.rename.dialog.component';
-import { Store } from '@ngrx/store';
-import { ChatActions } from '../store/chat.action';
-import { ChatDeleteDialogComponent } from '../dialog/chat.delete.dialog.component';
-import { Router } from '@angular/router';
 import { RenameNavComponent } from './rename.nav.component';
 import { MediaService } from '../../common/media/media.service';
+import { Component, inject, input, signal } from '@angular/core';
+import { NavItemComponent } from '../../common/components/sidenav/nav.item.component';
+import { SidenavItemMenu } from '../../common/components/sidenav/sidenav.domain';
+import { ChatRenameDialogComponent } from '../dialog/chat.rename.dialog.component';
+import { ChatDeleteDialogComponent } from '../dialog/chat.delete.dialog.component';
 
 @Component({
   selector: 'chat-nav',

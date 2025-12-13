@@ -13,6 +13,13 @@ export const selectSelectedResumeTree = createSelector(
   (state) => state.selectedTree
 );
 
+export const selectSelectedResume = createSelector(
+  selectResumes,
+  selectSelectedResumeId,
+  (resumes, selectedId) => resumes.find((r) => r.id === selectedId) // get selected resume from resumes, not resume tree
+);
+
+// for resolver
 export const selectResumeTitle = (id: string) =>
   createSelector(selectResumes, (resumes) => {
     for (const r of resumes) {

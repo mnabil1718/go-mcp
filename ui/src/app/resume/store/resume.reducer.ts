@@ -31,6 +31,11 @@ export const resumesReducer = createReducer(
     loading: true,
   })),
 
+  on(ResumeActions.rename, (state, { id, title }) => ({
+    ...state,
+    resumes: state.resumes.map((r) => (r.id === id ? { ...r, title } : r)),
+  })),
+
   // API
 
   on(ResumeAPIActions.createSuccess, (state, { temp_id, resume }) => ({
@@ -46,5 +51,10 @@ export const resumesReducer = createReducer(
     loading: false,
     selectedId: tree.id,
     selectedTree: tree,
+  })),
+
+  on(ResumeAPIActions.renameSuccess, (state, resume) => ({
+    ...state,
+    resumes: state.resumes.map((r) => (r.id === resume.id ? { ...r, title: resume.title } : r)),
   }))
 );
