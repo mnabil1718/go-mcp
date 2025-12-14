@@ -30,10 +30,11 @@ import { MatInputModule } from '@angular/material/input';
         #input
         matInput
         [value]="title()"
-        (input)="title.set($any($event.target).value)"
-        (keydown)="onKeyDown($event)"
-        (focus)="onFocus()"
         (blur)="onBlur()"
+        (focus)="onFocus()"
+        (keydown)="onKeyDown($event)"
+        placeholder="Insert Resume Title..."
+        (input)="title.set($any($event.target).value)"
         class="w-full outline-0 placeholder:text-slate-400 mr-3"
       />
       <button matButton="filled" (click)="generatePDF()">
@@ -50,8 +51,9 @@ export class ResumeToolbarComponent {
   readonly resume = toSignal(this.store.select(ResumeSelectors.selectSelectedResume), {
     initialValue: null,
   });
-  readonly id = computed(() => this.resume()?.id ?? null);
   title = signal<string>(''); // writable signal
+  originalTitle = signal<string>(''); // writable signal
+  readonly id = computed(() => this.resume()?.id ?? null);
 
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
@@ -59,7 +61,9 @@ export class ResumeToolbarComponent {
     effect(() => {
       const r = this.resume();
       if (!r) return;
+
       this.title.set(r.title);
+      this.originalTitle.set(r.title);
     });
   }
 
@@ -74,7 +78,9 @@ export class ResumeToolbarComponent {
   dispatch() {
     const id = this.id();
     const title = this.title().trim();
-    if (!id || title == '') return;
+    const oldTitle = this.originalTitle().trim();
+
+    if (!id || title == '' || oldTitle === title) return;
 
     this.store.dispatch(ResumeActions.rename({ id, title }));
   }

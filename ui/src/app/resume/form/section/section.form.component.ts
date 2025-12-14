@@ -40,6 +40,7 @@ import {
 import { DragHandleComponent } from '../../drag.handle.component';
 import { MediaService } from '../../../common/media/media.service';
 import { DeleteButtonComponent } from '../delete/delete-button.component';
+import { NEW_SECTION_ITEM } from '../../resume.data';
 
 @Component({
   selector: 'section-form',
@@ -96,16 +97,7 @@ export class SectionResumeFormComponent {
   }
 
   addSectionItem(): void {
-    this.service.addSectionItem(
-      {
-        id: crypto.randomUUID(),
-        position: this.section_items.length + 1,
-        title: 'New Section Item',
-        subtext: 'Good Company, Inc.',
-        right_subtext: 'San Francisco, CA',
-      },
-      this.section_items
-    );
+    this.service.addSectionItem(NEW_SECTION_ITEM, this.section_items);
 
     setTimeout(() => {
       const last = this.sectionItems.last;

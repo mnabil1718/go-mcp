@@ -10,6 +10,10 @@
     </mat-form-field>
   </div>
 
+  @if (!!this.date?.value) {
+  <date-form [form]="$any(date)" (delete)="onDeleteDate($event)" />
+  }
+
   <div class="flex justify-between items-center mb-3">
     <mat-slide-toggle [checked]="showContent()" (change)="showContent.set($event.checked)"
       >Show content</mat-slide-toggle
@@ -22,8 +26,4 @@
   <field-form [hidden]="!showContent()" label="Content" [control]="$any(content)">
     <editor [control]="$any(content)" />
   </field-form>
-
-  @if (!!this.date?.value) {
-  <date-form [form]="$any(date)" (delete)="onDeleteDate($event)" />
-  }
 </form>

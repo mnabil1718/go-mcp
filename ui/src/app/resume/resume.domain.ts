@@ -55,10 +55,9 @@ export interface ResumeState {
 
 // UI / In-memory Tree
 
+// no root resume object, so theres only
+// a single source of truth in the store
 export interface ResumeNode {
-  id: string;
-  title: string;
-  created_at: string;
   profile: ProfileNode;
   sections: Array<SectionNode>;
 }

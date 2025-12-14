@@ -46,10 +46,10 @@ export const resumesReducer = createReducer(
     selectedTree: state.selectedTree ? { ...state.selectedTree, id: resume.id } : null,
   })),
 
-  on(ResumeAPIActions.getByIdSuccess, (state, { tree }) => ({
+  on(ResumeAPIActions.getByIdSuccess, (state, { id, tree }) => ({
     ...state,
     loading: false,
-    selectedId: tree.id,
+    selectedId: id,
     selectedTree: tree,
   })),
 

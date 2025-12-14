@@ -1,15 +1,12 @@
 import { DATE_DISPLAY_FORMAT } from '../common/date/date.domain';
-import { ResumeNode } from './resume.domain';
+import { ResumeDate, ResumeNode, SectionItemNode, SectionNode } from './resume.domain';
 
 function _genId(): string {
   return crypto.randomUUID();
 }
 
-export function buildSeedTree(temp_id: string): ResumeNode {
+export function buildSeedTree(): ResumeNode {
   return {
-    id: temp_id,
-    title: 'My New Resume',
-    created_at: new Date().toISOString(),
     profile: {
       id: _genId(),
       name: 'Your Name',
@@ -123,3 +120,24 @@ export function buildSeedTree(temp_id: string): ResumeNode {
     ],
   };
 }
+
+export const NEW_SECTION: SectionNode = {
+  id: crypto.randomUUID(),
+  position: 1, // not important, recalculated when save
+  title: 'New Section',
+  section_items: [],
+};
+
+export const NEW_SECTION_ITEM: SectionItemNode = {
+  id: crypto.randomUUID(),
+  position: 1, // not important
+  title: 'New Section Item',
+  subtext: 'Good Company, Inc.',
+  right_subtext: 'San Francisco, CA',
+};
+
+export const NEW_DATE: ResumeDate = {
+  format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
+  start: new Date().toISOString(),
+  ranged: false,
+};

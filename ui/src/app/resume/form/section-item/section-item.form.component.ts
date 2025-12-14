@@ -13,6 +13,7 @@ import { DATE_DISPLAY_FORMAT } from '../../../common/date/date.domain';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ResumeDeleteDialogComponent } from '../../dialog/resume.delete.dialog.component';
+import { NEW_DATE } from '../../resume.data';
 
 @Component({
   selector: 'section-item-form',
@@ -57,11 +58,7 @@ export class SectionItemFormComponent {
   }
 
   addDate(): void {
-    const fg = this.service.buildDateGroup({
-      format: DATE_DISPLAY_FORMAT.DATE_MONTH_YEAR,
-      start: new Date().toISOString(),
-      ranged: false,
-    });
+    const fg = this.service.buildDateGroup(NEW_DATE);
     this.form().setControl('date', fg);
   }
 

@@ -22,6 +22,7 @@ import { DragHandleComponent } from '../../drag.handle.component';
 import { PointerPosition } from '../form.resume.domain';
 import { MediaService } from '../../../common/media/media.service';
 import { DeleteButtonComponent } from '../delete/delete-button.component';
+import { NEW_SECTION } from '../../resume.data';
 
 @Component({
   selector: 'root-form',
@@ -72,12 +73,7 @@ export class RootFormComponent {
   }
 
   addSection(): void {
-    this.service.addSection({
-      id: crypto.randomUUID(),
-      position: this.service.sections.length + 1,
-      title: 'New Section',
-      section_items: [],
-    });
+    this.service.addSection(NEW_SECTION);
 
     setTimeout(() => {
       const last = this.sections.last;

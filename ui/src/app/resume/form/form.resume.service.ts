@@ -18,11 +18,8 @@ export class ResumeFormService {
   set form(tree: ResumeNode | null) {
     if (tree) {
       this.fg = this.fb.group({
-        title: [tree.title, Validators.required],
         profile: this.buildProfileGroup(tree.profile),
         sections: this.buildSectionArray(tree.sections),
-        id: [{ value: tree.id, disabled: true }, Validators.required], // ensure id is immutable
-        created_at: [{ value: tree.created_at, disabled: true }, Validators.required], // ensure created_at is immutable
       });
     }
   }
@@ -103,7 +100,7 @@ export class ResumeFormService {
     });
   }
 
-  // not inclusing position, as when editing might get reordered.
+  // not including position, as when editing might get reordered.
   public buildSectionItemGroup(node: SectionItemNode): FormGroup {
     return this.fb.group({
       title: [node.title ?? ''],
@@ -137,9 +134,6 @@ export class ResumeFormService {
     }
 
     return {
-      id: this.fg.get('id')!.value,
-      title: this.fg.get('title')!.value,
-      created_at: this.fg.get('created_at')!.value,
       profile: this.toProfile(this.profile),
       sections: this.toSections(this.sections),
     };

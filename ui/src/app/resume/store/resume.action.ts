@@ -19,7 +19,7 @@ export const ResumeAPIActions = createActionGroup({
     // API result
     getResumesSuccess: props<{ resumes: Resume[] }>(),
     createSuccess: props<{ temp_id: string; resume: Resume }>(),
-    getByIdSuccess: props<{ tree: ResumeNode }>(),
+    getByIdSuccess: props<{ id: string; tree: ResumeNode }>(),
     renameSuccess: props<Resume>(),
 
     failure: props<{ error: Error }>(),

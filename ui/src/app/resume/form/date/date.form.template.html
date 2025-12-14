@@ -1,7 +1,7 @@
-<form [formGroup]="form()" class="flex flex-col gap-2">
+<form [formGroup]="form()" class="flex flex-col gap-2 mb-4">
   <mat-expansion-panel class="w-full">
     <mat-expansion-panel-header class="relative flex group">
-      <mat-panel-title> Date Settings </mat-panel-title>
+      <mat-panel-title> Date </mat-panel-title>
       <mat-panel-description class="!flex-none">
         <delete-button tooltip="Delete Date" (delete)="delete.emit($event)" />
       </mat-panel-description>
@@ -15,56 +15,57 @@
           }
         </mat-select>
       </mat-form-field>
-      <div class="flex flex-col md:flex-row space-x-4 space-y-2">
+      <div class="flex flex-col md:flex-row space-x-4 space-y-2 mb-4">
         <mat-slide-toggle formControlName="ranged">Date Range</mat-slide-toggle>
         @if (ranged?.value) {
         <mat-slide-toggle formControlName="present">This is still ongoing</mat-slide-toggle>
         }
       </div>
+      <div>
+        @if (!ranged?.value) {
+        <mat-form-field class="w-full">
+          <mat-label>Choose a date</mat-label>
+          <input matInput formControlName="start" [matDatepicker]="picker" />
+          <mat-hint>{{ format?.value }}</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker [touchUi]="isMobile()" #picker></mat-datepicker>
+          @if (start?.invalid) {
+          <mat-error> {{ getStartErrorMessage(start?.errors) }}</mat-error>
+          }
+        </mat-form-field>
+        } @else {
+        <div class="flex flex-col md:flex-row items-center gap-2">
+          <mat-form-field class="flex-1 w-full">
+            <mat-label>Start Date</mat-label>
+            <mat-hint>{{ format?.value }}</mat-hint>
+            <input matInput formControlName="start" [matDatepicker]="pickerStart" />
+            <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+            <mat-datepicker [touchUi]="isMobile()" #pickerStart></mat-datepicker>
+            @if (start?.invalid) {
+            <mat-error> {{ getStartErrorMessage(start?.errors) }} </mat-error>
+            }
+          </mat-form-field>
+
+          @if (!present?.value) {
+          <mat-form-field class="flex-1 w-full">
+            <mat-label>End Date</mat-label>
+            <input matInput formControlName="end" [matDatepicker]="pickerEnd" />
+            <mat-hint>{{ format?.value }}</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker [touchUi]="isMobile()" #pickerEnd></mat-datepicker>
+
+            @if (end?.invalid) {
+            <mat-error>{{ getEndErrorMessage(end?.errors) }}</mat-error>
+            }
+          </mat-form-field>
+          } @else {
+          <mat-form-field class="flex-1 w-full">
+            <input matInput [value]="'Present'" readonly />
+          </mat-form-field>
+          }
+        </div>
+        }
+      </div>
     </div>
   </mat-expansion-panel>
-
-  @if (!ranged?.value) {
-  <mat-form-field class="w-full">
-    <mat-label>Choose a date</mat-label>
-    <input matInput formControlName="start" [matDatepicker]="picker" />
-    <mat-hint>{{ format?.value }}</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker [touchUi]="isMobile()" #picker></mat-datepicker>
-    @if (start?.invalid) {
-    <mat-error> {{ getStartErrorMessage(start?.errors) }}</mat-error>
-    }
-  </mat-form-field>
-  } @else {
-  <div class="flex flex-col md:flex-row items-center gap-2">
-    <mat-form-field class="flex-1 w-full">
-      <mat-label>Start Date</mat-label>
-      <mat-hint>{{ format?.value }}</mat-hint>
-      <input matInput formControlName="start" [matDatepicker]="pickerStart" />
-      <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
-      <mat-datepicker [touchUi]="isMobile()" #pickerStart></mat-datepicker>
-      @if (start?.invalid) {
-      <mat-error> {{ getStartErrorMessage(start?.errors) }} </mat-error>
-      }
-    </mat-form-field>
-
-    @if (!present?.value) {
-    <mat-form-field class="flex-1 w-full">
-      <mat-label>End Date</mat-label>
-      <input matInput formControlName="end" [matDatepicker]="pickerEnd" />
-      <mat-hint>{{ format?.value }}</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-      <mat-datepicker [touchUi]="isMobile()" #pickerEnd></mat-datepicker>
-
-      @if (end?.invalid) {
-      <mat-error>{{ getEndErrorMessage(end?.errors) }}</mat-error>
-      }
-    </mat-form-field>
-    } @else {
-    <mat-form-field class="flex-1 w-full">
-      <input matInput [value]="'Present'" readonly />
-    </mat-form-field>
-    }
-  </div>
-  }
 </form>

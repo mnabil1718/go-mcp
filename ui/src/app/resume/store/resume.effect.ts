@@ -26,8 +26,12 @@ export class ResumeEffect {
     return this.actions$.pipe(
       ofType(ResumeActions.initCreate),
       exhaustMap(({ temp_id }) => {
-        const seed_tree: ResumeNode = buildSeedTree(temp_id);
-        const resume = this.service.treeToResume(seed_tree);
+        const seed_tree: ResumeNode = buildSeedTree();
+        const resume: Resume = {
+          id: temp_id,
+          title: 'My New Resume',
+          created_at: new Date().toISOString(),
+        };
         this.formService.form = seed_tree;
         return of(ResumeActions.create({ temp_id, seed_tree, resume }));
       })
@@ -38,12 +42,12 @@ export class ResumeEffect {
     return this.actions$.pipe(
       ofType(ResumeActions.create),
       exhaustMap(({ temp_id }) => {
-        const dummy: Resume = {
-          id: crypto.randomUUID(),
-          title: 'Dummy Resume',
+        const resume: Resume = {
+          id: temp_id,
+          title: 'My New Resume',
           created_at: new Date().toISOString(),
         };
-        return of(ResumeAPIActions.createSuccess({ temp_id, resume: dummy }));
+        return of(ResumeAPIActions.createSuccess({ temp_id, resume }));
       })
     );
   });
@@ -63,9 +67,9 @@ export class ResumeEffect {
     return this.actions$.pipe(
       ofType(ResumeActions.getById),
       exhaustMap(({ id }) => {
-        const seed_tree: ResumeNode = buildSeedTree(id);
+        const seed_tree: ResumeNode = buildSeedTree();
         this.formService.form = seed_tree;
-        return of(ResumeAPIActions.getByIdSuccess({ tree: seed_tree }));
+        return of(ResumeAPIActions.getByIdSuccess({ id, tree: seed_tree }));
       })
     );
   });
