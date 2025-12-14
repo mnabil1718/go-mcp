@@ -1,11 +1,7 @@
 <div #container class="flex flex-[1_0_0] min-h-0">
-  <!-- Left column -->
-  <div class="hidden md:flex flex-1 preview-container overflow-y-auto p-3">
-    <div class="preview bg-white h-full aspect-[1/1.414] mx-auto"></div>
-  </div>
-
+  <!-- DATA FORM -->
   <resizable-panel
-    position="right"
+    position="left"
     [parentWidth]="width()"
     [minWidth]="width() / 4"
     [defaultWidth]="width() / 2"
@@ -14,4 +10,9 @@
       <resume-form />
     </div>
   </resizable-panel>
+
+  <!-- PDF PREVIEW -->
+  <div class="hidden md:flex w-full min-h-0 preview-container overflow-y-auto p-2">
+    <div class="w-full aspect-[1/1.4142] bg-white h-fit border border-slate-300"></div>
+  </div>
 </div>

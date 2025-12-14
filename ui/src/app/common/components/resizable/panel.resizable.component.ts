@@ -9,8 +9,8 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
   imports: [CommonModule, DragDropModule, CdkScrollable],
   styles: `
   .bg-surface {
-  background-color: var(--mat-sys-surface);
-}
+    background-color: var(--mat-sys-surface);
+  }
   `,
   template: `
     <div cdkScrollable class="overflow-auto h-full w-full">
@@ -20,7 +20,8 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
     @if (!isTablet()) {
     <div
       cdkDrag
-      (cdkDragStarted)="onDragStarted()"
+      cdkDragLockAxis="x"
+      (cdkDragStarted)="onDragStarted($event)"
       (cdkDragEnded)="onDragFinished()"
       (cdkDragMoved)="onDragMoved($event)"
       [class.cursor-ew-resize]="isDragging()"
@@ -35,15 +36,17 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
         [class.bg-blue-500]="isDragging()"
         [class.text-white]="isDragging()"
         [class.bg-white]="!isDragging()"
-        class=" text-slate-400 group-hover:text-white group-hover:bg-blue-500 rounded-lg transition-colors duration-200"
-        >⠿</span
+        class="text-slate-400 group-hover:text-white group-hover:bg-blue-500 rounded-lg transition-colors duration-200"
       >
+        ⠿
+      </span>
     </div>
     }
   `,
   host: {
     class: 'relative block',
-    '[class.border-l]': '!isTablet()',
+    '[class.border-l]': '!isTablet() && position() === "right"',
+    '[class.border-r]': '!isTablet() && position() === "left"',
     '[class.border-slate-300]': '!isTablet()',
     '[style.width.px]': 'isTablet() ? parentWidth() : currentWidth()',
   },
@@ -60,6 +63,10 @@ export class ResizablePanel {
   defaultWidth = input.required<number>();
   parentWidth = input.required<number>();
 
+  // ✅ added
+  private startX = 0;
+  private startWidth = 0;
+
   onDefaultWidthChanged = effect(() => {
     this.currentWidth.set(this.defaultWidth());
   });
@@ -68,9 +75,13 @@ export class ResizablePanel {
     this.currentWidth.set(this.defaultWidth());
   }
 
-  onDragStarted(): void {
+  // ✅ fixed
+  onDragStarted(e: any): void {
     this.isDragging.set(true);
     document.body.classList.add('cursor-ew-resize');
+
+    this.startX = e.event.clientX;
+    this.startWidth = this.currentWidth();
   }
 
   onDragFinished(): void {
@@ -78,23 +89,19 @@ export class ResizablePanel {
     document.body.classList.remove('cursor-ew-resize');
   }
 
+  // ✅ fixed
   onDragMoved(e: CdkDragMove): void {
-    const p = this.position();
     const min = this.minWidth();
     const max = this.defaultWidth();
-    const rectBound = this.ref.nativeElement.getBoundingClientRect();
-    var w = e.pointerPosition.x;
 
-    if (p === 'right') {
-      w = rectBound.right - w;
-    }
+    const deltaX = e.pointerPosition.x - this.startX;
 
-    if (w >= min && w <= max) {
-      this.currentWidth.set(w);
-    }
+    let w = this.position() === 'left' ? this.startWidth + deltaX : this.startWidth - deltaX;
 
-    // Reset transform so the resizer stays positioned at the sidebar edge
-    const el = e.source.element.nativeElement;
-    el.style.transform = 'none';
+    w = Math.max(min, Math.min(max, w));
+    this.currentWidth.set(w);
+
+    // keep handle fixed
+    e.source.element.nativeElement.style.transform = 'none';
   }
 }
