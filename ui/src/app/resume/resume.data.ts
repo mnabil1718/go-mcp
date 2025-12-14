@@ -1,5 +1,12 @@
 import { DATE_DISPLAY_FORMAT } from '../common/date/date.domain';
-import { ResumeDate, ResumeNode, SectionItemNode, SectionNode } from './resume.domain';
+import {
+  PageMargins,
+  PageSize,
+  ResumeDate,
+  ResumeNode,
+  SectionItemNode,
+  SectionNode,
+} from './resume.domain';
 
 function _genId(): string {
   return crypto.randomUUID();
@@ -141,3 +148,20 @@ export const NEW_DATE: ResumeDate = {
   start: new Date().toISOString(),
   ranged: false,
 };
+
+export const PAGE_SIZE_A4: PageSize = {
+  width: 210, // mm
+  height: 297 + 2, // mm
+};
+
+export const PAGE_PRINT_MARGIN: PageMargins = {
+  top: 20,
+  bottom: 20,
+  left: 20,
+  right: 20,
+};
+
+export const BASE_FONT_SIZE = 10.5; // pt
+export const BASE_LINE_HEIGHT = 1.4; // pt
+
+export const MM_TO_PX = 3.78; //  for sizeToPx = mm * MM_TO_PX

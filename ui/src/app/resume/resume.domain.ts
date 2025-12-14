@@ -90,3 +90,15 @@ export interface SectionItemNode {
 export interface ResumeDeleteDialogData {
   type: 'section' | 'section_item' | 'date';
 }
+
+export interface PageSize {
+  width: number;
+  height: number;
+}
+
+export interface PageMargins {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
