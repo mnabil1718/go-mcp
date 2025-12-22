@@ -1,10 +1,11 @@
 import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { ResizablePanel } from '../../common/components/resizable/panel.resizable.component';
 import { ResumeFormComponent } from '../form/form.resume.component';
+import { PreviewResumeComponent } from '../preview/preview.resume.component';
 
 @Component({
   selector: 'edit-resume',
-  imports: [ResizablePanel, ResumeFormComponent],
+  imports: [ResizablePanel, ResumeFormComponent, PreviewResumeComponent],
   templateUrl: 'edit.resume.template.html',
   styleUrl: 'edit.resume.css',
   host: {

@@ -9,11 +9,16 @@ import {
   SectionNode,
 } from '../resume.domain';
 import { startDateRequiredValidator, validDateRangeValidator } from './date/date.form.validator';
+import { Observable, startWith } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ResumeFormService {
   private fb = inject(FormBuilder);
   private fg: FormGroup = this.fb.group({});
+
+  get value$(): Observable<ResumeNode | null> {
+    return this.fg.valueChanges.pipe(startWith(this.toTree()));
+  }
 
   set form(tree: ResumeNode | null) {
     if (tree) {
@@ -224,6 +229,4 @@ export class ResumeFormService {
   public removeSectionItemAt(arr: FormArray, idx: number): void {
     arr.removeAt(idx);
   }
-
-  // listeners
 }

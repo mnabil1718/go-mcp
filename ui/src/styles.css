@@ -57,5 +57,95 @@ quill-editor.ng-invalid {
   border-color: var(--mat-sys-error) !important;
 }
 
+/* ====== PRINT ======== */
+
+@media print {
+  /* Page setup */
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  /* Hide everything */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Show ONLY preview */
+  preview-resume,
+  preview-resume * {
+    visibility: visible !important;
+  }
+
+  /* Detach preview from flex layout */
+  preview-resume {
+    position: absolute;
+    inset: 0;
+    display: block !important;
+    width: 210mm;
+    min-height: 297mm;
+    overflow: visible !important;
+  }
+}
+
+
+@media print {
+  .hidden {
+    display: block !important;
+  }
+}
+
+@media print {
+  .preview {
+    aspect-ratio: auto !important;
+    width: 100%;
+    min-height: 100%;
+    border: none;
+  }
+}
+
+@media print {
+  /* Kill sidenav completely */
+  mat-sidenav,
+  mat-drawer,
+  .mat-sidenav,
+  .mat-drawer {
+    display: none !important;
+  }
+
+  /* Kill sidenav container layout */
+  mat-sidenav-container,
+  mat-drawer-container {
+    display: block !important;
+  }
+
+  /* Reset any layout shifts */
+  mat-sidenav-content,
+  .mat-sidenav-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+  }
+}
+
+@media print {
+  .flex {
+    display: block !important;
+  }
+
+  .min-h-0 {
+    min-height: auto !important;
+  }
+}
+
+
+
+@media screen {
+  .preview {
+    aspect-ratio: 1 / 1.4142;
+  }
+}
+
+
 
 

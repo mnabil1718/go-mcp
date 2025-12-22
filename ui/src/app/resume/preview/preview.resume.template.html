@@ -1,0 +1,15 @@
+<div class="preview w-full aspect-[1/1.4142] bg-white h-fit border border-slate-300">
+  @if (data$ | async; as resume) {
+  <div class="m-[12mm]">
+    <header class="mb-6">
+      @if(valueNotEmpty(resume.profile.name)) {
+      <h1 class="text-2xl font-bold">
+        {{ resume.profile.name }}
+      </h1>
+      } @if (valueNotEmpty(resume.profile.content)) {
+      <div [innerHTML]="resume.profile.content"></div>
+      }
+    </header>
+  </div>
+  }
+</div>

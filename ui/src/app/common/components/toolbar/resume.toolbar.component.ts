@@ -72,7 +72,7 @@ export class ResumeToolbarComponent {
   }
 
   generatePDF() {
-    this.pdfService.generate();
+    window.print();
   }
 
   dispatch() {
